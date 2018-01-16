@@ -1,0 +1,36 @@
+{
+  "_from": "pomelo-admin-web",
+  "_id": "pomelo-admin-web@0.0.2",
+  "_inBundle": false,
+  "_integrity": "sha1-q8OwFZYqFF1U3ar6XoE5DLY4DbY=",
+  "_location": "/pomelo-admin-web",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "pomelo-admin-web",
+    "name": "pomelo-admin-web",
+    "escapedName": "pomelo-admin-web",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/pomelo-admin-web/-/pomelo-admin-web-0.0.2.tgz",
+  "_shasum": "abc3b015962a145d54ddaafa5e81390cb6380db6",
+  "_spec": "pomelo-admin-web",
+  "_where": "/Users/linyng/develop/game/lib/test",
+  "bundleDependencies": false,
+  "dependencies": {
+    "ejs": ">=0.0.1",
+    "express": ">=0.0.1"
+  },
+  "deprecated": false,
+  "description": "pomelo-admin-web is a web console for [pomelo](https://github.com/NetEase/pomelo). it is based on [pomelo-admin](https://github.com/NetEase/pomelo-admin). it is just an web console example, you can implement your style like web console.",
+  "name": "pomelo-admin-web",
+  "private": false,
+  "version": "0.0.2"
+}
