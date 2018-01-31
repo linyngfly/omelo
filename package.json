@@ -1,6 +1,20 @@
 {
   "name": "omelo",
   "version": "2.2.5",
+  "private": false,
+  "deprecated": false,
+  "description": "`omelo` is base pomelo, support es6 version",
+  "engines": {
+    "node": "8.9.0"
+  },
+  "main": "index",
+  "author": {
+    "name": "halfblood369",
+    "email": "halfblood369@gmail.com"
+  },
+  "bin": {
+    "pomelo": "./bin/pomelo"
+  },
   "homepage": "https://github.com/linyngfly/omelo",
   "repository": {
     "type": "git",
@@ -19,6 +33,7 @@
     }
   ],
   "keywords": [
+    "omelo",
     "pomelo",
     "framework",
     "game",
@@ -45,9 +60,6 @@
     "socket.io": "2.0.4",
     "ws": "4.0.0"
   },
-  "bin": {
-    "pomelo": "./bin/pomelo"
-  },
   "devDependencies": {
     "should": "3.3.1",
     "mocha": ">=0.0.1",
@@ -57,5 +69,11 @@
     "grunt-contrib-clean": "0.5.x",
     "grunt-contrib-jshint": "~0.8.0",
     "blanket": "~1.1.6"
-  }
+  },
+  "contributors": [
+    {
+      "name": "linyngfly",
+      "email": "linyngfly@163.com"
+    }
+  ]
 }
