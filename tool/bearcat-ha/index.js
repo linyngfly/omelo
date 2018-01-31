@@ -1,6 +1,6 @@
-var HaClient = require('./lib/haClient');
+let HaClient = require('./lib/haClient');
 
-var bearcatHa = {};
+let bearcatHa = {};
 
 bearcatHa.createClient = function(opts) {
 	return new HaClient(opts);

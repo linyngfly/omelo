@@ -170,7 +170,7 @@ WebInspector.ExtensionPanel.prototype = {
 
     _addStyleRule: function(selector, body)
     {
-        var style = document.createElement("style");
+        let style = document.createElement("style");
         style.textContent = selector + " { " + body + " }";
         document.head.appendChild(style);
     }
@@ -314,7 +314,7 @@ WebInspector.ExtensionSidebarPane.prototype = {
             return;
         }
         this._objectPropertiesView.element.removeChildren();
-        var section = new WebInspector.ObjectPropertiesSection(object, title);
+        let section = new WebInspector.ObjectPropertiesSection(object, title);
         if (!title)
             section.headerElement.addStyleClass("hidden");
         section.expanded = true;

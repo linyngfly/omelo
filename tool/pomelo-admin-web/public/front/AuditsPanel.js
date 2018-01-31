@@ -58,7 +58,7 @@ WebInspector.AuditsPanel = function()
     this._constructCategories();
 
     this._launcherView = new WebInspector.AuditLauncherView(this.initiateAudit.bind(this), this.terminateAudit.bind(this));
-    for (var id in this.categoriesById)
+    for (let id in this.categoriesById)
         this._launcherView.addCategory(this.categoriesById[id]);
 
     WebInspector.resourceTreeModel.addEventListener(WebInspector.ResourceTreeModel.EventTypes.OnLoad, this._didMainResourceLoad, this);
@@ -94,8 +94,8 @@ WebInspector.AuditsPanel.prototype = {
     _constructCategories: function()
     {
         this._auditCategoriesById = {};
-        for (var categoryCtorID in WebInspector.AuditCategories) {
-            var auditCategory = new WebInspector.AuditCategories[categoryCtorID]();
+        for (let categoryCtorID in WebInspector.AuditCategories) {
+            let auditCategory = new WebInspector.AuditCategories[categoryCtorID]();
             auditCategory._id = categoryCtorID;
             this.categoriesById[categoryCtorID] = auditCategory;
         }
@@ -103,16 +103,16 @@ WebInspector.AuditsPanel.prototype = {
 
     _executeAudit: function(categories, resultCallback)
     {
-        var resources = WebInspector.networkLog.resources;
+        let resources = WebInspector.networkLog.resources;
 
-        var rulesRemaining = 0;
-        for (var i = 0; i < categories.length; ++i)
+        let rulesRemaining = 0;
+        for (let i = 0; i < categories.length; ++i)
             rulesRemaining += categories[i].ruleCount;
 
         this._progressMonitor.setTotalWork(rulesRemaining);
 
-        var results = [];
-        var mainResourceURL = WebInspector.inspectedPageURL;
+        let results = [];
+        let mainResourceURL = WebInspector.inspectedPageURL;
 
         function ruleResultReadyCallback(categoryResult, ruleResult)
         {
@@ -134,9 +134,9 @@ WebInspector.AuditsPanel.prototype = {
             return;
         }
 
-        for (var i = 0; i < categories.length; ++i) {
-            var category = categories[i];
-            var result = new WebInspector.AuditCategoryResult(category);
+        for (let i = 0; i < categories.length; ++i) {
+            let category = categories[i];
+            let result = new WebInspector.AuditCategoryResult(category);
             results.push(result);
             category.run(resources, ruleResultReadyCallback.bind(this, result), this._progressMonitor);
         }
@@ -144,14 +144,14 @@ WebInspector.AuditsPanel.prototype = {
 
     _auditFinishedCallback: function(launcherCallback, mainResourceURL, results)
     {
-        var children = this.auditResultsTreeElement.children;
-        var ordinal = 1;
-        for (var i = 0; i < children.length; ++i) {
+        let children = this.auditResultsTreeElement.children;
+        let ordinal = 1;
+        for (let i = 0; i < children.length; ++i) {
             if (children[i].mainResourceURL === mainResourceURL)
                 ordinal++;
         }
 
-        var resultTreeElement = new WebInspector.AuditResultSidebarTreeElement(results, mainResourceURL, ordinal);
+        let resultTreeElement = new WebInspector.AuditResultSidebarTreeElement(results, mainResourceURL, ordinal);
         this.auditResultsTreeElement.appendChild(resultTreeElement);
         resultTreeElement.revealAndSelect();
         if (!this._progressMonitor.canceled && launcherCallback)
@@ -165,8 +165,8 @@ WebInspector.AuditsPanel.prototype = {
 
         this._progressMonitor = new WebInspector.AuditProgressMonitor(progressElement);
 
-        var categories = [];
-        for (var i = 0; i < categoryIds.length; ++i)
+        let categories = [];
+        for (let i = 0; i < categoryIds.length; ++i)
             categories.push(this.categoriesById[categoryIds[i]]);
 
         function initiateAuditCallback(categories, launcherCallback)
@@ -197,7 +197,7 @@ WebInspector.AuditsPanel.prototype = {
     _didMainResourceLoad: function()
     {
         if (this._pageReloadCallback) {
-            var callback = this._pageReloadCallback;
+            let callback = this._pageReloadCallback;
             delete this._pageReloadCallback;
             callback();
         }
@@ -287,7 +287,7 @@ WebInspector.AuditCategory.prototype = {
     run: function(resources, callback, progressMonitor)
     {
         this._ensureInitialized();
-        for (var i = 0; i < this._rules.length; ++i)
+        for (let i = 0; i < this._rules.length; ++i)
             this._rules[i].run(resources, callback, progressMonitor);
     },
 
@@ -343,7 +343,7 @@ WebInspector.AuditRule.prototype = {
         if (progressMonitor.canceled)
             return;
 
-        var result = new WebInspector.AuditRuleResult(this.displayName);
+        let result = new WebInspector.AuditRuleResult(this.displayName);
         result.severity = this._severity;
         this.doRun(resources, result, callback, progressMonitor);
     },
@@ -384,8 +384,8 @@ WebInspector.AuditRuleResult = function(value, expanded, className)
     this._formatters = {
         r: WebInspector.AuditRuleResult.linkifyDisplayName
     };
-    var standardFormatters = Object.keys(String.standardFormatters);
-    for (var i = 0; i < standardFormatters.length; ++i)
+    let standardFormatters = Object.keys(String.standardFormatters);
+    for (let i = 0; i < standardFormatters.length; ++i)
         this._formatters[standardFormatters[i]] = String.standardFormatters[standardFormatters[i]];
 }
 
@@ -408,7 +408,7 @@ WebInspector.AuditRuleResult.prototype = {
     {
         if (!this.children)
             this.children = [];
-        var entry = new WebInspector.AuditRuleResult(value, expanded, className);
+        let entry = new WebInspector.AuditRuleResult(value, expanded, className);
         this.children.push(entry);
         return entry;
     },
@@ -420,7 +420,7 @@ WebInspector.AuditRuleResult.prototype = {
 
     addURLs: function(urls)
     {
-        for (var i = 0; i < urls.length; ++i)
+        for (let i = 0; i < urls.length; ++i)
             this.addURL(urls[i]);
     },
 
@@ -435,10 +435,10 @@ WebInspector.AuditRuleResult.prototype = {
      */
     addFormatted: function(format, vararg)
     {
-        var substitutions = Array.prototype.slice.call(arguments, 1);
-        var fragment = document.createDocumentFragment();
+        let substitutions = Array.prototype.slice.call(arguments, 1);
+        let fragment = document.createDocumentFragment();
 
-        var formattedResult = String.format(format, substitutions, this._formatters, fragment, this._append).formattedResult;
+        let formattedResult = String.format(format, substitutions, this._formatters, fragment, this._append).formattedResult;
         if (formattedResult instanceof Node)
             formattedResult.normalize();
         return this.addChild(formattedResult);

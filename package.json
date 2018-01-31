@@ -1,21 +1,21 @@
 {
   "name": "omelo",
   "version": "2.2.5",
-  "homepage": "https://github.com/NetEase/omelo",
+  "homepage": "https://github.com/linyngfly/omelo",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NetEase/pomelo.git"
+    "url": "https://github.com/linyngfly/omelo.git"
   },
   "scripts": {
     "test": "grunt"
   },
   "bugs": {
-    "url": "https://github.com/NetEase/pomelo/issues"
+    "url": "https://github.com/linyngfly/omelo/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/NetEase/pomelo#license"
+      "url": "https://github.com/linyngfly/omelo#license"
     }
   ],
   "keywords": [

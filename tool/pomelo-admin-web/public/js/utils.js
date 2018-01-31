@@ -1,5 +1,5 @@
 function gridDetailShow(data){
-	 var detailForm=Ext.create('Ext.form.Panel',{
+	 let detailForm=Ext.create('Ext.form.Panel',{
 		frame:true,
 		anchor:'100%',
 		items:[
@@ -14,7 +14,7 @@ function gridDetailShow(data){
 			}
 		]	
 	});
-	  var win=Ext.create('Ext.window.Window',{
+	  let win=Ext.create('Ext.window.Window',{
  	    id:'saveWinId',
   	    title:'saveScript',
   	    height:400,

@@ -41,11 +41,11 @@ WebInspector.SoftContextMenu.prototype = {
         this._time = new Date().getTime();
 
         // Absolutely position menu for iframes.
-        var absoluteX = event.pageX;
-        var absoluteY = event.pageY;
-        var targetElement = event.target;
+        let absoluteX = event.pageX;
+        let absoluteY = event.pageY;
+        let targetElement = event.target;
         while (targetElement && window !== targetElement.ownerDocument.defaultView) {
-            var frameElement = targetElement.ownerDocument.defaultView.frameElement;
+            let frameElement = targetElement.ownerDocument.defaultView.frameElement;
             absoluteY += frameElement.totalOffsetTop();
             absoluteX += frameElement.totalOffsetLeft();
             targetElement = frameElement;
@@ -68,7 +68,7 @@ WebInspector.SoftContextMenu.prototype = {
         this._contextMenuElement.addEventListener("keydown", this._menuKeyDown.bind(this), false);
         this._contextMenuElement.addEventListener("blur", this._discardMenu.bind(this), false);
 
-        for (var i = 0; i < this._items.length; ++i)
+        for (let i = 0; i < this._items.length; ++i)
             this._contextMenuElement.appendChild(this._createMenuItem(this._items[i]));
 
         this._glassPaneElement.appendChild(this._contextMenuElement);
@@ -89,10 +89,10 @@ WebInspector.SoftContextMenu.prototype = {
         if (item.type === "separator")
             return this._createSeparator();
 
-        var menuItemElement = document.createElement("div");
+        let menuItemElement = document.createElement("div");
         menuItemElement.className = "soft-context-menu-item";
 
-        var checkMarkElement = document.createElement("span");
+        let checkMarkElement = document.createElement("span");
         checkMarkElement.textContent = "\u2713 "; // Checkmark Unicode symbol
         checkMarkElement.className = "soft-context-menu-item-checkmark";
         if (!item.checked)
@@ -114,7 +114,7 @@ WebInspector.SoftContextMenu.prototype = {
 
     _createSeparator: function()
     {
-        var separatorElement = document.createElement("div");
+        let separatorElement = document.createElement("div");
         separatorElement.className = "soft-context-menu-separator";
         separatorElement._isSeparator = true;
         return separatorElement;
@@ -161,7 +161,7 @@ WebInspector.SoftContextMenu.prototype = {
 
     _highlightPrevious: function()
     {
-        var menuItemElement = this._highlightedMenuItemElement ? this._highlightedMenuItemElement.previousSibling : this._contextMenuElement.lastChild;
+        let menuItemElement = this._highlightedMenuItemElement ? this._highlightedMenuItemElement.previousSibling : this._contextMenuElement.lastChild;
         while (menuItemElement && menuItemElement._isSeparator)
             menuItemElement = menuItemElement.previousSibling;
         if (menuItemElement)
@@ -170,7 +170,7 @@ WebInspector.SoftContextMenu.prototype = {
 
     _highlightNext: function()
     {
-        var menuItemElement = this._highlightedMenuItemElement ? this._highlightedMenuItemElement.nextSibling : this._contextMenuElement.firstChild;
+        let menuItemElement = this._highlightedMenuItemElement ? this._highlightedMenuItemElement.nextSibling : this._contextMenuElement.firstChild;
         while (menuItemElement && menuItemElement._isSeparator)
             menuItemElement = menuItemElement.nextSibling;
         if (menuItemElement)
@@ -209,7 +209,7 @@ WebInspector.SoftContextMenu.prototype = {
     _discardMenu: function(event)
     {
         if (this._glassPaneElement) {
-            var glassPane = this._glassPaneElement;
+            let glassPane = this._glassPaneElement;
             delete this._glassPaneElement;
             // This can re-enter discardMenu due to blur.
             document.body.removeChild(glassPane);

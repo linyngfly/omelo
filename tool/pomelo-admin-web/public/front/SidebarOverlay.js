@@ -101,7 +101,7 @@ WebInspector.SidebarOverlay.prototype = {
 
     hide: function()
     {
-        var element = this.element.parentElement;
+        let element = this.element.parentElement;
         if (!element)
             return;
 
@@ -121,7 +121,7 @@ WebInspector.SidebarOverlay.prototype = {
      */
     _setWidth: function(newWidth)
     {
-        var width = Number.constrain(newWidth, this._minimalWidth, this._totalWidth);
+        let width = Number.constrain(newWidth, this._minimalWidth, this._totalWidth);
         
         if (this._width === width)
             return;
@@ -158,7 +158,7 @@ WebInspector.SidebarOverlay.prototype = {
      */
     _startResizerDragging: function(event)
     {
-        var width = this._width;
+        let width = this._width;
         this._dragOffset = width - event.pageX;
         WebInspector.elementDragStart(this._resizerElement, this._resizerDragging.bind(this), this._endResizerDragging.bind(this), event, "ew-resize");
     },
@@ -168,7 +168,7 @@ WebInspector.SidebarOverlay.prototype = {
      */
     _resizerDragging: function(event)
     {
-        var width = event.pageX + this._dragOffset;
+        let width = event.pageX + this._dragOffset;
         this._setWidth(width);
         event.preventDefault();
     },

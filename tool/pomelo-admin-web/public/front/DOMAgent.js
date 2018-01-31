@@ -74,9 +74,9 @@ WebInspector.DOMNode = function(domAgent, doc, isInShadowTree, payload) {
     }
 
     if (payload.shadowRoots && WebInspector.experimentsSettings.showShadowDOM.isEnabled()) {
-        for (var i = 0; i < payload.shadowRoots.length; ++i) {
-            var root = payload.shadowRoots[i];
-            var node = new WebInspector.DOMNode(this._domAgent, this.ownerDocument, true, root);
+        for (let i = 0; i < payload.shadowRoots.length; ++i) {
+            let root = payload.shadowRoots[i];
+            let node = new WebInspector.DOMNode(this._domAgent, this.ownerDocument, true, root);
             this._shadowRoots.push(node);
         }
     }
@@ -204,7 +204,7 @@ WebInspector.DOMNode.prototype = {
      */
     getAttribute: function(name)
     {
-        var attr = this._attributesMap[name];
+        let attr = this._attributesMap[name];
         return attr ? attr.value : undefined;
     },
 
@@ -246,7 +246,7 @@ WebInspector.DOMNode.prototype = {
         {
             if (!error) {
                 delete this._attributesMap[name];
-                for (var i = 0;  i < this._attributes.length; ++i) {
+                for (let i = 0;  i < this._attributes.length; ++i) {
                     if (this._attributes[i].name === name) {
                         this._attributes.splice(i, 1);
                         break;
@@ -339,8 +339,8 @@ WebInspector.DOMNode.prototype = {
      */
     path: function()
     {
-        var path = [];
-        var node = this;
+        let path = [];
+        let node = this;
         while (node && "index" in node && node._nodeName.length) {
             path.push([node.index, node._nodeName]);
             node = node.parentNode;
@@ -355,17 +355,17 @@ WebInspector.DOMNode.prototype = {
      */
     appropriateSelectorFor: function(justSelector)
     {
-        var lowerCaseName = this.localName() || this.nodeName().toLowerCase();
+        let lowerCaseName = this.localName() || this.nodeName().toLowerCase();
 
-        var id = this.getAttribute("id");
+        let id = this.getAttribute("id");
         if (id) {
-            var selector = "#" + id;
+            let selector = "#" + id;
             return (justSelector ? selector : lowerCaseName + selector);
         }
 
-        var className = this.getAttribute("class");
+        let className = this.getAttribute("class");
         if (className) {
-            var selector = "." + className.trim().replace(/\s+/g, ".");
+            let selector = "." + className.trim().replace(/\s+/g, ".");
             return (justSelector ? selector : lowerCaseName + selector);
         }
 
@@ -384,7 +384,7 @@ WebInspector.DOMNode.prototype = {
         if (!node)
             return false;
 
-        var currentNode = node.parentNode;
+        let currentNode = node.parentNode;
         while (currentNode) {
             if (this === currentNode)
                 return true;
@@ -409,7 +409,7 @@ WebInspector.DOMNode.prototype = {
     {
         this._attributes = [];
         this._attributesMap = {};
-        for (var i = 0; i < attrs.length; i += 2)
+        for (let i = 0; i < attrs.length; i += 2)
             this._addAttribute(attrs[i], attrs[i + 1]);
     },
 
@@ -420,7 +420,7 @@ WebInspector.DOMNode.prototype = {
      */
     _insertChild: function(prev, payload)
     {
-        var node = new WebInspector.DOMNode(this._domAgent, this.ownerDocument, this._isInShadowTree, payload);
+        let node = new WebInspector.DOMNode(this._domAgent, this.ownerDocument, this._isInShadowTree, payload);
         if (!prev) {
             if (!this.children) {
                 // First node
@@ -453,9 +453,9 @@ WebInspector.DOMNode.prototype = {
             return;
 
         this.children = this._shadowRoots.slice();
-        for (var i = 0; i < payloads.length; ++i) {
-            var payload = payloads[i];
-            var node = new WebInspector.DOMNode(this._domAgent, this.ownerDocument, this._isInShadowTree, payload);
+        for (let i = 0; i < payloads.length; ++i) {
+            let payload = payloads[i];
+            let node = new WebInspector.DOMNode(this._domAgent, this.ownerDocument, this._isInShadowTree, payload);
             this.children.push(node);
         }
         this._renumber();
@@ -471,8 +471,8 @@ WebInspector.DOMNode.prototype = {
         }
         this.firstChild = this.children[0];
         this.lastChild = this.children[this._childNodeCount - 1];
-        for (var i = 0; i < this._childNodeCount; ++i) {
-            var child = this.children[i];
+        for (let i = 0; i < this._childNodeCount; ++i) {
+            let child = this.children[i];
             child.index = i;
             child.nextSibling = i + 1 < this._childNodeCount ? this.children[i + 1] : null;
             child.previousSibling = i - 1 >= 0 ? this.children[i - 1] : null;
@@ -486,7 +486,7 @@ WebInspector.DOMNode.prototype = {
      */
     _addAttribute: function(name, value)
     {
-        var attr = {
+        let attr = {
             name: name,
             value: value,
             _node: this
@@ -501,7 +501,7 @@ WebInspector.DOMNode.prototype = {
      */
     _setAttribute: function(name, value)
     {
-        var attr = this._attributesMap[name];
+        let attr = this._attributesMap[name];
         if (attr)
             attr.value = value;
         else
@@ -513,7 +513,7 @@ WebInspector.DOMNode.prototype = {
      */
     _removeAttribute: function(name)
     {
-        var attr = this._attributesMap[name];
+        let attr = this._attributesMap[name];
         if (attr) {
             this._attributes.remove(attr);
             delete this._attributesMap[name];
@@ -547,10 +547,10 @@ WebInspector.DOMNode.prototype = {
         if (this._nodeType === Node.DOCUMENT_NODE)
             return "/";
 
-        var steps = [];
-        var contextNode = this;
+        let steps = [];
+        let contextNode = this;
         while (contextNode) {
-            var step = contextNode._xPathValue(optimized);
+            let step = contextNode._xPathValue(optimized);
             if (!step)
                 break; // Error - bail out early.
             steps.push(step);
@@ -569,8 +569,8 @@ WebInspector.DOMNode.prototype = {
      */
     _xPathValue: function(optimized)
     {
-        var ownValue;
-        var ownIndex = this._xPathIndex();
+        let ownValue;
+        let ownIndex = this._xPathIndex();
         if (ownIndex === -1)
             return null; // Error.
 
@@ -625,16 +625,16 @@ WebInspector.DOMNode.prototype = {
                 return true;
 
             // XPath treats CDATA as text nodes.
-            var leftType = left._nodeType === Node.CDATA_SECTION_NODE ? Node.TEXT_NODE : left._nodeType;
-            var rightType = right._nodeType === Node.CDATA_SECTION_NODE ? Node.TEXT_NODE : right._nodeType;
+            let leftType = left._nodeType === Node.CDATA_SECTION_NODE ? Node.TEXT_NODE : left._nodeType;
+            let rightType = right._nodeType === Node.CDATA_SECTION_NODE ? Node.TEXT_NODE : right._nodeType;
             return leftType === rightType;
         }
 
-        var siblings = this.parentNode ? this.parentNode.children : null;
+        let siblings = this.parentNode ? this.parentNode.children : null;
         if (!siblings)
             return 0; // Root node - no siblings.
-        var hasSameNamedElements;
-        for (var i = 0; i < siblings.length; ++i) {
+        let hasSameNamedElements;
+        for (let i = 0; i < siblings.length; ++i) {
             if (areNodesSimilar(this, siblings[i]) && siblings[i] !== this) {
                 hasSameNamedElements = true;
                 break;
@@ -642,8 +642,8 @@ WebInspector.DOMNode.prototype = {
         }
         if (!hasSameNamedElements)
             return 0;
-        var ownIndex = 1; // XPath indices start with 1.
-        for (var i = 0; i < siblings.length; ++i) {
+        let ownIndex = 1; // XPath indices start with 1.
+        for (let i = 0; i < siblings.length; ++i) {
             if (areNodesSimilar(this, siblings[i])) {
                 if (siblings[i] === this)
                     return ownIndex;
@@ -728,8 +728,8 @@ WebInspector.DOMAgent.prototype = {
             if (!error)
                 this._setDocument(root);
 
-            for (var i = 0; i < this._pendingDocumentRequestCallbacks.length; ++i) {
-                var callback = this._pendingDocumentRequestCallbacks[i];
+            for (let i = 0; i < this._pendingDocumentRequestCallbacks.length; ++i) {
+                let callback = this._pendingDocumentRequestCallbacks[i];
                 if (callback)
                     callback(this._document);
             }
@@ -754,7 +754,7 @@ WebInspector.DOMAgent.prototype = {
      */
     pushNodeByPathToFrontend: function(path, callback)
     {
-        var callbackCast = /** @type {function(*)} */ callback;
+        let callbackCast = /** @type {function(*)} */ callback;
         this._dispatchWhenDocumentAvailable(DOMAgent.pushNodeByPathToFrontend.bind(DOMAgent, path), callbackCast);
     },
 
@@ -780,7 +780,7 @@ WebInspector.DOMAgent.prototype = {
      */
     _dispatchWhenDocumentAvailable: function(func, callback)
     {
-        var callbackWrapper = /** @type {function(?Protocol.Error, *=)} */ this._wrapClientCallback(callback);
+        let callbackWrapper = /** @type {function(?Protocol.Error, *=)} */ this._wrapClientCallback(callback);
 
         function onDocumentAvailable()
         {
@@ -801,7 +801,7 @@ WebInspector.DOMAgent.prototype = {
      */
     _attributeModified: function(nodeId, name, value)
     {
-        var node = this._idToDOMNode[nodeId];
+        let node = this._idToDOMNode[nodeId];
         if (!node)
             return;
         node._setAttribute(name, value);
@@ -814,7 +814,7 @@ WebInspector.DOMAgent.prototype = {
      */
     _attributeRemoved: function(nodeId, name)
     {
-        var node = this._idToDOMNode[nodeId];
+        let node = this._idToDOMNode[nodeId];
         if (!node)
             return;
         node._removeAttribute(name);
@@ -826,7 +826,7 @@ WebInspector.DOMAgent.prototype = {
      */
     _inlineStyleInvalidated: function(nodeIds)
     {
-        for (var i = 0; i < nodeIds.length; ++i)
+        for (let i = 0; i < nodeIds.length; ++i)
             this._attributeLoadNodeIds[nodeIds[i]] = true;
         if ("_loadNodeAttributesTimeout" in this)
             return;
@@ -847,7 +847,7 @@ WebInspector.DOMAgent.prototype = {
                 console.error("Error during DOMAgent operation: " + error);
                 return;
             }
-            var node = this._idToDOMNode[nodeId];
+            let node = this._idToDOMNode[nodeId];
             if (node) {
                 node._setAttributesPayload(attributes);
                 this.dispatchEventToListeners(WebInspector.DOMAgent.Events.AttrModified, { node: node, name: "style" });
@@ -857,8 +857,8 @@ WebInspector.DOMAgent.prototype = {
 
         delete this._loadNodeAttributesTimeout;
 
-        for (var nodeId in this._attributeLoadNodeIds) {
-            var nodeIdAsNumber = parseInt(nodeId, 10);
+        for (let nodeId in this._attributeLoadNodeIds) {
+            let nodeIdAsNumber = parseInt(nodeId, 10);
             DOMAgent.getAttributes(nodeIdAsNumber, callback.bind(this, nodeIdAsNumber));
         }
         this._attributeLoadNodeIds = {};
@@ -870,7 +870,7 @@ WebInspector.DOMAgent.prototype = {
      */
     _characterDataModified: function(nodeId, newValue)
     {
-        var node = this._idToDOMNode[nodeId];
+        let node = this._idToDOMNode[nodeId];
         node._nodeValue = newValue;
         this.dispatchEventToListeners(WebInspector.DOMAgent.Events.CharacterDataModified, node);
     },
@@ -924,7 +924,7 @@ WebInspector.DOMAgent.prototype = {
             return;
         }
 
-        var parent = this._idToDOMNode[parentId];
+        let parent = this._idToDOMNode[parentId];
         parent._setChildrenPayload(payloads);
     },
 
@@ -934,7 +934,7 @@ WebInspector.DOMAgent.prototype = {
      */
     _childNodeCountUpdated: function(nodeId, newValue)
     {
-        var node = this._idToDOMNode[nodeId];
+        let node = this._idToDOMNode[nodeId];
         node._childNodeCount = newValue;
         this.dispatchEventToListeners(WebInspector.DOMAgent.Events.ChildNodeCountUpdated, node);
     },
@@ -946,9 +946,9 @@ WebInspector.DOMAgent.prototype = {
      */
     _childNodeInserted: function(parentId, prevId, payload)
     {
-        var parent = this._idToDOMNode[parentId];
-        var prev = this._idToDOMNode[prevId];
-        var node = parent._insertChild(prev, payload);
+        let parent = this._idToDOMNode[parentId];
+        let prev = this._idToDOMNode[prevId];
+        let node = parent._insertChild(prev, payload);
         this._idToDOMNode[node.id] = node;
         this.dispatchEventToListeners(WebInspector.DOMAgent.Events.NodeInserted, node);
     },
@@ -959,8 +959,8 @@ WebInspector.DOMAgent.prototype = {
      */
     _childNodeRemoved: function(parentId, nodeId)
     {
-        var parent = this._idToDOMNode[parentId];
-        var node = this._idToDOMNode[nodeId];
+        let parent = this._idToDOMNode[parentId];
+        let node = this._idToDOMNode[nodeId];
         parent._removeChild(node);
         this._unbind(node);
         this.dispatchEventToListeners(WebInspector.DOMAgent.Events.NodeRemoved, {node:node, parent:parent});
@@ -979,7 +979,7 @@ WebInspector.DOMAgent.prototype = {
     _unbind: function(node)
     {
         delete this._idToDOMNode[node.id];
-        for (var i = 0; node.children && i < node.children.length; ++i)
+        for (let i = 0; node.children && i < node.children.length; ++i)
             this._unbind(node.children[i]);
     },
 
@@ -988,7 +988,7 @@ WebInspector.DOMAgent.prototype = {
      */
     inspectElement: function(nodeId)
     {
-        var node = this._idToDOMNode[nodeId];
+        let node = this._idToDOMNode[nodeId];
         if (node)
             this.dispatchEventToListeners(WebInspector.DOMAgent.Events.InspectElementRequested, node);
     },
@@ -1057,7 +1057,7 @@ WebInspector.DOMAgent.prototype = {
      */
     querySelector: function(nodeId, selectors, callback)
     {
-        var callbackCast = /** @type {function(*)|undefined} */callback;
+        let callbackCast = /** @type {function(*)|undefined} */callback;
         DOMAgent.querySelector(nodeId, selectors, this._wrapClientCallback(callbackCast));
     },
 
@@ -1068,7 +1068,7 @@ WebInspector.DOMAgent.prototype = {
      */
     querySelectorAll: function(nodeId, selectors, callback)
     {
-        var callbackCast = /** @type {function(*)|undefined} */callback;
+        let callbackCast = /** @type {function(*)|undefined} */callback;
         DOMAgent.querySelectorAll(nodeId, selectors, this._wrapClientCallback(callbackCast));
     },
 
@@ -1119,7 +1119,7 @@ WebInspector.DOMAgent.prototype = {
     _buildHighlightConfig: function(mode)
     {
         mode = mode || "all";
-        var highlightConfig = { showInfo: mode === "all" };
+        let highlightConfig = { showInfo: mode === "all" };
         if (mode === "all" || mode === "content")
             highlightConfig.contentColor = WebInspector.Color.PageHighlight.Content.toProtocolRGBA();
 

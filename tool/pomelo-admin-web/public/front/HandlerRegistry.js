@@ -71,8 +71,8 @@ WebInspector.HandlerRegistry.prototype = {
      */
     dispatchToHandler: function(name, data)
     {
-        var handler = this._handlers[name];
-        var result = handler && handler(data);
+        let handler = this._handlers[name];
+        let result = handler && handler(data);
         return !!result;
     },
 
@@ -112,11 +112,11 @@ WebInspector.HandlerSelector.prototype =
     _update: function()
     {
         this.element.removeChildren();
-        var names = this._handlerRegistry.handlerNames;
-        var activeHandler = this._handlerRegistry.activeHandler;
+        let names = this._handlerRegistry.handlerNames;
+        let activeHandler = this._handlerRegistry.activeHandler;
 
-        for (var i = 0; i < names.length; ++i) {
-            var option = document.createElement("option");
+        for (let i = 0; i < names.length; ++i) {
+            let option = document.createElement("option");
             option.textContent = names[i];
             option.selected = activeHandler === names[i];
             this.element.appendChild(option);
@@ -126,7 +126,7 @@ WebInspector.HandlerSelector.prototype =
 
     _onChange: function(event)
     {
-        var value = event.target.value;
+        let value = event.target.value;
         this._handlerRegistry.activeHandler = value;
     }
 }

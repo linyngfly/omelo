@@ -2,10 +2,10 @@ Ext.onReady(function() {
 	Ext.BLANK_IMAGE_URL = '../ext-4.0.7-gpl/resources/themes/images/default/tree/s.gif';
 
 	// server comboBox
-	var serverStore = Ext.create('Ext.data.Store', {
+	let serverStore = Ext.create('Ext.data.Store', {
 		fields: ['name', 'serverId']
 	});
-	var serverCom = Ext.create('Ext.form.ComboBox', {
+	let serverCom = Ext.create('Ext.form.ComboBox', {
 		id: 'serverComId',
 		fieldLabel: 'on Server',
 		labelWidth: 60,
@@ -16,11 +16,11 @@ Ext.onReady(function() {
 	});
 
 	// script comboBox
-	var scriptStore = Ext.create('Ext.data.Store', {
+	let scriptStore = Ext.create('Ext.data.Store', {
 		fields: ['type']
 	});
 
-	var scriptCom = Ext.create('Ext.form.ComboBox', {
+	let scriptCom = Ext.create('Ext.form.ComboBox', {
 		id: 'scriptComId',
 		fieldLabel: '&nbsp;&nbsp;&nbsp;&nbsp;  Type',
 		labelWidth: 80,
@@ -30,7 +30,7 @@ Ext.onReady(function() {
 		valueField: 'type',
 	});
 
-	var runScriptPanel = Ext.create('Ext.form.FormPanel', {
+	let runScriptPanel = Ext.create('Ext.form.FormPanel', {
 		bodyPadding: 10,
 		autoScroll: true,
 		autoShow: true,
@@ -84,15 +84,15 @@ Ext.onReady(function() {
 		}]
 	});
 
-	var viewport = new Ext.Viewport({
+	let viewport = new Ext.Viewport({
 		layout: 'border',
 		items: [runScriptPanel]
 	});
 });
 
 function startProf() {
-	var scriptJs = Ext.getCmp('scriptComId').getValue();
-	var serverId = Ext.getCmp('serverComId').getValue();
+	let scriptJs = Ext.getCmp('scriptComId').getValue();
+	let serverId = Ext.getCmp('serverComId').getValue();
 	if (!serverId || serverId.length < 1) {
 		alert('serverId is required!');
 		return;
@@ -113,8 +113,8 @@ function startProf() {
 }
 
 function stopProf() {
-	var scriptJs = Ext.getCmp('scriptComId').getValue();
-	var serverId = Ext.getCmp('serverComId').getValue();
+	let scriptJs = Ext.getCmp('scriptComId').getValue();
+	let serverId = Ext.getCmp('serverComId').getValue();
 	if (!serverId || serverId.length < 1) {
 		alert('serverId is required!');
 		return;

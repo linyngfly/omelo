@@ -149,7 +149,7 @@ WebInspector.NetworkLogView.prototype = {
 
     _createTable: function()
     {
-        var columns;
+        let columns;
         if (Capabilities.nativeInstrumentationEnabled)
             columns = {name: {}, method: {}, status: {}, type: {}, initiator: {}, size: {}, time: {}, timeline: {}};
         else
@@ -211,9 +211,9 @@ WebInspector.NetworkLogView.prototype = {
 
     _makeHeaderFragment: function(title, subtitle)
     {
-        var fragment = document.createDocumentFragment();
+        let fragment = document.createDocumentFragment();
         fragment.appendChild(document.createTextNode(title));
-        var subtitleDiv = document.createElement("div");
+        let subtitleDiv = document.createElement("div");
         subtitleDiv.className = "network-header-subtitle";
         subtitleDiv.textContent = subtitle;
         fragment.appendChild(subtitleDiv);
@@ -222,9 +222,9 @@ WebInspector.NetworkLogView.prototype = {
 
     _patchTimelineHeader: function()
     {
-        var timelineSorting = document.createElement("select");
+        let timelineSorting = document.createElement("select");
 
-        var option = document.createElement("option");
+        let option = document.createElement("option");
         option.value = "startTime";
         option.label = WebInspector.UIString("Timeline");
         timelineSorting.appendChild(option);
@@ -254,7 +254,7 @@ WebInspector.NetworkLogView.prototype = {
         option.label = WebInspector.UIString("Latency");
         timelineSorting.appendChild(option);
 
-        var header = this._dataGrid.headerTableHeader("timeline");
+        let header = this._dataGrid.headerTableHeader("timeline");
         header.replaceChild(timelineSorting, header.firstChild);
 
         timelineSorting.addEventListener("click", function(event) { event.consume() }, false);
@@ -279,8 +279,8 @@ WebInspector.NetworkLogView.prototype = {
         this._sortingFunctions.duration = WebInspector.NetworkDataGridNode.ResourcePropertyComparator.bind(null, "duration", true);
         this._sortingFunctions.latency = WebInspector.NetworkDataGridNode.ResourcePropertyComparator.bind(null, "latency", true);
 
-        var timeCalculator = new WebInspector.NetworkTransferTimeCalculator();
-        var durationCalculator = new WebInspector.NetworkTransferDurationCalculator();
+        let timeCalculator = new WebInspector.NetworkTransferTimeCalculator();
+        let durationCalculator = new WebInspector.NetworkTransferDurationCalculator();
 
         this._calculators = {};
         this._calculators.timeline = timeCalculator;
@@ -294,12 +294,12 @@ WebInspector.NetworkLogView.prototype = {
     _sortItems: function()
     {
         this._removeAllNodeHighlights();
-        var columnIdentifier = this._dataGrid.sortColumnIdentifier;
+        let columnIdentifier = this._dataGrid.sortColumnIdentifier;
         if (columnIdentifier === "timeline") {
             this._sortByTimeline();
             return;
         }
-        var sortingFunction = this._sortingFunctions[columnIdentifier];
+        let sortingFunction = this._sortingFunctions[columnIdentifier];
         if (!sortingFunction)
             return;
 
@@ -313,13 +313,13 @@ WebInspector.NetworkLogView.prototype = {
     _sortByTimeline: function()
     {
         this._removeAllNodeHighlights();
-        var selectedIndex = this._timelineSortSelector.selectedIndex;
+        let selectedIndex = this._timelineSortSelector.selectedIndex;
         if (!selectedIndex)
             selectedIndex = 1; // Sort by start time by default.
-        var selectedOption = this._timelineSortSelector[selectedIndex];
-        var value = selectedOption.value;
+        let selectedOption = this._timelineSortSelector[selectedIndex];
+        let value = selectedOption.value;
 
-        var sortingFunction = this._sortingFunctions[value];
+        let sortingFunction = this._sortingFunctions[value];
         this._dataGrid.sortNodes(sortingFunction);
         this.calculator = this._calculators[value];
         if (this.calculator.startAtZero)
@@ -332,13 +332,13 @@ WebInspector.NetworkLogView.prototype = {
 
     _createFilterStatusBarItems: function()
     {
-        var filterBarElement = document.createElement("div");
+        let filterBarElement = document.createElement("div");
         filterBarElement.className = "scope-bar status-bar-item";
         filterBarElement.id = "network-filter";
 
         function createFilterElement(category, label)
         {
-            var categoryElement = document.createElement("li");
+            let categoryElement = document.createElement("li");
             categoryElement.category = category;
             categoryElement.className = category;
             categoryElement.appendChild(document.createTextNode(label));
@@ -351,21 +351,21 @@ WebInspector.NetworkLogView.prototype = {
         this._filterAllElement = createFilterElement.call(this, "all", WebInspector.UIString("All"));
 
         // Add a divider
-        var dividerElement = document.createElement("div");
+        let dividerElement = document.createElement("div");
         dividerElement.addStyleClass("scope-bar-divider");
         filterBarElement.appendChild(dividerElement);
 
-        for (var category in this._categories)
+        for (let category in this._categories)
             createFilterElement.call(this, category, this._categories[category].title);
         this._filterBarElement = filterBarElement;
     },
 
     _createSummaryBar: function()
     {
-        var tbody = this._dataGrid.dataTableBody;
-        var tfoot = document.createElement("tfoot");
-        var tr = tfoot.createChild("tr", "revealed network-summary-bar");
-        var td = tr.createChild("td");
+        let tbody = this._dataGrid.dataTableBody;
+        let tfoot = document.createElement("tfoot");
+        let tr = tfoot.createChild("tr", "revealed network-summary-bar");
+        let td = tr.createChild("td");
         td.setAttribute("colspan", 7);
         tbody.parentNode.insertBefore(tfoot, tbody);
         this._summaryBarElement = td;
@@ -373,14 +373,14 @@ WebInspector.NetworkLogView.prototype = {
 
     _updateSummaryBar: function()
     {
-        var requestsNumber = this._resources.length;
+        let requestsNumber = this._resources.length;
 
         if (!requestsNumber) {
             if (this._summaryBarElement._isDisplayingWarning)
                 return;
             this._summaryBarElement._isDisplayingWarning = true;
 
-            var img = document.createElement("img");
+            let img = document.createElement("img");
             img.src = "Images/warningIcon.png";
             this._summaryBarElement.removeChildren();
             this._summaryBarElement.appendChild(img);
@@ -390,14 +390,14 @@ WebInspector.NetworkLogView.prototype = {
         }
         delete this._summaryBarElement._isDisplayingWarning;
 
-        var transferSize = 0;
-        var selectedRequestsNumber = 0;
-        var selectedTransferSize = 0;
-        var baseTime = -1;
-        var maxTime = -1;
-        for (var i = 0; i < this._resources.length; ++i) {
-            var resource = this._resources[i];
-            var resourceTransferSize = (resource.cached || !resource.transferSize) ? 0 : resource.transferSize;
+        let transferSize = 0;
+        let selectedRequestsNumber = 0;
+        let selectedTransferSize = 0;
+        let baseTime = -1;
+        let maxTime = -1;
+        for (let i = 0; i < this._resources.length; ++i) {
+            let resource = this._resources[i];
+            let resourceTransferSize = (resource.cached || !resource.transferSize) ? 0 : resource.transferSize;
             transferSize += resourceTransferSize;
             if (!this._hiddenCategories.all || !this._hiddenCategories[resource.category.name]) {
                 selectedRequestsNumber++;
@@ -408,7 +408,7 @@ WebInspector.NetworkLogView.prototype = {
             if (resource.endTime > maxTime)
                 maxTime = resource.endTime;
         }
-        var text = "";
+        let text = "";
         if (this._hiddenCategories.all) {
             text += String.sprintf(WebInspector.UIString("%d / %d requests"), selectedRequestsNumber, requestsNumber);
             text += "  \u2758  " + String.sprintf(WebInspector.UIString("%s / %s transferred"), Number.bytesToString(selectedTransferSize), Number.bytesToString(transferSize));
@@ -440,8 +440,8 @@ WebInspector.NetworkLogView.prototype = {
     _updateFilter: function(e)
     {
         this._removeAllNodeHighlights();
-        var isMac = WebInspector.isMac();
-        var selectMultiple = false;
+        let isMac = WebInspector.isMac();
+        let selectMultiple = false;
         if (isMac && e.metaKey && !e.ctrlKey && !e.altKey && !e.shiftKey)
             selectMultiple = true;
         if (!isMac && e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey)
@@ -456,8 +456,8 @@ WebInspector.NetworkLogView.prototype = {
     {
         function unselectAll()
         {
-            for (var i = 0; i < this._filterBarElement.childNodes.length; ++i) {
-                var child = this._filterBarElement.childNodes[i];
+            for (let i = 0; i < this._filterBarElement.childNodes.length; ++i) {
+                let child = this._filterBarElement.childNodes[i];
                 if (!child.category)
                     continue;
 
@@ -524,8 +524,8 @@ WebInspector.NetworkLogView.prototype = {
     {
         if (!this._dataGrid)
             return;
-        var timelineColumn = this._dataGrid.columns.timeline;
-        for (var i = 0; i < this._dataGrid.resizers.length; ++i) {
+        let timelineColumn = this._dataGrid.columns.timeline;
+        for (let i = 0; i < this._dataGrid.resizers.length; ++i) {
             if (timelineColumn.ordinal === this._dataGrid.resizers[i].rightNeighboringColumnID) {
                 // Position timline grid location.
                 this._timelineGrid.element.style.left = this._dataGrid.resizers[i].style.left;
@@ -533,7 +533,7 @@ WebInspector.NetworkLogView.prototype = {
             }
         }
 
-        var proceed = true;
+        let proceed = true;
         if (!this.isShowing()) {
             this._scheduleRefresh();
             proceed = false;
@@ -555,12 +555,12 @@ WebInspector.NetworkLogView.prototype = {
 
         this._timelineGrid.removeEventDividers();
         if (this._mainResourceLoadTime !== -1) {
-            var percent = this.calculator.computePercentageFromEventTime(this._mainResourceLoadTime);
+            let percent = this.calculator.computePercentageFromEventTime(this._mainResourceLoadTime);
 
-            var loadDivider = document.createElement("div");
+            let loadDivider = document.createElement("div");
             loadDivider.className = "network-event-divider network-red-divider";
 
-            var loadDividerPadding = document.createElement("div");
+            let loadDividerPadding = document.createElement("div");
             loadDividerPadding.className = "network-event-divider-padding";
             loadDividerPadding.title = WebInspector.UIString("Load event fired");
             loadDividerPadding.appendChild(loadDivider);
@@ -569,12 +569,12 @@ WebInspector.NetworkLogView.prototype = {
         }
 
         if (this._mainResourceDOMContentTime !== -1) {
-            var percent = this.calculator.computePercentageFromEventTime(this._mainResourceDOMContentTime);
+            let percent = this.calculator.computePercentageFromEventTime(this._mainResourceDOMContentTime);
 
-            var domContentDivider = document.createElement("div");
+            let domContentDivider = document.createElement("div");
             domContentDivider.className = "network-event-divider network-blue-divider";
 
-            var domContentDividerPadding = document.createElement("div");
+            let domContentDividerPadding = document.createElement("div");
             domContentDividerPadding.className = "network-event-divider-padding";
             domContentDividerPadding.title = WebInspector.UIString("DOMContent event fired");
             domContentDividerPadding.appendChild(domContentDivider);
@@ -591,8 +591,8 @@ WebInspector.NetworkLogView.prototype = {
 
     _invalidateAllItems: function()
     {
-        for (var i = 0; i < this._resources.length; ++i) {
-            var resource = this._resources[i];
+        for (let i = 0; i < this._resources.length; ++i) {
+            let resource = this._resources[i];
             this._staleResources[resource.requestId] = resource;
         }
     },
@@ -621,7 +621,7 @@ WebInspector.NetworkLogView.prototype = {
 
     _createResourceGridNode: function(resource)
     {
-        var node = new WebInspector.NetworkDataGridNode(this, resource);
+        let node = new WebInspector.NetworkDataGridNode(this, resource);
         resource.__gridNodeId = this._lastResourceGridNodeId++;
         this._resourceGridNodes[resource.__gridNodeId] = node;
         return node;
@@ -673,16 +673,16 @@ WebInspector.NetworkLogView.prototype = {
         }
 
         this._removeAllNodeHighlights();
-        var wasScrolledToLastRow = this._dataGrid.isScrolledToLastRow();
-        var boundariesChanged = false;
+        let wasScrolledToLastRow = this._dataGrid.isScrolledToLastRow();
+        let boundariesChanged = false;
         if (this.calculator.updateBoundariesForEventTime) {
             boundariesChanged = this.calculator.updateBoundariesForEventTime(this._mainResourceLoadTime) || boundariesChanged;
             boundariesChanged = this.calculator.updateBoundariesForEventTime(this._mainResourceDOMContentTime) || boundariesChanged;
         }
 
-        for (var resourceId in this._staleResources) {
-            var resource = this._staleResources[resourceId];
-            var node = this._resourceGridNode(resource);
+        for (let resourceId in this._staleResources) {
+            let resource = this._staleResources[resourceId];
+            let node = this._resourceGridNode(resource);
             if (!node) {
                 // Create the timeline tree element and graph.
                 node = this._createResourceGridNode(resource);
@@ -702,7 +702,7 @@ WebInspector.NetworkLogView.prototype = {
             this._invalidateAllItems();
         }
 
-        for (var resourceId in this._staleResources)
+        for (let resourceId in this._staleResources)
             this._resourceGridNode(this._staleResources[resourceId]).refreshGraph(this.calculator);
 
         this._staleResources = {};
@@ -769,7 +769,7 @@ WebInspector.NetworkLogView.prototype = {
         // In case of redirect request id is reassigned to a redirected
         // resource and we need to update _resourcesById ans search results.
         if (this._resourcesById[resource.requestId]) {
-            var oldResource = resource.redirects[resource.redirects.length - 1];
+            let oldResource = resource.redirects[resource.redirects.length - 1];
             this._resourcesById[oldResource.requestId] = oldResource;
 
             this._updateSearchMatchedListAfterRequestIdChanged(resource.requestId, oldResource.requestId);
@@ -780,7 +780,7 @@ WebInspector.NetworkLogView.prototype = {
 
         // Pull all the redirects of the main resource upon commit load.
         if (resource.redirects) {
-            for (var i = 0; i < resource.redirects.length; ++i)
+            for (let i = 0; i < resource.redirects.length; ++i)
                 this._refreshResource(resource.redirects[i]);
         }
 
@@ -810,13 +810,13 @@ WebInspector.NetworkLogView.prototype = {
         if (this._preserveLogToggle.toggled)
             return;
 
-        var frame = /** @type {WebInspector.ResourceTreeFrame} */ event.data;
-        var loaderId = frame.loaderId;
+        let frame = /** @type {WebInspector.ResourceTreeFrame} */ event.data;
+        let loaderId = frame.loaderId;
 
         // Preserve provisional load resources.
-        var resourcesToPreserve = [];
-        for (var i = 0; i < this._resources.length; ++i) {
-            var resource = this._resources[i];
+        let resourcesToPreserve = [];
+        for (let i = 0; i < this._resources.length; ++i) {
+            let resource = this._resources[i];
             if (resource.loaderId === loaderId)
                 resourcesToPreserve.push(resource);
         }
@@ -824,7 +824,7 @@ WebInspector.NetworkLogView.prototype = {
         this._reset();
 
         // Restore preserved items.
-        for (var i = 0; i < resourcesToPreserve.length; ++i)
+        for (let i = 0; i < resourcesToPreserve.length; ++i)
             this._appendResource(resourcesToPreserve[i]);
     },
 
@@ -846,7 +846,7 @@ WebInspector.NetworkLogView.prototype = {
         this._dataGrid.showColumn("time");
         this._dataGrid.showColumn("timeline");
 
-        var widths = {};
+        let widths = {};
         widths.name = 20;
         widths.method = 6;
         widths.status = 6;
@@ -877,7 +877,7 @@ WebInspector.NetworkLogView.prototype = {
         this._dataGrid.hideColumn("time");
         this._dataGrid.hideColumn("timeline");
 
-        var widths = {};
+        let widths = {};
         widths.name = 100;
         this._dataGrid.applyColumnWidthsMap(widths);
 
@@ -910,10 +910,10 @@ WebInspector.NetworkLogView.prototype = {
     {
         if (!this._allowPopover)
             return;
-        var anchor = element.enclosingNodeOrSelfWithClass("network-graph-bar") || element.enclosingNodeOrSelfWithClass("network-graph-label");
+        let anchor = element.enclosingNodeOrSelfWithClass("network-graph-bar") || element.enclosingNodeOrSelfWithClass("network-graph-label");
         if (!anchor)
             return null;
-        var resource = anchor.parentElement.resource;
+        let resource = anchor.parentElement.resource;
         return resource && resource.timing ? anchor : null;
     },
 
@@ -923,16 +923,16 @@ WebInspector.NetworkLogView.prototype = {
      */
     _showPopover: function(anchor, popover)
     {
-        var resource = anchor.parentElement.resource;
-        var tableElement = WebInspector.ResourceTimingView.createTimingTable(resource);
+        let resource = anchor.parentElement.resource;
+        let tableElement = WebInspector.ResourceTimingView.createTimingTable(resource);
         popover.show(tableElement, anchor);
     },
 
     _contextMenu: function(event)
     {
-        var contextMenu = new WebInspector.ContextMenu();
-        var gridNode = this._dataGrid.dataGridNodeFromNode(event.target);
-        var resource = gridNode && gridNode._resource;
+        let contextMenu = new WebInspector.ContextMenu();
+        let gridNode = this._dataGrid.dataGridNodeFromNode(event.target);
+        let resource = gridNode && gridNode._resource;
 
         if (resource) {
             contextMenu.appendItem(WebInspector.openLinkExternallyLabel(), WebInspector.openResource.bind(WebInspector, resource.url, false));
@@ -965,7 +965,7 @@ WebInspector.NetworkLogView.prototype = {
 
     _copyAll: function()
     {
-        var harArchive = {
+        let harArchive = {
             log: (new WebInspector.HARLog(this._resources)).build()
         };
         InspectorFrontendHost.copyText(JSON.stringify(harArchive, null, 2));
@@ -973,7 +973,7 @@ WebInspector.NetworkLogView.prototype = {
 
     _copyResource: function(resource)
     {
-        var har = (new WebInspector.HAREntry(resource)).build();
+        let har = (new WebInspector.HAREntry(resource)).build();
         InspectorFrontendHost.copyText(JSON.stringify(har, null, 2));
     },
 
@@ -994,7 +994,7 @@ WebInspector.NetworkLogView.prototype = {
 
     _exportAll: function()
     {
-        var harArchive = {
+        let harArchive = {
             log: (new WebInspector.HARLog(this._resources)).build()
         };
         
@@ -1003,7 +1003,7 @@ WebInspector.NetworkLogView.prototype = {
 
     _exportResource: function(resource)
     {
-        var har = (new WebInspector.HAREntry(resource)).build();
+        let har = (new WebInspector.HAREntry(resource)).build();
         InspectorFrontendHost.saveAs(resource.displayName + ".har", JSON.stringify(har, null, 2));
     },
 
@@ -1021,23 +1021,23 @@ WebInspector.NetworkLogView.prototype = {
 
     _updateOffscreenRows: function()
     {
-        var dataTableBody = this._dataGrid.dataTableBody;
-        var rows = dataTableBody.children;
-        var recordsCount = rows.length;
+        let dataTableBody = this._dataGrid.dataTableBody;
+        let rows = dataTableBody.children;
+        let recordsCount = rows.length;
         if (recordsCount < 2)
             return;  // Filler row only.
 
-        var visibleTop = this._dataGrid.scrollContainer.scrollTop;
-        var visibleBottom = visibleTop + this._dataGrid.scrollContainer.offsetHeight;
+        let visibleTop = this._dataGrid.scrollContainer.scrollTop;
+        let visibleBottom = visibleTop + this._dataGrid.scrollContainer.offsetHeight;
 
-        var rowHeight = 0;
+        let rowHeight = 0;
 
         // Filler is at recordsCount - 1.
-        var unfilteredRowIndex = 0;
-        for (var i = 0; i < recordsCount - 1; ++i) {
-            var row = rows[i];
+        let unfilteredRowIndex = 0;
+        for (let i = 0; i < recordsCount - 1; ++i) {
+            let row = rows[i];
 
-            var dataGridNode = this._dataGrid.dataGridNodeFromNode(row);
+            let dataGridNode = this._dataGrid.dataGridNodeFromNode(row);
             if (dataGridNode.isFilteredOut()) {
                 row.removeStyleClass("offscreen");
                 continue;
@@ -1046,7 +1046,7 @@ WebInspector.NetworkLogView.prototype = {
             if (!rowHeight)
                 rowHeight = row.offsetHeight;
 
-            var rowIsVisible = unfilteredRowIndex * rowHeight < visibleBottom && (unfilteredRowIndex + 1) * rowHeight > visibleTop;
+            let rowIsVisible = unfilteredRowIndex * rowHeight < visibleBottom && (unfilteredRowIndex + 1) * rowHeight > visibleTop;
             if (rowIsVisible !== row.rowIsVisible) {
                 if (rowIsVisible)
                     row.removeStyleClass("offscreen");
@@ -1069,7 +1069,7 @@ WebInspector.NetworkLogView.prototype = {
         if (resource.requestId in this._matchedResourcesMap)
             return this._matchedResourcesMap[resource.requestId];
 
-        var matchedResourceIndex = this._matchedResources.length;
+        let matchedResourceIndex = this._matchedResources.length;
         this._matchedResourcesMap[resource.requestId] = matchedResourceIndex;
         this._matchedResources.push(resource.requestId);
 
@@ -1085,7 +1085,7 @@ WebInspector.NetworkLogView.prototype = {
 
     _updateSearchMatchedListAfterRequestIdChanged: function(oldRequestId, newRequestId)
     {
-        var resourceIndex = this._matchedResourcesMap[oldRequestId];
+        let resourceIndex = this._matchedResourcesMap[oldRequestId];
         if (resourceIndex) {
             delete this._matchedResourcesMap[oldRequestId];
             this._matchedResourcesMap[newRequestId] = resourceIndex;
@@ -1095,7 +1095,7 @@ WebInspector.NetworkLogView.prototype = {
 
     _updateHighlightIfMatched: function(resource)
     {
-        var matchedResourceIndex = this._matchResource(resource);
+        let matchedResourceIndex = this._matchResource(resource);
         if (matchedResourceIndex === -1)
             return;
 
@@ -1119,16 +1119,16 @@ WebInspector.NetworkLogView.prototype = {
             return;
         }
 
-        var resource = this._resourcesById[this._matchedResources[matchedResourceIndex]];
+        let resource = this._resourcesById[this._matchedResources[matchedResourceIndex]];
         if (!resource)
             return;
 
-        var nameMatched = resource.displayName && resource.displayName.match(this._searchRegExp);
-        var pathMatched = resource.path && resource.folder.match(this._searchRegExp);
+        let nameMatched = resource.displayName && resource.displayName.match(this._searchRegExp);
+        let pathMatched = resource.path && resource.folder.match(this._searchRegExp);
         if (!nameMatched && pathMatched && !this._largerResourcesButton.toggled)
             this._toggleLargerResources();
 
-        var node = this._resourceGridNode(resource);
+        let node = this._resourceGridNode(resource);
         if (node) {
             this._highlightedSubstringChanges = node._highlightMatchedSubstring(this._searchRegExp);
             if (reveal)
@@ -1140,8 +1140,8 @@ WebInspector.NetworkLogView.prototype = {
 
     performSearch: function(searchQuery, sortOrFilterApplied)
     {
-        var newMatchedResourceIndex = 0;
-        var currentMatchedRequestId;
+        let newMatchedResourceIndex = 0;
+        let currentMatchedRequestId;
         if (this._currentMatchedResourceIndex !== -1)
             currentMatchedRequestId = this._matchedResources[this._currentMatchedResourceIndex];
 
@@ -1150,11 +1150,11 @@ WebInspector.NetworkLogView.prototype = {
 
         this._clearSearchMatchedList();
 
-        var childNodes = this._dataGrid.dataTableBody.childNodes;
-        var resourceNodes = Array.prototype.slice.call(childNodes, 0, childNodes.length - 1); // drop the filler row.
+        let childNodes = this._dataGrid.dataTableBody.childNodes;
+        let resourceNodes = Array.prototype.slice.call(childNodes, 0, childNodes.length - 1); // drop the filler row.
 
-        for (var i = 0; i < resourceNodes.length; ++i) {
-            var dataGridNode = this._dataGrid.dataGridNodeFromNode(resourceNodes[i]);
+        for (let i = 0; i < resourceNodes.length; ++i) {
+            let dataGridNode = this._dataGrid.dataGridNodeFromNode(resourceNodes[i]);
             if (dataGridNode.isFilteredOut())
                 continue;
 
@@ -1190,7 +1190,7 @@ WebInspector.NetworkLogView.prototype = {
     {
         this._removeAllNodeHighlights();
 
-        var node = this._resourceGridNode(resource);
+        let node = this._resourceGridNode(resource);
         if (node) {
             this._dataGrid.element.focus();
             node.reveal();
@@ -1322,7 +1322,7 @@ WebInspector.NetworkPanel.prototype = {
 
     showAnchorLocation: function(anchor)
     {
-        var resource = this._resourceByAnchor(anchor);
+        let resource = this._resourceByAnchor(anchor);
         this.revealAndHighlightResource(resource)
     },
 
@@ -1376,7 +1376,7 @@ WebInspector.NetworkPanel.prototype = {
             delete this.visibleView;
         }
 
-        var view = new WebInspector.NetworkItemView(resource);
+        let view = new WebInspector.NetworkItemView(resource);
         view.show(this._viewsContainerElement);
         this.visibleView = view;
     },
@@ -1468,7 +1468,7 @@ WebInspector.NetworkBaseCalculator.prototype = {
     {
         this.minimumBoundary = 0;
 
-        var value = this._value(item);
+        let value = this._value(item);
         if (typeof this.maximumBoundary === "undefined" || value > this.maximumBoundary) {
             this.maximumBoundary = value;
             return true;
@@ -1507,19 +1507,19 @@ WebInspector.NetworkTimeCalculator.prototype = {
     computeBarGraphPercentages: function(resource)
     {
         if (resource.startTime !== -1)
-            var start = ((resource.startTime - this.minimumBoundary) / this.boundarySpan) * 100;
+            let start = ((resource.startTime - this.minimumBoundary) / this.boundarySpan) * 100;
         else
-            var start = 0;
+            let start = 0;
 
         if (resource.responseReceivedTime !== -1)
-            var middle = ((resource.responseReceivedTime - this.minimumBoundary) / this.boundarySpan) * 100;
+            let middle = ((resource.responseReceivedTime - this.minimumBoundary) / this.boundarySpan) * 100;
         else
-            var middle = (this.startAtZero ? start : 100);
+            let middle = (this.startAtZero ? start : 100);
 
         if (resource.endTime !== -1)
-            var end = ((resource.endTime - this.minimumBoundary) / this.boundarySpan) * 100;
+            let end = ((resource.endTime - this.minimumBoundary) / this.boundarySpan) * 100;
         else
-            var end = (this.startAtZero ? middle : 100);
+            let end = (this.startAtZero ? middle : 100);
 
         if (this.startAtZero) {
             end -= start;
@@ -1555,26 +1555,26 @@ WebInspector.NetworkTimeCalculator.prototype = {
 
     computeBarGraphLabels: function(resource)
     {
-        var rightLabel = "";
+        let rightLabel = "";
         if (resource.responseReceivedTime !== -1 && resource.endTime !== -1)
             rightLabel = this.formatTime(resource.endTime - resource.responseReceivedTime);
 
-        var hasLatency = resource.latency > 0;
+        let hasLatency = resource.latency > 0;
         if (hasLatency)
-            var leftLabel = this.formatTime(resource.latency);
+            let leftLabel = this.formatTime(resource.latency);
         else
-            var leftLabel = rightLabel;
+            let leftLabel = rightLabel;
 
         if (resource.timing)
             return {left: leftLabel, right: rightLabel};
 
         if (hasLatency && rightLabel) {
-            var total = this.formatTime(resource.duration);
-            var tooltip = WebInspector.UIString("%s latency, %s download (%s total)", leftLabel, rightLabel, total);
+            let total = this.formatTime(resource.duration);
+            let tooltip = WebInspector.UIString("%s latency, %s download (%s total)", leftLabel, rightLabel, total);
         } else if (hasLatency)
-            var tooltip = WebInspector.UIString("%s latency", leftLabel);
+            let tooltip = WebInspector.UIString("%s latency", leftLabel);
         else if (rightLabel)
-            var tooltip = WebInspector.UIString("%s download", rightLabel);
+            let tooltip = WebInspector.UIString("%s download", rightLabel);
 
         if (resource.cached)
             tooltip = WebInspector.UIString("%s (from cache)", tooltip);
@@ -1583,9 +1583,9 @@ WebInspector.NetworkTimeCalculator.prototype = {
 
     updateBoundaries: function(resource)
     {
-        var didChange = false;
+        let didChange = false;
 
-        var lowerBound;
+        let lowerBound;
         if (this.startAtZero)
             lowerBound = 0;
         else
@@ -1596,7 +1596,7 @@ WebInspector.NetworkTimeCalculator.prototype = {
             didChange = true;
         }
 
-        var upperBound = this._upperBound(resource);
+        let upperBound = this._upperBound(resource);
         if (upperBound !== -1 && (typeof this.maximumBoundary === "undefined" || upperBound > this.maximumBoundary)) {
             this.maximumBoundary = upperBound;
             didChange = true;
@@ -1718,8 +1718,8 @@ WebInspector.NetworkDataGridNode.prototype = {
 
     _highlightMatchedSubstring: function(regexp)
     {
-        var domChanges = [];
-        var matchInfo = this._nameCell.textContent.match(regexp);
+        let domChanges = [];
+        let matchInfo = this._nameCell.textContent.match(regexp);
         highlightSearchResult(this._nameCell, matchInfo.index, matchInfo[0].length, domChanges);
         return domChanges;
     },
@@ -1736,9 +1736,9 @@ WebInspector.NetworkDataGridNode.prototype = {
 
     _createDivInTD: function(columnIdentifier)
     {
-        var td = document.createElement("td");
+        let td = document.createElement("td");
         td.className = columnIdentifier + "-column";
-        var div = document.createElement("div");
+        let div = document.createElement("div");
         td.appendChild(div);
         this._element.appendChild(td);
         return div;
@@ -1808,22 +1808,22 @@ WebInspector.NetworkDataGridNode.prototype = {
         this._nameCell.removeChildren();
 
         if (this._resource.category === WebInspector.resourceCategories.images) {
-            var previewImage = document.createElement("img");
+            let previewImage = document.createElement("img");
             previewImage.className = "image-network-icon-preview";
             this._resource.populateImageSource(previewImage);
 
-            var iconElement = document.createElement("div");
+            let iconElement = document.createElement("div");
             iconElement.className = "icon";
             iconElement.appendChild(previewImage);
         } else {
-            var iconElement = document.createElement("img");
+            let iconElement = document.createElement("img");
             iconElement.className = "icon";
         }
         this._nameCell.appendChild(iconElement);
         this._nameCell.appendChild(document.createTextNode(this._fileName()));
 
 
-        var subtitle = this._resource.displayDomain;
+        let subtitle = this._resource.displayDomain;
 
         if (this._resource.path)
             subtitle += this._resource.folder;
@@ -1834,7 +1834,7 @@ WebInspector.NetworkDataGridNode.prototype = {
 
     _fileName: function()
     {
-        var fileName = this._resource.displayName;
+        let fileName = this._resource.displayName;
         if (this._resource.queryString)
             fileName += "?" + this._resource.queryString;
         return fileName;
@@ -1892,17 +1892,17 @@ WebInspector.NetworkDataGridNode.prototype = {
 
     _refreshInitiatorCell: function()
     {
-        var initiator = this._resource.initiator;
+        let initiator = this._resource.initiator;
         if ((initiator && initiator.type !== "other") || this._resource.redirectSource) {
             this._initiatorCell.removeStyleClass("network-dim-cell");
             this._initiatorCell.removeChildren();
             if (this._resource.redirectSource) {
-                var redirectSource = this._resource.redirectSource;
+                let redirectSource = this._resource.redirectSource;
                 this._initiatorCell.title = redirectSource.url;
                 this._initiatorCell.appendChild(WebInspector.linkifyRequestAsNode(redirectSource));
                 this._appendSubtitle(this._initiatorCell, WebInspector.UIString("Redirect"));
             } else if (initiator.type === "script") {
-                var topFrame = initiator.stackTrace[0];
+                let topFrame = initiator.stackTrace[0];
                 // This could happen when resource loading was triggered by console.
                 if (!topFrame.url) {
                     this._initiatorCell.addStyleClass("network-dim-cell");
@@ -1910,7 +1910,7 @@ WebInspector.NetworkDataGridNode.prototype = {
                     return;
                 }
                 this._initiatorCell.title = topFrame.url + ":" + topFrame.lineNumber;
-                var urlElement = this._parentView._linkifier.linkifyLocation(topFrame.url, topFrame.lineNumber - 1, 0);
+                let urlElement = this._parentView._linkifier.linkifyLocation(topFrame.url, topFrame.lineNumber - 1, 0);
                 this._initiatorCell.appendChild(urlElement);
                 this._appendSubtitle(this._initiatorCell, WebInspector.UIString("Script"));
             } else { // initiator.type === "parser"
@@ -1930,8 +1930,8 @@ WebInspector.NetworkDataGridNode.prototype = {
             this._sizeCell.setTextAndTitle(WebInspector.UIString("(from cache)"));
             this._sizeCell.addStyleClass("network-dim-cell");
         } else {
-            var resourceSize = typeof this._resource.resourceSize === "number" ? Number.bytesToString(this._resource.resourceSize) : "?";
-            var transferSize = typeof this._resource.transferSize === "number" ? Number.bytesToString(this._resource.transferSize) : "?";
+            let resourceSize = typeof this._resource.resourceSize === "number" ? Number.bytesToString(this._resource.resourceSize) : "?";
+            let transferSize = typeof this._resource.transferSize === "number" ? Number.bytesToString(this._resource.transferSize) : "?";
             this._sizeCell.setTextAndTitle(transferSize);
             this._sizeCell.removeStyleClass("network-dim-cell");
             this._appendSubtitle(this._sizeCell, resourceSize);
@@ -1952,7 +1952,7 @@ WebInspector.NetworkDataGridNode.prototype = {
 
     _appendSubtitle: function(cellElement, subtitleText)
     {
-        var subtitleElement = document.createElement("div");
+        let subtitleElement = document.createElement("div");
         subtitleElement.className = "network-cell-subtitle";
         subtitleElement.textContent = subtitleText;
         cellElement.appendChild(subtitleElement);
@@ -1960,7 +1960,7 @@ WebInspector.NetworkDataGridNode.prototype = {
 
     refreshGraph: function(calculator)
     {
-        var percentages = calculator.computeBarGraphPercentages(this._resource);
+        let percentages = calculator.computeBarGraphPercentages(this._resource);
         this._percentages = percentages;
 
         this._barAreaElement.removeStyleClass("hidden");
@@ -1976,11 +1976,11 @@ WebInspector.NetworkDataGridNode.prototype = {
         this._barLeftElement.style.setProperty("right", (100 - percentages.end) + "%");
         this._barRightElement.style.setProperty("left", percentages.middle + "%");
 
-        var labels = calculator.computeBarGraphLabels(this._resource);
+        let labels = calculator.computeBarGraphLabels(this._resource);
         this._labelLeftElement.textContent = labels.left;
         this._labelRightElement.textContent = labels.right;
 
-        var tooltip = (labels.tooltip || "");
+        let tooltip = (labels.tooltip || "");
         this._barLeftElement.title = tooltip;
         this._labelLeftElement.title = tooltip;
         this._labelRightElement.title = tooltip;
@@ -2006,11 +2006,11 @@ WebInspector.NetworkDataGridNode.prototype = {
         const barLeftElementOffsetWidth = this._barLeftElement.offsetWidth;
 
         if (this._barLeftElement) {
-            var leftBarWidth = barLeftElementOffsetWidth - labelPadding;
-            var rightBarWidth = (barRightElementOffsetWidth - barLeftElementOffsetWidth) - labelPadding;
+            let leftBarWidth = barLeftElementOffsetWidth - labelPadding;
+            let rightBarWidth = (barRightElementOffsetWidth - barLeftElementOffsetWidth) - labelPadding;
         } else {
-            var leftBarWidth = (barLeftElementOffsetWidth - barRightElementOffsetWidth) - labelPadding;
-            var rightBarWidth = barRightElementOffsetWidth - labelPadding;
+            let leftBarWidth = (barLeftElementOffsetWidth - barRightElementOffsetWidth) - labelPadding;
+            let rightBarWidth = barRightElementOffsetWidth - labelPadding;
         }
 
         const labelLeftElementOffsetWidth = this._labelLeftElement.offsetWidth;
@@ -2021,10 +2021,10 @@ WebInspector.NetworkDataGridNode.prototype = {
         const graphElementOffsetWidth = this._graphElement.offsetWidth;
 
         if (labelBefore && (graphElementOffsetWidth * (this._percentages.start / 100)) < (labelLeftElementOffsetWidth + 10))
-            var leftHidden = true;
+            let leftHidden = true;
 
         if (labelAfter && (graphElementOffsetWidth * ((100 - this._percentages.end) / 100)) < (labelRightElementOffsetWidth + 10))
-            var rightHidden = true;
+            let rightHidden = true;
 
         if (barLeftElementOffsetWidth == barRightElementOffsetWidth) {
             // The left/right label data are the same, so a before/after label can be replaced by an on-bar label.
@@ -2058,8 +2058,8 @@ WebInspector.NetworkDataGridNode.prototype = {
 
 WebInspector.NetworkDataGridNode.NameComparator = function(a, b)
 {
-    var aFileName = a._resource.displayName + (a._resource.queryString ? a._resource.queryString : "");
-    var bFileName = b._resource.displayName + (b._resource.queryString ? b._resource.queryString : "");
+    let aFileName = a._resource.displayName + (a._resource.queryString ? a._resource.queryString : "");
+    let bFileName = b._resource.displayName + (b._resource.queryString ? b._resource.queryString : "");
     if (aFileName > bFileName)
         return 1;
     if (bFileName > aFileName)
@@ -2097,8 +2097,8 @@ WebInspector.NetworkDataGridNode.InitiatorComparator = function(a, b)
 
 WebInspector.NetworkDataGridNode.ResourcePropertyComparator = function(propertyName, revert, a, b)
 {
-    var aValue = a._resource[propertyName];
-    var bValue = b._resource[propertyName];
+    let aValue = a._resource[propertyName];
+    let bValue = b._resource[propertyName];
     if (aValue > bValue)
         return revert ? -1 : 1;
     if (bValue > aValue)

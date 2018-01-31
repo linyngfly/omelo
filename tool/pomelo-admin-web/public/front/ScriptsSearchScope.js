@@ -47,8 +47,8 @@ WebInspector.ScriptsSearchScope.prototype = {
     {
         this.stopSearch();
         
-        var uiSourceCodes = this._sortedUISourceCodes();
-        var uiSourceCodeIndex = 0;
+        let uiSourceCodes = this._sortedUISourceCodes();
+        let uiSourceCodeIndex = 0;
         
         function filterOutContentScripts(uiSourceCode)
         {
@@ -63,7 +63,7 @@ WebInspector.ScriptsSearchScope.prototype = {
             // FIXME: Enable support for counting matches for incremental search.
             // FIXME: Enable support for bounding search results/matches number to keep inspector responsive.
             if (uiSourceCodeIndex < uiSourceCodes.length) {
-                var uiSourceCode = uiSourceCodes[uiSourceCodeIndex++];
+                let uiSourceCode = uiSourceCodes[uiSourceCodeIndex++];
                 uiSourceCode.searchInContent(searchConfig.query, !searchConfig.ignoreCase, searchConfig.isRegex, searchCallbackWrapper.bind(this, this._searchId, uiSourceCode));
             } else 
                 searchFinishedCallback(true);
@@ -76,7 +76,7 @@ WebInspector.ScriptsSearchScope.prototype = {
                 return;
             }
                 
-            var searchResult = new WebInspector.FileBasedSearchResultsPane.SearchResult(uiSourceCode, searchMatches);
+            let searchResult = new WebInspector.FileBasedSearchResultsPane.SearchResult(uiSourceCode, searchMatches);
             searchResultCallback(searchResult);
             continueSearch.call(this);
         }
@@ -113,7 +113,7 @@ WebInspector.ScriptsSearchScope.prototype = {
             return a.url.localeCompare(b.url);   
         }
         
-        var uiSourceCodes = WebInspector.debuggerPresentationModel.uiSourceCodes();
+        let uiSourceCodes = WebInspector.debuggerPresentationModel.uiSourceCodes();
         
         uiSourceCodes = uiSourceCodes.filter(filterOutAnonymous);
         uiSourceCodes.sort(comparator);
@@ -144,9 +144,9 @@ WebInspector.ScriptsSearchResultsPane.prototype = {
      */
     createAnchor: function(file, lineNumber, columnNumber)
     {
-        var uiSourceCode = /** @type {WebInspector.UISourceCode} */ file;
-        var rawLocation = WebInspector.debuggerPresentationModel.uiLocationToRawLocation(uiSourceCode, lineNumber, columnNumber);
-        var anchor = this._linkifier.linkifyRawLocation(rawLocation);
+        let uiSourceCode = /** @type {WebInspector.UISourceCode} */ file;
+        let rawLocation = WebInspector.debuggerPresentationModel.uiLocationToRawLocation(uiSourceCode, lineNumber, columnNumber);
+        let anchor = this._linkifier.linkifyRawLocation(rawLocation);
         anchor.removeChildren();
         return anchor;
     },
@@ -157,7 +157,7 @@ WebInspector.ScriptsSearchResultsPane.prototype = {
      */
     fileName: function(file)
     {
-        var uiSourceCode = file;
+        let uiSourceCode = file;
         return uiSourceCode.url;
     },
 }

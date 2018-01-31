@@ -68,10 +68,10 @@ WebInspector.Panel.prototype = {
 
     wasShown: function()
     {
-        var statusBarItems = this.statusBarItems;
+        let statusBarItems = this.statusBarItems;
         if (statusBarItems) {
             this._statusBarItemContainer = document.createElement("div");
-            for (var i = 0; i < statusBarItems.length; ++i)
+            for (let i = 0; i < statusBarItems.length; ++i)
                 this._statusBarItemContainer.appendChild(statusBarItems[i]);
             document.getElementById("main-status-bar").appendChild(this._statusBarItemContainer);
         }
@@ -201,8 +201,8 @@ WebInspector.Panel.prototype = {
 
     handleShortcut: function(event)
     {
-        var shortcutKey = WebInspector.KeyboardShortcut.makeKeyFromEvent(event);
-        var handler = this._shortcuts[shortcutKey];
+        let shortcutKey = WebInspector.KeyboardShortcut.makeKeyFromEvent(event);
+        let handler = this._shortcuts[shortcutKey];
         if (handler) {
             handler(event);
             event.handled = true;

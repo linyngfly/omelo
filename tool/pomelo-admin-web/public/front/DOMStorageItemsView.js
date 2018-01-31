@@ -79,32 +79,32 @@ WebInspector.DOMStorageItemsView.prototype = {
 
     _dataGridForDOMStorageEntries: function(entries)
     {
-        var columns = {};
+        let columns = {};
         columns[0] = {};
         columns[1] = {};
         columns[0].title = WebInspector.UIString("Key");
         columns[1].title = WebInspector.UIString("Value");
 
-        var nodes = [];
+        let nodes = [];
 
-        var keys = [];
-        var length = entries.length;
-        for (var i = 0; i < entries.length; i++) {
-            var data = {};
+        let keys = [];
+        let length = entries.length;
+        for (let i = 0; i < entries.length; i++) {
+            let data = {};
 
-            var key = entries[i][0];
+            let key = entries[i][0];
             data[0] = key;
-            var value = entries[i][1];
+            let value = entries[i][1];
             data[1] = value;
-            var node = new WebInspector.DataGridNode(data, false);
+            let node = new WebInspector.DataGridNode(data, false);
             node.selectable = true;
             nodes.push(node);
             keys.push(key);
         }
 
-        var dataGrid = new WebInspector.DataGrid(columns, this._editingCallback.bind(this), this._deleteCallback.bind(this));
+        let dataGrid = new WebInspector.DataGrid(columns, this._editingCallback.bind(this), this._deleteCallback.bind(this));
         length = nodes.length;
-        for (var i = 0; i < length; ++i)
+        for (let i = 0; i < length; ++i)
             dataGrid.appendChild(nodes[i]);
         dataGrid.addCreationNode(false);
         if (length > 0)
@@ -127,7 +127,7 @@ WebInspector.DOMStorageItemsView.prototype = {
 
     _editingCallback: function(editingNode, columnIdentifier, oldText, newText)
     {
-        var domStorage = this.domStorage;
+        let domStorage = this.domStorage;
         if (columnIdentifier === 0) {
             if (oldText)
                 domStorage.removeItem(oldText);

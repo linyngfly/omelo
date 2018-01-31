@@ -100,9 +100,9 @@ WebInspector.HeapSnapshotWorker = function()
 WebInspector.HeapSnapshotWorker.prototype = {
     createObject: function(constructorName)
     {
-        var proxyConstructorFunction = this._findFunction(constructorName + "Proxy");
-        var objectId = this._nextObjectId++;
-        var proxy = new proxyConstructorFunction(this, objectId);
+        let proxyConstructorFunction = this._findFunction(constructorName + "Proxy");
+        let objectId = this._nextObjectId++;
+        let proxy = new proxyConstructorFunction(this, objectId);
         this._postMessage({callId: this._nextCallId++, disposition: "create", objectId: objectId, methodName: constructorName});
         return proxy;
     },
@@ -121,17 +121,17 @@ WebInspector.HeapSnapshotWorker.prototype = {
 
     callGetter: function(callback, objectId, getterName)
     {
-        var callId = this._nextCallId++;
+        let callId = this._nextCallId++;
         this._callbacks[callId] = callback;
         this._postMessage({callId: callId, disposition: "getter", objectId: objectId, methodName: getterName});
     },
 
     callFactoryMethod: function(callback, objectId, methodName, proxyConstructorName)
     {
-        var callId = this._nextCallId++;
-        var methodArguments = Array.prototype.slice.call(arguments, 4);
-        var newObjectId = this._nextObjectId++;
-        var proxyConstructorFunction = this._findFunction(proxyConstructorName);
+        let callId = this._nextCallId++;
+        let methodArguments = Array.prototype.slice.call(arguments, 4);
+        let newObjectId = this._nextObjectId++;
+        let proxyConstructorFunction = this._findFunction(proxyConstructorName);
         if (callback) {
             function wrapCallback(remoteResult)
             {
@@ -148,8 +148,8 @@ WebInspector.HeapSnapshotWorker.prototype = {
 
     callMethod: function(callback, objectId, methodName)
     {
-        var callId = this._nextCallId++;
-        var methodArguments = Array.prototype.slice.call(arguments, 3);
+        let callId = this._nextCallId++;
+        let methodArguments = Array.prototype.slice.call(arguments, 3);
         if (callback)
             this._callbacks[callId] = callback;
         this._postMessage({callId: callId, disposition: "method", objectId: objectId, methodName: methodName, methodArguments: methodArguments});
@@ -163,10 +163,10 @@ WebInspector.HeapSnapshotWorker.prototype = {
 
     _checkLongRunningCalls: function()
     {
-        for (var callId in this._previousCallbacks)
+        for (let callId in this._previousCallbacks)
             if (!(callId in this._callbacks))
                 delete this._previousCallbacks[callId];
-        var hasLongRunningCalls = false;
+        let hasLongRunningCalls = false;
         for (callId in this._previousCallbacks) {
             hasLongRunningCalls = true;
             break;
@@ -178,16 +178,16 @@ WebInspector.HeapSnapshotWorker.prototype = {
 
     _findFunction: function(name)
     {
-        var path = name.split(".");
-        var result = window;
-        for (var i = 0; i < path.length; ++i)
+        let path = name.split(".");
+        let result = window;
+        for (let i = 0; i < path.length; ++i)
             result = result[path[i]];
         return result;
     },
 
     _messageReceived: function(event)
     {
-        var data = event.data;
+        let data = event.data;
         if (event.data.error) {
             if (event.data.errorMethodName)
                 WebInspector.log(WebInspector.UIString("An error happened when a call for method '%s' was requested", event.data.errorMethodName));
@@ -197,7 +197,7 @@ WebInspector.HeapSnapshotWorker.prototype = {
         }
         if (!this._callbacks[data.callId])
             return;
-        var callback = this._callbacks[data.callId];
+        let callback = this._callbacks[data.callId];
         delete this._callbacks[data.callId];
         callback(data.result);
     },
@@ -265,12 +265,12 @@ WebInspector.HeapSnapshotLoaderProxy.prototype = {
     {
         if (!this._loading)
             return false;
-        var loadCallbacks = this._onLoadCallbacks;
+        let loadCallbacks = this._onLoadCallbacks;
         loadCallbacks.splice(0, 0, callback);
         delete this._onLoadCallbacks;
         this._loading = false;
         this._loaded = true;
-        var self = this;
+        let self = this;
         function updateStaticData(snapshotProxy)
         {
             this.dispose();
@@ -282,7 +282,7 @@ WebInspector.HeapSnapshotLoaderProxy.prototype = {
 
     _callLoadCallbacks: function(loadCallbacks, snapshotProxy)
     {
-        for (var i = 0; i < loadCallbacks.length; ++i)
+        for (let i = 0; i < loadCallbacks.length; ++i)
             loadCallbacks[i](snapshotProxy);
     },
 

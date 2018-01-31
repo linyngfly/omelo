@@ -102,7 +102,7 @@ WebInspector.JavaScriptSourceFrame.prototype = {
     {
         contextMenu.appendItem(WebInspector.UIString(WebInspector.useLowerCaseMenuTitles() ? "Continue to here" : "Continue to Here"), this._model.continueToLine.bind(this._model, this._uiSourceCode, lineNumber));
 
-        var breakpoint = this._model.findBreakpoint(this._uiSourceCode, lineNumber);
+        let breakpoint = this._model.findBreakpoint(this._uiSourceCode, lineNumber);
         if (!breakpoint) {
             // This row doesn't have a breakpoint: We want to show Add Breakpoint and Add and Edit Breakpoint.
             contextMenu.appendItem(WebInspector.UIString(WebInspector.useLowerCaseMenuTitles() ? "Add breakpoint" : "Add Breakpoint"), this._setBreakpoint.bind(this, lineNumber, "", true));
@@ -147,18 +147,18 @@ WebInspector.JavaScriptSourceFrame.prototype = {
     populateTextAreaContextMenu: function(contextMenu, lineNumber)
     {
         WebInspector.SourceFrame.prototype.populateTextAreaContextMenu.call(this, contextMenu, lineNumber);
-        var selection = window.getSelection();
+        let selection = window.getSelection();
         if (selection.type === "Range" && !selection.isCollapsed) {
-            var addToWatchLabel = WebInspector.UIString(WebInspector.useLowerCaseMenuTitles() ? "Add to watch" : "Add to Watch");
+            let addToWatchLabel = WebInspector.UIString(WebInspector.useLowerCaseMenuTitles() ? "Add to watch" : "Add to Watch");
             contextMenu.appendItem(addToWatchLabel, this._scriptsPanel.addToWatch.bind(this._scriptsPanel, selection.toString()));
-            var evaluateLabel = WebInspector.UIString(WebInspector.useLowerCaseMenuTitles() ? "Evaluate in console" : "Evaluate in Console");
+            let evaluateLabel = WebInspector.UIString(WebInspector.useLowerCaseMenuTitles() ? "Evaluate in console" : "Evaluate in Console");
             contextMenu.appendItem(evaluateLabel, WebInspector.evaluateInConsole.bind(WebInspector, selection.toString()));
         }
     },
 
     afterTextChanged: function(oldRange, newRange)
     {
-        var isDirty = this.textModel.copyRange() !== this._originalContent;
+        let isDirty = this.textModel.copyRange() !== this._originalContent;
         if (isDirty)
             this._scriptsPanel.setScriptSourceIsDirty(this._uiSourceCode, true);
         else
@@ -169,8 +169,8 @@ WebInspector.JavaScriptSourceFrame.prototype = {
     {
         if (!this._isDirty) {
             // Disable all breakpoints in the model, store them as muted breakpoints.
-            for (var lineNumber = 0; lineNumber < this.textModel.linesCount; ++lineNumber) {
-                var breakpoint = this.textModel.getAttribute(lineNumber, "breakpoint");
+            for (let lineNumber = 0; lineNumber < this.textModel.linesCount; ++lineNumber) {
+                let breakpoint = this.textModel.getAttribute(lineNumber, "breakpoint");
                 if (breakpoint) {
                     this._model.removeBreakpoint(this._uiSourceCode, lineNumber);
                     // Re-adding decoration only.
@@ -195,8 +195,8 @@ WebInspector.JavaScriptSourceFrame.prototype = {
         this._isDirty = false;
 
         // Restore all muted breakpoints.
-        for (var lineNumber = 0; lineNumber < this.textModel.linesCount; ++lineNumber) {
-            var breakpoint = this.textModel.getAttribute(lineNumber, "breakpoint");
+        for (let lineNumber = 0; lineNumber < this.textModel.linesCount; ++lineNumber) {
+            let breakpoint = this.textModel.getAttribute(lineNumber, "breakpoint");
             if (breakpoint) {
                 // Remove fake decoration
                 this.removeBreakpoint(lineNumber);
@@ -213,7 +213,7 @@ WebInspector.JavaScriptSourceFrame.prototype = {
             return null;
         if (window.getSelection().type === "Range")
             return null;
-        var lineElement = element.enclosingNodeOrSelfWithClass("webkit-line-content");
+        let lineElement = element.enclosingNodeOrSelfWithClass("webkit-line-content");
         if (!lineElement)
             return null;
 
@@ -232,22 +232,22 @@ WebInspector.JavaScriptSourceFrame.prototype = {
 
         // Handle non-highlighted case
         // 1. Collect ranges of identifier suspects
-        var lineContent = lineElement.textContent;
-        var ranges = [];
-        var regex = new RegExp("[a-zA-Z_\$0-9]+", "g");
-        var match;
+        let lineContent = lineElement.textContent;
+        let ranges = [];
+        let regex = new RegExp("[a-zA-Z_\$0-9]+", "g");
+        let match;
         while (regex.lastIndex < lineContent.length && (match = regex.exec(lineContent)))
             ranges.push({offset: match.index, length: regex.lastIndex - match.index});
 
         // 2. 'highlight' them with artificial style to detect word boundaries
-        var changes = [];
+        let changes = [];
         highlightRangesWithStyleClass(lineElement, ranges, "source-frame-token", changes);
-        var lineOffsetLeft = lineElement.totalOffsetLeft();
-        for (var child = lineElement.firstChild; child; child = child.nextSibling) {
+        let lineOffsetLeft = lineElement.totalOffsetLeft();
+        for (let child = lineElement.firstChild; child; child = child.nextSibling) {
             if (child.nodeType !== Node.ELEMENT_NODE || !child.hasStyleClass("source-frame-token"))
                 continue;
             if (event.x > lineOffsetLeft + child.offsetLeft && event.x < lineOffsetLeft + child.offsetLeft + child.offsetWidth) {
-                var text = child.textContent;
+                let text = child.textContent;
                 return (text === "this" || !WebInspector.SourceJavaScriptTokenizer.Keywords[text]) ? child : null;
             }
         }
@@ -270,23 +270,23 @@ WebInspector.JavaScriptSourceFrame.prototype = {
                 this._highlightElement.addStyleClass("source-frame-eval-expression");
         }
 
-        var selectedCallFrame = this._model.selectedCallFrame;
+        let selectedCallFrame = this._model.selectedCallFrame;
         selectedCallFrame.evaluate(this._highlightElement.textContent, objectGroupName, false, false, showObjectPopover.bind(this));
     },
 
     _onHidePopover: function()
     {
         // Replace higlight element with its contents inplace.
-        var highlightElement = this._highlightElement;
+        let highlightElement = this._highlightElement;
         if (!highlightElement)
             return;
         // FIXME: the text editor should maintain highlight on its own. The check below is a workaround for
         // the case when highlight element is detached from DOM by the TextViewer when re-building the DOM.
-        var parentElement = highlightElement.parentElement;
+        let parentElement = highlightElement.parentElement;
         if (parentElement) {
-            var child = highlightElement.firstChild;
+            let child = highlightElement.firstChild;
             while (child) {
-                var nextSibling = child.nextSibling;
+                let nextSibling = child.nextSibling;
                 parentElement.insertBefore(child, highlightElement);
                 child = nextSibling;
             }
@@ -298,8 +298,8 @@ WebInspector.JavaScriptSourceFrame.prototype = {
     _highlightExpression: function(element)
     {
         // Collect tokens belonging to evaluated expression.
-        var tokens = [ element ];
-        var token = element.previousSibling;
+        let tokens = [ element ];
+        let token = element.previousSibling;
         while (token && (token.className === "webkit-javascript-ident" || token.className === "source-frame-token" || token.className === "webkit-javascript-keyword" || token.textContent.trim() === ".")) {
             tokens.push(token);
             token = token.previousSibling;
@@ -307,10 +307,10 @@ WebInspector.JavaScriptSourceFrame.prototype = {
         tokens.reverse();
 
         // Wrap them with highlight element.
-        var parentElement = element.parentElement;
-        var nextElement = element.nextSibling;
-        var container = document.createElement("span");
-        for (var i = 0; i < tokens.length; ++i)
+        let parentElement = element.parentElement;
+        let nextElement = element.nextSibling;
+        let container = document.createElement("span");
+        for (let i = 0; i < tokens.length; ++i)
             container.appendChild(tokens[i]);
         parentElement.insertBefore(container, nextElement);
         return container;
@@ -318,7 +318,7 @@ WebInspector.JavaScriptSourceFrame.prototype = {
 
     addBreakpoint: function(lineNumber, resolved, conditional, enabled, mutedWhileEditing)
     {
-        var breakpoint = {
+        let breakpoint = {
             resolved: resolved,
             conditional: conditional,
             enabled: enabled
@@ -357,12 +357,12 @@ WebInspector.JavaScriptSourceFrame.prototype = {
 
         if (event.button != 0 || event.altKey || event.ctrlKey || event.metaKey)
             return;
-        var target = event.target.enclosingNodeOrSelfWithClass("webkit-line-number");
+        let target = event.target.enclosingNodeOrSelfWithClass("webkit-line-number");
         if (!target)
             return;
-        var lineNumber = target.lineNumber;
+        let lineNumber = target.lineNumber;
 
-        var breakpoint = this._model.findBreakpoint(this._uiSourceCode, lineNumber);
+        let breakpoint = this._model.findBreakpoint(this._uiSourceCode, lineNumber);
         if (breakpoint) {
             if (event.shiftKey)
                 this._model.updateBreakpoint(this._uiSourceCode, lineNumber, breakpoint.condition, !breakpoint.enabled);
@@ -396,7 +396,7 @@ WebInspector.JavaScriptSourceFrame.prototype = {
             callback(committed, newText);
         }
 
-        var config = new WebInspector.EditingConfig(finishEditing.bind(this, true), finishEditing.bind(this, false));
+        let config = new WebInspector.EditingConfig(finishEditing.bind(this, true), finishEditing.bind(this, false));
         WebInspector.startEditing(this._conditionEditorElement, config);
         this._conditionEditorElement.value = condition;
         this._conditionEditorElement.select();
@@ -404,16 +404,16 @@ WebInspector.JavaScriptSourceFrame.prototype = {
 
     _createConditionElement: function(lineNumber)
     {
-        var conditionElement = document.createElement("div");
+        let conditionElement = document.createElement("div");
         conditionElement.className = "source-frame-breakpoint-condition";
 
-        var labelElement = document.createElement("label");
+        let labelElement = document.createElement("label");
         labelElement.className = "source-frame-breakpoint-message";
         labelElement.htmlFor = "source-frame-breakpoint-condition";
         labelElement.appendChild(document.createTextNode(WebInspector.UIString("The breakpoint on line %d will stop only if this expression is true:", lineNumber)));
         conditionElement.appendChild(labelElement);
 
-        var editorElement = document.createElement("input");
+        let editorElement = document.createElement("input");
         editorElement.id = "source-frame-breakpoint-condition";
         editorElement.className = "monospace";
         editorElement.type = "text";
@@ -444,12 +444,12 @@ WebInspector.JavaScriptSourceFrame.prototype = {
 
     _lineNumberAfterEditing: function(lineNumber, oldRange, newRange)
     {
-        var shiftOffset = lineNumber <= oldRange.startLine ? 0 : newRange.linesCount - oldRange.linesCount;
+        let shiftOffset = lineNumber <= oldRange.startLine ? 0 : newRange.linesCount - oldRange.linesCount;
 
         // Special case of editing the line itself. We should decide whether the line number should move below or not.
         if (lineNumber === oldRange.startLine) {
-            var whiteSpacesRegex = /^[\s\xA0]*$/;
-            for (var i = 0; lineNumber + i <= newRange.endLine; ++i) {
+            let whiteSpacesRegex = /^[\s\xA0]*$/;
+            for (let i = 0; lineNumber + i <= newRange.endLine; ++i) {
                 if (!whiteSpacesRegex.test(this.textModel.line(lineNumber + i))) {
                     shiftOffset = i;
                     break;
@@ -457,7 +457,7 @@ WebInspector.JavaScriptSourceFrame.prototype = {
             }
         }
 
-        var newLineNumber = Math.max(0, lineNumber + shiftOffset);
+        let newLineNumber = Math.max(0, lineNumber + shiftOffset);
         if (oldRange.startLine < lineNumber && lineNumber < oldRange.endLine)
             newLineNumber = oldRange.startLine;
         return newLineNumber;

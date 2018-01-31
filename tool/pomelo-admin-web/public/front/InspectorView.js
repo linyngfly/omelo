@@ -76,7 +76,7 @@ WebInspector.InspectorView.prototype = {
             // FIXME: remove search controller.
             WebInspector.searchController.activePanelChanged();
         }
-        for (var panelName in WebInspector.panels) {
+        for (let panelName in WebInspector.panels) {
             if (WebInspector.panels[panelName] === x) {
                 WebInspector.settings.lastActivePanel.set(panelName);
                 this._pushToHistory(panelName);
@@ -91,16 +91,16 @@ WebInspector.InspectorView.prototype = {
             // Windows and Mac have two different definitions of [, so accept both.
             case "U+005B":
             case "U+00DB": // [ key
-                var isRotateLeft = WebInspector.KeyboardShortcut.eventHasCtrlOrMeta(event) && !event.shiftKey && !event.altKey;
+                let isRotateLeft = WebInspector.KeyboardShortcut.eventHasCtrlOrMeta(event) && !event.shiftKey && !event.altKey;
                 if (isRotateLeft) {
-                    var index = this._panelOrder.indexOf(this.currentPanel());
+                    let index = this._panelOrder.indexOf(this.currentPanel());
                     index = (index === 0) ? this._panelOrder.length - 1 : index - 1;
                     this._panelOrder[index].toolbarItem.click();
                     event.consume();
                     return;
                 }
 
-                var isGoBack = WebInspector.KeyboardShortcut.eventHasCtrlOrMeta(event) && event.altKey;
+                let isGoBack = WebInspector.KeyboardShortcut.eventHasCtrlOrMeta(event) && event.altKey;
                 if (isGoBack && this._canGoBackInHistory()) {
                     this._goBackInHistory();
                     event.consume();
@@ -110,16 +110,16 @@ WebInspector.InspectorView.prototype = {
             // Windows and Mac have two different definitions of ], so accept both.
             case "U+005D":
             case "U+00DD":  // ] key
-                var isRotateRight = WebInspector.KeyboardShortcut.eventHasCtrlOrMeta(event) && !event.shiftKey && !event.altKey;
+                let isRotateRight = WebInspector.KeyboardShortcut.eventHasCtrlOrMeta(event) && !event.shiftKey && !event.altKey;
                 if (isRotateRight) {
-                    var index = this._panelOrder.indexOf(this.currentPanel());
+                    let index = this._panelOrder.indexOf(this.currentPanel());
                     index = (index + 1) % this._panelOrder.length;
                     this._panelOrder[index].toolbarItem.click();
                     event.consume();
                     return;
                 }
 
-                var isGoForward = WebInspector.KeyboardShortcut.eventHasCtrlOrMeta(event) && event.altKey;
+                let isGoForward = WebInspector.KeyboardShortcut.eventHasCtrlOrMeta(event) && event.altKey;
                 if (isGoForward && this._canGoForwardInHistory()) {
                     this._goForwardInHistory();
                     event.consume();

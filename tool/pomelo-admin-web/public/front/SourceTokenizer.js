@@ -99,8 +99,8 @@ WebInspector.SourceTokenizer.Registry.prototype = {
     {
         if (!this._tokenizerConstructors[mimeType])
             return null;
-        var tokenizerClass = this._tokenizerConstructors[mimeType];
-        var tokenizer = this._tokenizers[tokenizerClass];
+        let tokenizerClass = this._tokenizerConstructors[mimeType];
+        let tokenizer = this._tokenizers[tokenizerClass];
         if (!tokenizer) {
             tokenizer = new WebInspector[tokenizerClass]();
             this._tokenizers[tokenizerClass] = tokenizer;

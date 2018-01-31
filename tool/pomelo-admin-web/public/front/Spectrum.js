@@ -41,18 +41,18 @@ WebInspector.Spectrum = function()
     this._containerElement.tabIndex = 0;
     this._containerElement.addEventListener("keydown", this._onKeyDown.bind(this), false);
 
-    var topElement = this._containerElement.createChild("div", "spectrum-top");
+    let topElement = this._containerElement.createChild("div", "spectrum-top");
     topElement.createChild("div", "spectrum-fill");
 
-    var topInnerElement = topElement.createChild("div", "spectrum-top-inner fill");
+    let topInnerElement = topElement.createChild("div", "spectrum-top-inner fill");
     this._draggerElement = topInnerElement.createChild("div", "spectrum-color");
     this._dragHelperElement = this._draggerElement.createChild("div", "spectrum-sat fill").createChild("div", "spectrum-val fill").createChild("div", "spectrum-dragger");
 
     this._sliderElement = topInnerElement.createChild("div", "spectrum-hue");
     this.slideHelper = this._sliderElement.createChild("div", "spectrum-slider");
 
-    var rangeContainer = this._containerElement.createChild("div", "spectrum-range-container");
-    var alphaLabel = rangeContainer.createChild("label");
+    let rangeContainer = this._containerElement.createChild("div", "spectrum-range-container");
+    let alphaLabel = rangeContainer.createChild("label");
     alphaLabel.textContent = WebInspector.UIString("\u03B1:");
 
     this._alphaElement = rangeContainer.createChild("input", "spectrum-range");
@@ -61,11 +61,11 @@ WebInspector.Spectrum = function()
     this._alphaElement.setAttribute("max", "100");
     this._alphaElement.addEventListener("change", alphaDrag.bind(this), false);
 
-    var swatchElement = document.createElement("span");
+    let swatchElement = document.createElement("span");
     swatchElement.className = "swatch";
     this._swatchInnerElement = swatchElement.createChild("span", "swatch-inner");
 
-    var displayContainer = this._containerElement.createChild("div");
+    let displayContainer = this._containerElement.createChild("div");
     displayContainer.appendChild(swatchElement);
     this._displayElement = displayContainer.createChild("span", "source-code spectrum-display-value");
 
@@ -104,13 +104,13 @@ WebInspector.Spectrum.Events = {
 
 WebInspector.Spectrum.hsvaToRGBA = function(h, s, v, a)
 {
-    var r, g, b;
+    let r, g, b;
 
-    var i = Math.floor(h * 6);
-    var f = h * 6 - i;
-    var p = v * (1 - s);
-    var q = v * (1 - f * s);
-    var t = v * (1 - (1 - f) * s);
+    let i = Math.floor(h * 6);
+    let f = h * 6 - i;
+    let p = v * (1 - s);
+    let q = v * (1 - f * s);
+    let t = v * (1 - (1 - f) * s);
 
     switch(i % 6) {
     case 0:
@@ -142,13 +142,13 @@ WebInspector.Spectrum.rgbaToHSVA = function(r, g, b, a)
     g = g / 255;
     b = b / 255;
 
-    var max = Math.max(r, g, b);
-    var min = Math.min(r, g, b);
-    var h;
-    var s;
-    var v = max;
+    let max = Math.max(r, g, b);
+    let min = Math.min(r, g, b);
+    let h;
+    let s;
+    let v = max;
 
-    var d = max - min;
+    let d = max - min;
     s = max ? d / max : 0;
 
     if(max === min) {
@@ -179,12 +179,12 @@ WebInspector.Spectrum.rgbaToHSVA = function(r, g, b, a)
  */
 WebInspector.Spectrum.draggable = function(element, onmove, onstart, onstop) {
 
-    var doc = document;
-    var dragging;
-    var offset;
-    var scrollOffset;
-    var maxHeight;
-    var maxWidth;
+    let doc = document;
+    let dragging;
+    let offset;
+    let scrollOffset;
+    let maxHeight;
+    let maxWidth;
 
     function consume(e)
     {
@@ -194,8 +194,8 @@ WebInspector.Spectrum.draggable = function(element, onmove, onstart, onstop) {
     function move(e)
     {
         if (dragging) {
-            var dragX = Math.max(0, Math.min(e.pageX - offset.left + scrollOffset.left, maxWidth));
-            var dragY = Math.max(0, Math.min(e.pageY - offset.top + scrollOffset.top, maxHeight));
+            let dragX = Math.max(0, Math.min(e.pageX - offset.left + scrollOffset.left, maxWidth));
+            let dragY = Math.max(0, Math.min(e.pageY - offset.top + scrollOffset.top, maxHeight));
 
             if (onmove)
                 onmove(element, dragX, dragY);
@@ -204,7 +204,7 @@ WebInspector.Spectrum.draggable = function(element, onmove, onstart, onstop) {
 
     function start(e)
     {
-        var rightClick = e.which ? (e.which === 3) : (e.button === 2);
+        let rightClick = e.which ? (e.which === 3) : (e.button === 2);
 
         if (!rightClick && !dragging) {
 
@@ -249,7 +249,7 @@ WebInspector.Spectrum.draggable = function(element, onmove, onstart, onstop) {
 WebInspector.Spectrum.prototype = {
     set color(color)
     {
-        var rgba = (color.rgba || color.rgb).slice(0);
+        let rgba = (color.rgba || color.rgb).slice(0);
 
         if (rgba.length === 3)
             rgba[3] = 1;
@@ -259,15 +259,15 @@ WebInspector.Spectrum.prototype = {
 
     get color()
     {
-        var rgba = WebInspector.Spectrum.hsvaToRGBA(this.hsv[0], this.hsv[1], this.hsv[2], this.hsv[3]);
-        var color;
+        let rgba = WebInspector.Spectrum.hsvaToRGBA(this.hsv[0], this.hsv[1], this.hsv[2], this.hsv[3]);
+        let color;
 
         if (rgba[3] === 1)
             color = WebInspector.Color.fromRGB(rgba[0], rgba[1], rgba[2]);
         else
             color = WebInspector.Color.fromRGBA(rgba[0], rgba[1], rgba[2], rgba[3]);
 
-        var colorValue = color.toString(this.outputColorFormat);
+        let colorValue = color.toString(this.outputColorFormat);
         if (!colorValue)
             colorValue = color.toString(); // this.outputColorFormat can be invalid for current color (e.g. "nickname").
         return new WebInspector.Color(colorValue);
@@ -275,8 +275,8 @@ WebInspector.Spectrum.prototype = {
 
     get outputColorFormat()
     {
-        var cf = WebInspector.StylesSidebarPane.ColorFormat;
-        var format = this._originalFormat;
+        let cf = WebInspector.StylesSidebarPane.ColorFormat;
+        let format = this._originalFormat;
 
         if (this.hsv[3] === 1) {
             // Simplify transparent formats.
@@ -297,7 +297,7 @@ WebInspector.Spectrum.prototype = {
 
     get colorHueOnly()
     {
-        var rgba = WebInspector.Spectrum.hsvaToRGBA(this.hsv[0], 1, 1, 1);
+        let rgba = WebInspector.Spectrum.hsvaToRGBA(this.hsv[0], 1, 1, 1);
         return WebInspector.Color.fromRGBA(rgba[0], rgba[1], rgba[2], rgba[3]);
     },
 
@@ -319,13 +319,13 @@ WebInspector.Spectrum.prototype = {
 
     _updateHelperLocations: function()
     {
-        var h = this.hsv[0];
-        var s = this.hsv[1];
-        var v = this.hsv[2];
+        let h = this.hsv[0];
+        let s = this.hsv[1];
+        let v = this.hsv[2];
 
         // Where to show the little circle that displays your current selected color.
-        var dragX = s * this.dragWidth;
-        var dragY = this.dragHeight - (v * this.dragHeight);
+        let dragX = s * this.dragWidth;
+        let dragY = this.dragHeight - (v * this.dragHeight);
 
         dragX = Math.max(-this._dragHelperElementHeight,
                         Math.min(this.dragWidth - this._dragHelperElementHeight, dragX - this._dragHelperElementHeight));
@@ -335,7 +335,7 @@ WebInspector.Spectrum.prototype = {
         this._dragHelperElement.positionAt(dragX, dragY);
 
         // Where to show the bar that displays your current selected hue.
-        var slideY = (h * this.slideHeight) - this.slideHelperHeight;
+        let slideY = (h * this.slideHeight) - this.slideHelperHeight;
         this.slideHelper.style.top = slideY + "px";
 
         this._alphaElement.value = this.hsv[3] * 100;
@@ -345,15 +345,15 @@ WebInspector.Spectrum.prototype = {
     {
         this._updateHelperLocations();
 
-        var rgb = (this.color.rgba || this.color.rgb).slice(0);
+        let rgb = (this.color.rgba || this.color.rgb).slice(0);
 
         if (rgb.length === 3)
             rgb[3] = 1;
 
-        var rgbHueOnly = this.colorHueOnly.rgb;
+        let rgbHueOnly = this.colorHueOnly.rgb;
 
-        var flatColor = "rgb(" + rgbHueOnly[0] + ", " + rgbHueOnly[1] + ", " + rgbHueOnly[2] + ")";
-        var fullColor = "rgba(" + rgb[0] + ", " + rgb[1] + ", " + rgb[2] + ", " + rgb[3] + ")";
+        let flatColor = "rgb(" + rgbHueOnly[0] + ", " + rgbHueOnly[1] + ", " + rgbHueOnly[2] + ")";
+        let fullColor = "rgba(" + rgb[0] + ", " + rgb[1] + ", " + rgb[2] + ", " + rgb[3] + ")";
 
         this._draggerElement.style.backgroundColor = flatColor;
         this._swatchInnerElement.style.backgroundColor = fullColor;

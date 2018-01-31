@@ -105,7 +105,7 @@ WebInspector.TabbedPane.prototype = {
      */
     appendTab: function(id, tabTitle, view, tabTooltip, userGesture)
     {
-        var tab = new WebInspector.TabbedPaneTab(this, this._tabsElement, id, tabTitle, this._closeableTabs, view, tabTooltip);
+        let tab = new WebInspector.TabbedPaneTab(this, this._tabsElement, id, tabTitle, this._closeableTabs, view, tabTooltip);
         this._tabsById[id] = tab;
 
         this._tabs.push(tab);
@@ -138,7 +138,7 @@ WebInspector.TabbedPane.prototype = {
         if (this._currentTab && this._currentTab.id === id)
             this._hideCurrentTab();
 
-        var tab = this._tabsById[id];
+        let tab = this._tabsById[id];
         delete this._tabsById[id];
 
         this._tabsHistory.splice(this._tabsHistory.indexOf(tab), 1);
@@ -146,7 +146,7 @@ WebInspector.TabbedPane.prototype = {
         if (tab.shown)
             this._hideTabElement(tab);
 
-        var eventData = { tabId: id, view: tab.view, isUserGesture: userGesture };
+        let eventData = { tabId: id, view: tab.view, isUserGesture: userGesture };
         this.dispatchEventToListeners(WebInspector.TabbedPane.EventTypes.TabClosed, eventData);
         return true;
     },
@@ -156,8 +156,8 @@ WebInspector.TabbedPane.prototype = {
      */
     closeAllTabs: function(userGesture)
     {
-        var tabs = this._tabs.slice();
-        for (var i = 0; i < tabs.length; ++i)
+        let tabs = this._tabs.slice();
+        for (let i = 0; i < tabs.length; ++i)
             this._innerCloseTab(tabs[i].id, userGesture);
         this._updateTabElements();
     },
@@ -168,7 +168,7 @@ WebInspector.TabbedPane.prototype = {
      */
     selectTab: function(id, userGesture)
     {
-        var tab = this._tabsById[id];
+        let tab = this._tabsById[id];
         if (!tab)
             return;
         if (this._currentTab && this._currentTab.id === id)
@@ -183,7 +183,7 @@ WebInspector.TabbedPane.prototype = {
         
         this._updateTabElements();
 
-        var eventData = { tabId: id, view: tab.view, isUserGesture: userGesture };
+        let eventData = { tabId: id, view: tab.view, isUserGesture: userGesture };
         this.dispatchEventToListeners(WebInspector.TabbedPane.EventTypes.TabSelected, eventData);
         return true;
     },
@@ -207,7 +207,7 @@ WebInspector.TabbedPane.prototype = {
      */
     changeTabTitle: function(id, tabTitle)
     {
-        var tab = this._tabsById[id];
+        let tab = this._tabsById[id];
         tab.title = tabTitle;
         this._updateTabElements();
     },
@@ -218,7 +218,7 @@ WebInspector.TabbedPane.prototype = {
      */
     changeTabView: function(id, view)
     {
-        var tab = this._tabsById[id];
+        let tab = this._tabsById[id];
         if (this._currentTab && this._currentTab.id === tab.id) {
             this._hideTab(tab);
             tab.view = view;
@@ -233,7 +233,7 @@ WebInspector.TabbedPane.prototype = {
      */
     changeTabTooltip: function(id, tabTooltip)
     {
-        var tab = this._tabsById[id];
+        let tab = this._tabsById[id];
         tab.tooltip = tabTooltip;
     },
 
@@ -285,9 +285,9 @@ WebInspector.TabbedPane.prototype = {
 
     _createDropDownButton: function()
     {
-        var dropDownContainer = document.createElement("div");
+        let dropDownContainer = document.createElement("div");
         dropDownContainer.addStyleClass("tabbed-pane-header-tabs-drop-down-container");
-        var dropDownButton = dropDownContainer.createChild("div", "tabbed-pane-header-tabs-drop-down");
+        let dropDownButton = dropDownContainer.createChild("div", "tabbed-pane-header-tabs-drop-down");
         dropDownButton.appendChild(document.createTextNode("\u00bb"));
         this._tabsSelect = dropDownButton.createChild("select", "tabbed-pane-header-tabs-drop-down-select");
         this._tabsSelect.addEventListener("change", this._tabsSelectChanged.bind(this), false);
@@ -296,14 +296,14 @@ WebInspector.TabbedPane.prototype = {
 
     _updateTabsDropDown: function()
     {
-        var tabsToShowIndexes = this._tabsToShowIndexes(this._tabs, this._tabsHistory, this._headerContentsElement.offsetWidth, this._measuredDropDownButtonWidth);
+        let tabsToShowIndexes = this._tabsToShowIndexes(this._tabs, this._tabsHistory, this._headerContentsElement.offsetWidth, this._measuredDropDownButtonWidth);
 
-        for (var i = 0; i < this._tabs.length; ++i) {
+        for (let i = 0; i < this._tabs.length; ++i) {
             if (this._tabs[i].shown && tabsToShowIndexes.indexOf(i) === -1)
                 this._hideTabElement(this._tabs[i]);
         }
-        for (var i = 0; i < tabsToShowIndexes.length; ++i) {
-            var tab = this._tabs[tabsToShowIndexes[i]];
+        for (let i = 0; i < tabsToShowIndexes.length; ++i) {
+            let tab = this._tabs[tabsToShowIndexes[i]];
             if (!tab.shown)
                 this._showTabElement(i, tab);
         }
@@ -317,8 +317,8 @@ WebInspector.TabbedPane.prototype = {
             this._headerContentsElement.removeChild(this._dropDownButton);
 
         this._tabsSelect.removeChildren();
-        var tabsToShow = [];
-        for (var i = 0; i < this._tabs.length; ++i) {
+        let tabsToShow = [];
+        for (let i = 0; i < this._tabs.length; ++i) {
             if (!this._tabs[i].shown)
                 tabsToShow.push(this._tabs[i]);
                 continue;
@@ -330,8 +330,8 @@ WebInspector.TabbedPane.prototype = {
         }
         tabsToShow.sort(compareFunction);
 
-        for (var i = 0; i < tabsToShow.length; ++i) {
-            var option = new Option(tabsToShow[i].title);
+        for (let i = 0; i < tabsToShow.length; ++i) {
+            let option = new Option(tabsToShow[i].title);
             option.tab = tabsToShow[i];
             this._tabsSelect.appendChild(option);
         }
@@ -343,8 +343,8 @@ WebInspector.TabbedPane.prototype = {
 
     _tabsSelectChanged: function()
     {
-        var options = this._tabsSelect.options;
-        var selectedOption = options[this._tabsSelect.selectedIndex];
+        let options = this._tabsSelect.options;
+        let selectedOption = options[this._tabsSelect.selectedIndex];
         this.selectTab(selectedOption.tab.id, true);
     },
 
@@ -359,14 +359,14 @@ WebInspector.TabbedPane.prototype = {
 
     _updateWidths: function()
     {
-        var measuredWidths = [];
-        for (var tabId in this._tabs)
+        let measuredWidths = [];
+        for (let tabId in this._tabs)
             measuredWidths.push(this._tabs[tabId].measuredWidth);
         
-        var maxWidth = this._calculateMaxWidth(measuredWidths, this._headerContentsElement.offsetWidth);
+        let maxWidth = this._calculateMaxWidth(measuredWidths, this._headerContentsElement.offsetWidth);
         
-        for (var tabId in this._tabs) {
-            var tab = this._tabs[tabId];
+        for (let tabId in this._tabs) {
+            let tab = this._tabs[tabId];
             tab.width = Math.min(tab.measuredWidth, maxWidth);
         }
     },
@@ -382,16 +382,16 @@ WebInspector.TabbedPane.prototype = {
 
         measuredWidths.sort(function(x, y) { return x - y });
 
-        var totalMeasuredWidth = 0;
-        for (var i = 0; i < measuredWidths.length; ++i)
+        let totalMeasuredWidth = 0;
+        for (let i = 0; i < measuredWidths.length; ++i)
             totalMeasuredWidth += measuredWidths[i];
 
         if (totalWidth >= totalMeasuredWidth)
             return measuredWidths[measuredWidths.length - 1];
 
-        var totalExtraWidth = 0;
-        for (var i = measuredWidths.length - 1; i > 0; --i) {
-            var extraWidth = measuredWidths[i] - measuredWidths[i - 1];
+        let totalExtraWidth = 0;
+        for (let i = measuredWidths.length - 1; i > 0; --i) {
+            let extraWidth = measuredWidths[i] - measuredWidths[i - 1];
             totalExtraWidth += (measuredWidths.length - i) * extraWidth;
 
             if (totalWidth + totalExtraWidth >= totalMeasuredWidth)
@@ -410,12 +410,12 @@ WebInspector.TabbedPane.prototype = {
      */
     _tabsToShowIndexes: function(tabsOrdered, tabsHistory, totalWidth, measuredDropDownButtonWidth)
     {
-        var tabsToShowIndexes = [];
+        let tabsToShowIndexes = [];
 
-        var totalTabsWidth = 0;
-        for (var i = 0; i < tabsHistory.length; ++i) {
+        let totalTabsWidth = 0;
+        for (let i = 0; i < tabsHistory.length; ++i) {
             totalTabsWidth += tabsHistory[i].width;
-            var minimalRequiredWidth = totalTabsWidth;
+            let minimalRequiredWidth = totalTabsWidth;
             if (i !== tabsHistory.length - 1)
                 minimalRequiredWidth += measuredDropDownButtonWidth;
             if (minimalRequiredWidth > totalWidth)
@@ -596,18 +596,18 @@ WebInspector.TabbedPaneTab.prototype = {
      */
     _createTabElement: function(measuring)
     {
-        var tabElement = document.createElement("div");
+        let tabElement = document.createElement("div");
         tabElement.addStyleClass("tabbed-pane-header-tab");
         tabElement.tabIndex = -1;
         
-        var titleElement = tabElement.createChild("span", "tabbed-pane-header-tab-title");
+        let titleElement = tabElement.createChild("span", "tabbed-pane-header-tab-title");
         titleElement.textContent = this.title;
         titleElement.title = this.tooltip || "";
         if (!measuring)
             this._titleElement = titleElement;
 
         if (this._closeable) {
-            var closeButtonSpan = tabElement.createChild("span", "tabbed-pane-header-tab-close-button");
+            let closeButtonSpan = tabElement.createChild("span", "tabbed-pane-header-tab-close-button");
             closeButtonSpan.textContent = "\u00D7"; // 'MULTIPLICATION SIGN' 
         }
 
@@ -623,7 +623,7 @@ WebInspector.TabbedPaneTab.prototype = {
 
     _measure: function()
     {
-        var measuringTabElement = this._createTabElement(true);
+        let measuringTabElement = this._createTabElement(true);
         this._measureElement.appendChild(measuringTabElement);
         this._measuredWidth = measuringTabElement.offsetWidth;
         this._measureElement.removeChild(measuringTabElement);

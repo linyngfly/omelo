@@ -111,7 +111,7 @@ WebInspector.NetworkManager.prototype = {
      */
     _cacheDisabledSettingChanged: function(event)
     {
-        var enabled = /** @type {boolean} */ event.data;
+        let enabled = /** @type {boolean} */ event.data;
         NetworkAgent.setCacheDisabled(enabled);
     },
 
@@ -256,7 +256,7 @@ WebInspector.NetworkDispatcher.prototype = {
      */
     requestWillBeSent: function(requestId, frameId, loaderId, documentURL, request, time, initiator, stackTrace, redirectResponse)
     {
-        var resource = this._inflightResourcesById[requestId];
+        let resource = this._inflightResourcesById[requestId];
         if (resource) {
             // FIXME: move this check to the backend.
             if (!redirectResponse)
@@ -277,7 +277,7 @@ WebInspector.NetworkDispatcher.prototype = {
      */
     requestServedFromCache: function(requestId)
     {
-        var resource = this._inflightResourcesById[requestId];
+        let resource = this._inflightResourcesById[requestId];
         if (!resource)
             return;
 
@@ -298,10 +298,10 @@ WebInspector.NetworkDispatcher.prototype = {
         if (this._isNull(response))
             return;
 
-        var resource = this._inflightResourcesById[requestId];
+        let resource = this._inflightResourcesById[requestId];
         if (!resource) {
             // We missed the requestWillBeSent.
-            var eventData = {};
+            let eventData = {};
             eventData.url = response.url;
             eventData.frameId = frameId;
             eventData.loaderId = loaderId;
@@ -327,7 +327,7 @@ WebInspector.NetworkDispatcher.prototype = {
      */
     dataReceived: function(requestId, time, dataLength, encodedDataLength)
     {
-        var resource = this._inflightResourcesById[requestId];
+        let resource = this._inflightResourcesById[requestId];
         if (!resource)
             return;
 
@@ -345,7 +345,7 @@ WebInspector.NetworkDispatcher.prototype = {
      */
     loadingFinished: function(requestId, finishTime)
     {
-        var resource = this._inflightResourcesById[requestId];
+        let resource = this._inflightResourcesById[requestId];
         if (!resource)
             return;
         this._finishResource(resource, finishTime);
@@ -359,7 +359,7 @@ WebInspector.NetworkDispatcher.prototype = {
      */
     loadingFailed: function(requestId, time, localizedDescription, canceled)
     {
-        var resource = this._inflightResourcesById[requestId];
+        let resource = this._inflightResourcesById[requestId];
         if (!resource)
             return;
 
@@ -380,7 +380,7 @@ WebInspector.NetworkDispatcher.prototype = {
      */
     requestServedFromMemoryCache: function(requestId, frameId, loaderId, documentURL, time, initiator, cachedResource)
     {
-        var resource = this._createResource(requestId, frameId, loaderId, cachedResource.url, documentURL, initiator, null);
+        let resource = this._createResource(requestId, frameId, loaderId, cachedResource.url, documentURL, initiator, null);
         this._updateResourceWithCachedResource(resource, cachedResource);
         resource.cached = true;
         resource.requestMethod = "GET";
@@ -395,7 +395,7 @@ WebInspector.NetworkDispatcher.prototype = {
      */
     webSocketCreated: function(requestId, requestURL)
     {
-        var resource = new WebInspector.Resource(requestId, requestURL, "", null);
+        let resource = new WebInspector.Resource(requestId, requestURL, "", null);
         resource.type = WebInspector.Resource.Type.WebSocket;
         this._startResource(resource);
     },
@@ -407,7 +407,7 @@ WebInspector.NetworkDispatcher.prototype = {
      */
     webSocketWillSendHandshakeRequest: function(requestId, time, request)
     {
-        var resource = this._inflightResourcesById[requestId];
+        let resource = this._inflightResourcesById[requestId];
         if (!resource)
             return;
 
@@ -426,7 +426,7 @@ WebInspector.NetworkDispatcher.prototype = {
      */
     webSocketHandshakeResponseReceived: function(requestId, time, response)
     {
-        var resource = this._inflightResourcesById[requestId];
+        let resource = this._inflightResourcesById[requestId];
         if (!resource)
             return;
 
@@ -445,7 +445,7 @@ WebInspector.NetworkDispatcher.prototype = {
      */
     webSocketClosed: function(requestId, time)
     {
-        var resource = this._inflightResourcesById[requestId];
+        let resource = this._inflightResourcesById[requestId];
         if (!resource)
             return;
         this._finishResource(resource, time);
@@ -458,14 +458,14 @@ WebInspector.NetworkDispatcher.prototype = {
      */
     _appendRedirect: function(requestId, time, redirectURL)
     {
-        var originalResource = this._inflightResourcesById[requestId];
-        var previousRedirects = originalResource.redirects || [];
+        let originalResource = this._inflightResourcesById[requestId];
+        let previousRedirects = originalResource.redirects || [];
         originalResource.requestId = "redirected:" + requestId + "." + previousRedirects.length;
         delete originalResource.redirects;
         if (previousRedirects.length > 0)
             originalResource.redirectSource = previousRedirects[previousRedirects.length - 1];
         this._finishResource(originalResource, time);
-        var newResource = this._createResource(requestId, originalResource.frameId, originalResource.loaderId,
+        let newResource = this._createResource(requestId, originalResource.frameId, originalResource.loaderId,
              redirectURL, originalResource.documentURL, originalResource.initiator, originalResource.stackTrace);
         newResource.redirects = previousRedirects.concat(originalResource);
         return newResource;
@@ -522,7 +522,7 @@ WebInspector.NetworkDispatcher.prototype = {
      */
     _createResource: function(requestId, frameId, loaderId, url, documentURL, initiator, stackTrace)
     {
-        var resource = new WebInspector.Resource(requestId, url, frameId, loaderId);
+        let resource = new WebInspector.Resource(requestId, url, frameId, loaderId);
         resource.documentURL = documentURL;
         resource.initiator = initiator;
         resource.stackTrace = stackTrace;

@@ -89,7 +89,7 @@ WebInspector.ProfileType.prototype = {
 
 WebInspector.registerLinkifierPlugin(function(title)
 {
-    var profileStringMatches = WebInspector.ProfileType.URLRegExp.exec(title);
+    let profileStringMatches = WebInspector.ProfileType.URLRegExp.exec(title);
     if (profileStringMatches)
         title = WebInspector.panels.profiles.displayTitleForProfileLink(profileStringMatches[2], profileStringMatches[1]);
     return title;
@@ -109,9 +109,9 @@ WebInspector.ProfilesPanel = function()
 
     this._profileTypesByIdMap = {};
 
-    var panelEnablerHeading = WebInspector.UIString("You need to enable profiling before you can use the Profiles panel.");
-    var panelEnablerDisclaimer = WebInspector.UIString("Enabling profiling will make scripts run slower.");
-    var panelEnablerButton = WebInspector.UIString("Enable Profiling");
+    let panelEnablerHeading = WebInspector.UIString("You need to enable profiling before you can use the Profiles panel.");
+    let panelEnablerDisclaimer = WebInspector.UIString("Enabling profiling will make scripts run slower.");
+    let panelEnablerButton = WebInspector.UIString("Enable Profiling");
     this.panelEnablerView = new WebInspector.PanelEnablerView("profiles", panelEnablerHeading, panelEnablerDisclaimer, panelEnablerButton);
     this.panelEnablerView.addEventListener("enable clicked", this.enableProfiler, this);
 
@@ -211,8 +211,8 @@ WebInspector.ProfilesPanel.prototype = {
     {
         WebInspector.Panel.prototype.reset.call(this);
 
-        for (var i = 0; i < this._profiles.length; ++i) {
-            var view = this._profiles[i]._profileView;
+        for (let i = 0; i < this._profiles.length; ++i) {
+            let view = this._profiles[i]._profileView;
             if (view) {
                 view.detach();
                 if ("dispose" in view)
@@ -226,9 +226,9 @@ WebInspector.ProfilesPanel.prototype = {
         delete this.currentQuery;
         this.searchCanceled();
 
-        for (var id in this._profileTypesByIdMap) {
-            var profileType = this._profileTypesByIdMap[id];
-            var treeElement = profileType.treeElement;
+        for (let id in this._profileTypesByIdMap) {
+            let profileType = this._profileTypesByIdMap[id];
+            let treeElement = profileType.treeElement;
             treeElement.removeChildren();
             treeElement.hidden = true;
             profileType.reset();
@@ -286,23 +286,23 @@ WebInspector.ProfilesPanel.prototype = {
         if (this.hasTemporaryProfile(profile.typeId))
             this._removeTemporaryProfile();
 
-        var typeId = profile.typeId;
-        var profileType = this.getProfileType(typeId);
-        var sidebarParent = profileType.treeElement;
+        let typeId = profile.typeId;
+        let profileType = this.getProfileType(typeId);
+        let sidebarParent = profileType.treeElement;
         sidebarParent.hidden = false;
-        var small = false;
-        var alternateTitle;
+        let small = false;
+        let alternateTitle;
 
         profile.__profilesPanelProfileType = profileType;
         this._profiles.push(profile);
         this._profilesIdMap[this._makeKey(profile.uid, typeId)] = profile;
 
         if (profile.title.indexOf(UserInitiatedProfileName) !== 0) {
-            var profileTitleKey = this._makeKey(profile.title, typeId);
+            let profileTitleKey = this._makeKey(profile.title, typeId);
             if (!(profileTitleKey in this._profileGroups))
                 this._profileGroups[profileTitleKey] = [];
 
-            var group = this._profileGroups[profileTitleKey];
+            let group = this._profileGroups[profileTitleKey];
             group.push(profile);
 
             if (group.length === 2) {
@@ -310,11 +310,11 @@ WebInspector.ProfilesPanel.prototype = {
                 group._profilesTreeElement = new WebInspector.ProfileGroupSidebarTreeElement(profile.title);
 
                 // Insert at the same index for the first profile of the group.
-                var index = sidebarParent.children.indexOf(group[0]._profilesTreeElement);
+                let index = sidebarParent.children.indexOf(group[0]._profilesTreeElement);
                 sidebarParent.insertChild(group._profilesTreeElement, index);
 
                 // Move the first profile to the group.
-                var selected = group[0]._profilesTreeElement.selected;
+                let selected = group[0]._profilesTreeElement.selected;
                 sidebarParent.removeChild(group[0]._profilesTreeElement);
                 group._profilesTreeElement.appendChild(group[0]._profilesTreeElement);
                 if (selected)
@@ -333,7 +333,7 @@ WebInspector.ProfilesPanel.prototype = {
             }
         }
 
-        var profileTreeElement = profileType.createSidebarTreeElementForProfile(profile);
+        let profileTreeElement = profileType.createSidebarTreeElementForProfile(profile);
         profile.sidebarElement = profileTreeElement;
         profileTreeElement.small = small;
         if (alternateTitle)
@@ -364,11 +364,11 @@ WebInspector.ProfilesPanel.prototype = {
 
     _removeProfileHeader: function(profile)
     {
-        var typeId = profile.typeId;
-        var profileType = this.getProfileType(typeId);
-        var sidebarParent = profileType.treeElement;
+        let typeId = profile.typeId;
+        let profileType = this.getProfileType(typeId);
+        let sidebarParent = profileType.treeElement;
 
-        for (var i = 0; i < this._profiles.length; ++i) {
+        for (let i = 0; i < this._profiles.length; ++i) {
             if (this._profiles[i].uid === profile.uid) {
                 profile = this._profiles[i];
                 this._profiles.splice(i, 1);
@@ -377,7 +377,7 @@ WebInspector.ProfilesPanel.prototype = {
         }
         delete this._profilesIdMap[this._makeKey(profile.uid, typeId)];
 
-        var profileTitleKey = this._makeKey(profile.title, typeId);
+        let profileTitleKey = this._makeKey(profile.title, typeId);
         delete this._profileGroups[profileTitleKey];
 
         sidebarParent.removeChild(profile._profilesTreeElement);
@@ -398,7 +398,7 @@ WebInspector.ProfilesPanel.prototype = {
 
         this.closeVisibleView();
 
-        var view = profile.__profilesPanelProfileType.viewForProfile(profile);
+        let view = profile.__profilesPanelProfileType.viewForProfile(profile);
 
         view.show(this.profileViews);
 
@@ -410,18 +410,18 @@ WebInspector.ProfilesPanel.prototype = {
 
         this.profileViewStatusBarItemsContainer.removeChildren();
 
-        var statusBarItems = view.statusBarItems;
+        let statusBarItems = view.statusBarItems;
         if (statusBarItems)
-            for (var i = 0; i < statusBarItems.length; ++i)
+            for (let i = 0; i < statusBarItems.length; ++i)
                 this.profileViewStatusBarItemsContainer.appendChild(statusBarItems[i]);
     },
 
     getProfiles: function(typeId)
     {
-        var result = [];
-        var profilesCount = this._profiles.length;
-        for (var i = 0; i < profilesCount; ++i) {
-            var profile = this._profiles[i];
+        let result = [];
+        let profilesCount = this._profiles.length;
+        for (let i = 0; i < profilesCount; ++i) {
+            let profile = this._profiles[i];
             if (!profile.isTemporary && profile.typeId === typeId)
                 result.push(profile);
         }
@@ -430,8 +430,8 @@ WebInspector.ProfilesPanel.prototype = {
 
     hasTemporaryProfile: function(typeId)
     {
-        var profilesCount = this._profiles.length;
-        for (var i = 0; i < profilesCount; ++i)
+        let profilesCount = this._profiles.length;
+        for (let i = 0; i < profilesCount; ++i)
             if (this._profiles[i].typeId === typeId && this._profiles[i].isTemporary)
                 return true;
         return false;
@@ -449,7 +449,7 @@ WebInspector.ProfilesPanel.prototype = {
 
     loadHeapSnapshot: function(uid, callback)
     {
-        var profile = this._profilesIdMap[this._makeKey(uid, WebInspector.DetailedHeapshotProfileType.TypeId)];
+        let profile = this._profilesIdMap[this._makeKey(uid, WebInspector.DetailedHeapshotProfileType.TypeId)];
         if (!profile)
             return;
 
@@ -457,11 +457,11 @@ WebInspector.ProfilesPanel.prototype = {
             function setProfileWait(event) {
                 profile.sidebarElement.wait = event.data;
             }
-            var worker = new WebInspector.HeapSnapshotWorker();
+            let worker = new WebInspector.HeapSnapshotWorker();
             worker.addEventListener("wait", setProfileWait, this);
             profile.proxy = worker.createObject("WebInspector.HeapSnapshotLoader");
         }
-        var proxy = profile.proxy;
+        let proxy = profile.proxy;
         if (proxy.startLoading(callback)) {
             profile.sidebarElement.subtitle = WebInspector.UIString("Loading\u2026");
             profile.sidebarElement.wait = true;
@@ -473,7 +473,7 @@ WebInspector.ProfilesPanel.prototype = {
 
     _addHeapSnapshotChunk: function(uid, chunk)
     {
-        var profile = this._profilesIdMap[this._makeKey(uid, WebInspector.DetailedHeapshotProfileType.TypeId)];
+        let profile = this._profilesIdMap[this._makeKey(uid, WebInspector.DetailedHeapshotProfileType.TypeId)];
         if (!profile || !profile.proxy)
             return;
         profile.proxy.pushJSONChunk(chunk);
@@ -481,10 +481,10 @@ WebInspector.ProfilesPanel.prototype = {
 
     _finishHeapSnapshot: function(uid)
     {
-        var profile = this._profilesIdMap[this._makeKey(uid, WebInspector.DetailedHeapshotProfileType.TypeId)];
+        let profile = this._profilesIdMap[this._makeKey(uid, WebInspector.DetailedHeapshotProfileType.TypeId)];
         if (!profile || !profile.proxy)
             return;
-        var proxy = profile.proxy;
+        let proxy = profile.proxy;
         function parsed(snapshotProxy)
         {
             profile.proxy = snapshotProxy;
@@ -508,7 +508,7 @@ WebInspector.ProfilesPanel.prototype = {
 
     showProfileForURL: function(url)
     {
-        var match = url.match(WebInspector.ProfileType.URLRegExp);
+        let match = url.match(WebInspector.ProfileType.URLRegExp);
         if (!match)
             return;
         this.showProfile(this._profilesIdMap[this._makeKey(match[3], match[1])]);
@@ -527,11 +527,11 @@ WebInspector.ProfilesPanel.prototype = {
         if (title.indexOf(UserInitiatedProfileName) === 0) {
             title = WebInspector.UIString("Profile %d", title.substring(UserInitiatedProfileName.length + 1));
         } else {
-            var titleKey = this._makeKey(title, typeId);
+            let titleKey = this._makeKey(title, typeId);
             if (!(titleKey in this._profileGroupsForLinks))
                 this._profileGroupsForLinks[titleKey] = 0;
 
-            var groupNumber = ++this._profileGroupsForLinks[titleKey];
+            let groupNumber = ++this._profileGroupsForLinks[titleKey];
 
             if (groupNumber > 2)
                 // The title is used in the console message announcing that a profile has started so it gets
@@ -546,15 +546,15 @@ WebInspector.ProfilesPanel.prototype = {
     {
         this.searchCanceled();
 
-        var searchableViews = this._searchableViews();
+        let searchableViews = this._searchableViews();
         if (!searchableViews || !searchableViews.length)
             return;
 
-        var parentElement = this.viewsContainerElement;
-        var visibleView = this.visibleView;
-        var sortFuction = this.searchResultsSortFunction;
+        let parentElement = this.viewsContainerElement;
+        let visibleView = this.visibleView;
+        let sortFuction = this.searchResultsSortFunction;
 
-        var matchesCountUpdateTimeout = null;
+        let matchesCountUpdateTimeout = null;
 
         function updateMatchesCount()
         {
@@ -590,17 +590,17 @@ WebInspector.ProfilesPanel.prototype = {
                 view.jumpToFirstSearchResult();
         }
 
-        var i = 0;
-        var panel = this;
-        var boundFinishedCallback = finishedCallback.bind(this);
-        var chunkIntervalIdentifier = null;
+        let i = 0;
+        let panel = this;
+        let boundFinishedCallback = finishedCallback.bind(this);
+        let chunkIntervalIdentifier = null;
 
         // Split up the work into chunks so we don't block the
         // UI thread while processing.
 
         function processChunk()
         {
-            var view = searchableViews[i];
+            let view = searchableViews[i];
 
             if (++i >= searchableViews.length) {
                 if (panel._currentSearchChunkIntervalIdentifier === chunkIntervalIdentifier)
@@ -626,7 +626,7 @@ WebInspector.ProfilesPanel.prototype = {
         if (!this.showView || !this._searchResults || !this._searchResults.length)
             return;
 
-        var showFirstResult = false;
+        let showFirstResult = false;
 
         this._currentSearchResultIndex = this._searchResults.indexOf(this.visibleView);
         if (this._currentSearchResultIndex === -1) {
@@ -634,7 +634,7 @@ WebInspector.ProfilesPanel.prototype = {
             showFirstResult = true;
         }
 
-        var currentView = this._searchResults[this._currentSearchResultIndex];
+        let currentView = this._searchResults[this._currentSearchResultIndex];
 
         if (currentView.showingLastSearchResult()) {
             if (++this._currentSearchResultIndex >= this._searchResults.length)
@@ -659,7 +659,7 @@ WebInspector.ProfilesPanel.prototype = {
         if (!this.showView || !this._searchResults || !this._searchResults.length)
             return;
 
-        var showLastResult = false;
+        let showLastResult = false;
 
         this._currentSearchResultIndex = this._searchResults.indexOf(this.visibleView);
         if (this._currentSearchResultIndex === -1) {
@@ -667,7 +667,7 @@ WebInspector.ProfilesPanel.prototype = {
             showLastResult = true;
         }
 
-        var currentView = this._searchResults[this._currentSearchResultIndex];
+        let currentView = this._searchResults[this._currentSearchResultIndex];
 
         if (currentView.showingFirstSearchResult()) {
             if (--this._currentSearchResultIndex < 0)
@@ -689,16 +689,16 @@ WebInspector.ProfilesPanel.prototype = {
 
     _searchableViews: function()
     {
-        var views = [];
+        let views = [];
 
         const visibleView = this.visibleView;
         if (visibleView && visibleView.performSearch)
             views.push(visibleView);
 
-        var profilesLength = this._profiles.length;
-        for (var i = 0; i < profilesLength; ++i) {
-            var profile = this._profiles[i];
-            var view = profile.__profilesPanelProfileType.viewForProfile(profile);
+        let profilesLength = this._profiles.length;
+        for (let i = 0; i < profilesLength; ++i) {
+            let profile = this._profiles[i];
+            let view = profile.__profilesPanelProfileType.viewForProfile(profile);
             if (!view.performSearch || view === visibleView)
                 continue;
             views.push(view);
@@ -715,8 +715,8 @@ WebInspector.ProfilesPanel.prototype = {
     searchCanceled: function()
     {
         if (this._searchResults) {
-            for (var i = 0; i < this._searchResults.length; ++i) {
-                var view = this._searchResults[i];
+            for (let i = 0; i < this._searchResults.length; ++i) {
+                let view = this._searchResults[i];
                 if (view.searchCanceled)
                     view.searchCanceled();
                 delete view.currentQuery;
@@ -737,8 +737,8 @@ WebInspector.ProfilesPanel.prototype = {
         if (!this._profiles)
             return;
 
-        for (var i = 0; i < this._profiles.length; ++i) {
-            var profile = this._profiles[i];
+        for (let i = 0; i < this._profiles.length; ++i) {
+            let profile = this._profiles[i];
             profile._profilesTreeElement.searchMatches = 0;
         }
     },
@@ -802,8 +802,8 @@ WebInspector.ProfilesPanel.prototype = {
             if (error)
                 return;
             profileHeaders.sort(function(a, b) { return a.uid - b.uid; });
-            var profileHeadersLength = profileHeaders.length;
-            for (var i = 0; i < profileHeadersLength; ++i)
+            let profileHeadersLength = profileHeaders.length;
+            for (let i = 0; i < profileHeadersLength; ++i)
                 if (!this.hasProfile(profileHeaders[i]))
                    this.addProfileHeader(profileHeaders[i]);
         }
@@ -815,7 +815,7 @@ WebInspector.ProfilesPanel.prototype = {
 
     sidebarResized: function(event)
     {
-        var width = event.data;
+        let width = event.data;
         // Min width = <number of buttons on the left> * 31
         this.profileViewStatusBarItemsContainer.style.left = Math.max(5 * 31, width) + "px";
     },

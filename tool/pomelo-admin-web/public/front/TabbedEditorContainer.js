@@ -98,7 +98,7 @@ WebInspector.TabbedEditorContainer.prototype = {
             return;
         this._currentFile = uiSourceCode;
         
-        var tabId = this._tabIds.get(uiSourceCode) || this._appendFileTab(uiSourceCode, userGesture);
+        let tabId = this._tabIds.get(uiSourceCode) || this._appendFileTab(uiSourceCode, userGesture);
         
         this._tabbedPane.selectTab(tabId, userGesture);
         if (userGesture)
@@ -125,11 +125,11 @@ WebInspector.TabbedEditorContainer.prototype = {
             return;
         this._loadedURLs[uiSourceCode.url] = true;
 
-        var index = this._history.index(uiSourceCode.url)
+        let index = this._history.index(uiSourceCode.url)
         if (index === -1)
             return;
 
-        var tabId = this._tabIds.get(uiSourceCode) || this._appendFileTab(uiSourceCode, false);
+        let tabId = this._tabIds.get(uiSourceCode) || this._appendFileTab(uiSourceCode, false);
 
         // Select tab if this file was the last to be shown.
         if (index === 0)
@@ -154,7 +154,7 @@ WebInspector.TabbedEditorContainer.prototype = {
 
     _updateHistory: function()
     {
-        var tabIds = this._tabbedPane.lastOpenedTabIds(WebInspector.TabbedEditorContainer.maximalPreviouslyViewedFilesCount);
+        let tabIds = this._tabbedPane.lastOpenedTabIds(WebInspector.TabbedEditorContainer.maximalPreviouslyViewedFilesCount);
         
         function tabIdToURL(tabId)
         {
@@ -180,11 +180,11 @@ WebInspector.TabbedEditorContainer.prototype = {
      */
     _appendFileTab: function(uiSourceCode, userGesture)
     {
-        var view = this._delegate.viewForFile(uiSourceCode);
-        var title = this._titleForFile(uiSourceCode);
-        var tooltip = this._tooltipForFile(uiSourceCode);
+        let view = this._delegate.viewForFile(uiSourceCode);
+        let title = this._titleForFile(uiSourceCode);
+        let tooltip = this._tooltipForFile(uiSourceCode);
 
-        var tabId = this._generateTabId();
+        let tabId = this._generateTabId();
         this._tabIds.put(uiSourceCode, tabId);
         this._files[tabId] = uiSourceCode;
         
@@ -197,7 +197,7 @@ WebInspector.TabbedEditorContainer.prototype = {
      */
     _removeFileTab: function(uiSourceCode)
     {
-        var tabId = this._tabIds.get(uiSourceCode);
+        let tabId = this._tabIds.get(uiSourceCode);
         
         if (tabId)
             this._tabbedPane.closeTab(tabId);
@@ -208,10 +208,10 @@ WebInspector.TabbedEditorContainer.prototype = {
      */
     _tabClosed: function(event)
     {
-        var tabId = /** @type {string} */ event.data.tabId;
-        var userGesture = /** @type {boolean} */ event.data.isUserGesture;
+        let tabId = /** @type {string} */ event.data.tabId;
+        let userGesture = /** @type {boolean} */ event.data.isUserGesture;
 
-        var uiSourceCode = this._files[tabId];
+        let uiSourceCode = this._files[tabId];
         this._tabIds.remove(uiSourceCode);
         delete this._files[tabId];
         delete this._currentFile;
@@ -227,10 +227,10 @@ WebInspector.TabbedEditorContainer.prototype = {
      */
     _tabSelected: function(event)
     {
-        var tabId = /** @type {string} */ event.data.tabId;
-        var userGesture = /** @type {boolean} */ event.data.isUserGesture;
+        let tabId = /** @type {string} */ event.data.tabId;
+        let userGesture = /** @type {boolean} */ event.data.isUserGesture;
 
-        var uiSourceCode = this._files[tabId];
+        let uiSourceCode = this._files[tabId];
         this._innerShowFile(uiSourceCode, userGesture);
     },
 
@@ -240,7 +240,7 @@ WebInspector.TabbedEditorContainer.prototype = {
      */
     _replaceFileTab: function(oldUISourceCode, newUISourceCode)
     {
-        var tabId = this._tabIds.get(oldUISourceCode);
+        let tabId = this._tabIds.get(oldUISourceCode);
         
         if (!tabId)
             return;
@@ -261,9 +261,9 @@ WebInspector.TabbedEditorContainer.prototype = {
      */
     replaceFiles: function(oldUISourceCodeList, uiSourceCodeList)
     {
-        var mainFile;
-        for (var i = 0; i < oldUISourceCodeList.length; ++i) {
-            var tabId = this._tabIds.get(oldUISourceCodeList[i]);
+        let mainFile;
+        for (let i = 0; i < oldUISourceCodeList.length; ++i) {
+            let tabId = this._tabIds.get(oldUISourceCodeList[i]);
             if (tabId && (!mainFile || this._tabbedPane.selectedTabId === tabId)) {
                 mainFile = oldUISourceCodeList[i];
                 break;
@@ -274,7 +274,7 @@ WebInspector.TabbedEditorContainer.prototype = {
             return;
         
         this._replaceFileTab(mainFile, uiSourceCodeList[0]);
-        for (var i = 0; i < oldUISourceCodeList.length; ++i)
+        for (let i = 0; i < oldUISourceCodeList.length; ++i)
             this._removeFileTab(oldUISourceCodeList[i]);
     },
     
@@ -284,9 +284,9 @@ WebInspector.TabbedEditorContainer.prototype = {
      */
     setFileIsDirty: function(uiSourceCode, isDirty)
     {
-        var tabId = this._tabIds.get(uiSourceCode);
+        let tabId = this._tabIds.get(uiSourceCode);
         if (tabId) {
-            var title = this._titleForFile(uiSourceCode);
+            let title = this._titleForFile(uiSourceCode);
             if (isDirty)
                 title += "*";
             this._tabbedPane.changeTabTitle(tabId, title);
@@ -336,8 +336,8 @@ WebInspector.TabbedEditorContainer.History.prototype = {
      */
     update: function(urls)
     {
-        for (var i = urls.length - 1; i >= 0; --i) {
-            var index = this._urls.indexOf(urls[i]);
+        for (let i = urls.length - 1; i >= 0; --i) {
+            let index = this._urls.indexOf(urls[i]);
             if (index !== -1)
                 this._urls.splice(index, 1);
             this._urls.unshift(urls[i]);
@@ -349,7 +349,7 @@ WebInspector.TabbedEditorContainer.History.prototype = {
      */
     remove: function(url)
     {
-        var index = this._urls.indexOf(url);
+        let index = this._urls.indexOf(url);
         if (index !== -1)
             this._urls.splice(index, 1);
     },

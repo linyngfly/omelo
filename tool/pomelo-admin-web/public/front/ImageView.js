@@ -53,11 +53,11 @@ WebInspector.ImageView.prototype = {
         if (this._container)
             return;
 
-        var imageContainer = document.createElement("div");
+        let imageContainer = document.createElement("div");
         imageContainer.className = "image";
         this.element.appendChild(imageContainer);
 
-        var imagePreviewElement = document.createElement("img");
+        let imagePreviewElement = document.createElement("img");
         imagePreviewElement.addStyleClass("resource-image-view");
         imageContainer.appendChild(imagePreviewElement);
         imagePreviewElement.addEventListener("contextmenu", this._contextMenu.bind(this), true);
@@ -66,44 +66,44 @@ WebInspector.ImageView.prototype = {
         this._container.className = "info";
         this.element.appendChild(this._container);
 
-        var imageNameElement = document.createElement("h1");
+        let imageNameElement = document.createElement("h1");
         imageNameElement.className = "title";
         imageNameElement.textContent = this.resource.displayName;
         this._container.appendChild(imageNameElement);
 
-        var infoListElement = document.createElement("dl");
+        let infoListElement = document.createElement("dl");
         infoListElement.className = "infoList";
 
         this.resource.populateImageSource(imagePreviewElement);
 
         function onImageLoad()
         {
-            var content = this.resource.content;
+            let content = this.resource.content;
             if (content)
-                var resourceSize = this._base64ToSize(content);
+                let resourceSize = this._base64ToSize(content);
             else
-                var resourceSize = this.resource.resourceSize;
+                let resourceSize = this.resource.resourceSize;
 
-            var imageProperties = [
+            let imageProperties = [
                 { name: WebInspector.UIString("Dimensions"), value: WebInspector.UIString("%d × %d", imagePreviewElement.naturalWidth, imagePreviewElement.naturalHeight) },
                 { name: WebInspector.UIString("File size"), value: Number.bytesToString(resourceSize) },
                 { name: WebInspector.UIString("MIME type"), value: this.resource.mimeType }
             ];
 
             infoListElement.removeChildren();
-            for (var i = 0; i < imageProperties.length; ++i) {
-                var dt = document.createElement("dt");
+            for (let i = 0; i < imageProperties.length; ++i) {
+                let dt = document.createElement("dt");
                 dt.textContent = imageProperties[i].name;
                 infoListElement.appendChild(dt);
-                var dd = document.createElement("dd");
+                let dd = document.createElement("dd");
                 dd.textContent = imageProperties[i].value;
                 infoListElement.appendChild(dd);
             }
-            var dt = document.createElement("dt");
+            let dt = document.createElement("dt");
             dt.textContent = WebInspector.UIString("URL");
             infoListElement.appendChild(dt);
-            var dd = document.createElement("dd");
-            var externalResource = true;
+            let dd = document.createElement("dd");
+            let externalResource = true;
             dd.appendChild(WebInspector.linkifyURLAsNode(this.resource.url, undefined, undefined, externalResource));
             infoListElement.appendChild(dd);
 
@@ -116,7 +116,7 @@ WebInspector.ImageView.prototype = {
     {
         if (!content.length)
             return 0;
-        var size = (content.length || 0) * 3 / 4;
+        let size = (content.length || 0) * 3 / 4;
         if (content.length > 0 && content[content.length - 1] === "=")
             size--;
         if (content.length > 1 && content[content.length - 2] === "=")
@@ -126,7 +126,7 @@ WebInspector.ImageView.prototype = {
 
     _contextMenu: function(event)
     {
-        var contextMenu = new WebInspector.ContextMenu();
+        let contextMenu = new WebInspector.ContextMenu();
         contextMenu.appendItem(WebInspector.UIString(WebInspector.useLowerCaseMenuTitles() ? "Copy image URL" : "Copy Image URL"), this._copyImageURL.bind(this));
         contextMenu.appendItem(WebInspector.UIString(WebInspector.useLowerCaseMenuTitles() ? "Open image in new tab" : "Open Image in New Tab"), this._openInNewTab.bind(this));
         contextMenu.show(event);

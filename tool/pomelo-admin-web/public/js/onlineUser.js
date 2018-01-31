@@ -2,7 +2,7 @@ Ext.onReady(function(){
 
 	Ext.BLANK_IMAGE_URL ='../ext-4.0.7-gpl/resources/themes/images/default/tree/s.gif'; 
 	
-	var userStore = Ext.create('Ext.data.Store', {
+	let userStore = Ext.create('Ext.data.Store', {
 		id:'userStoreId',
 		autoLoad:false,
 		pageSize:5,
@@ -19,7 +19,7 @@ Ext.onReady(function(){
 	/**
 	 * userGrid,detail users' message
 	 */
-	var userGrid=Ext.create('Ext.grid.Panel', {
+	let userGrid=Ext.create('Ext.grid.Panel', {
 		id:'userGridId',
 		region:'center',
 	    store: userStore,
@@ -33,7 +33,7 @@ Ext.onReady(function(){
 		]
 	});
 
-	var viewport=new Ext.Viewport({
+	let viewport=new Ext.Viewport({
 		layout:'border',
 		items:[{
 			region:'north',
@@ -43,17 +43,17 @@ Ext.onReady(function(){
 	});
 });
 
-var STATUS_INTERVAL = 5 * 1000; // 60 seconds
+let STATUS_INTERVAL = 5 * 1000; // 60 seconds
 /*
 socket.on('connect', function(){
 	socket.emit('announce_web_client');
 	socket.emit('webMessage', {method: 'getOnlineUser'});
 
 	socket.on('getOnlineUser',function(msg){  
-		var totalConnCount = msg.totalConnCount;
-		var loginedCount = msg.loginedCount;
-		var onlineUserList = msg.onlineUserList
-		var store = Ext.getCmp('userGridId').getStore();
+		let totalConnCount = msg.totalConnCount;
+		let loginedCount = msg.loginedCount;
+		let onlineUserList = msg.onlineUserList
+		let store = Ext.getCmp('userGridId').getStore();
 		contentUpdate(totalConnCount, loginedCount);
 		store.loadData(onlineUserList);
 	});
@@ -67,13 +67,13 @@ setInterval(function() {
 			return;
 		}
 
-		var totalConnCount = 0, loginedCount = 0, info, list = [];
-		for(var sid in msg) {
+		let totalConnCount = 0, loginedCount = 0, info, list = [];
+		for(let sid in msg) {
 			info = msg[sid];
 			totalConnCount += msg[sid].totalConnCount;
 			loginedCount += msg[sid].loginedCount;
-			var lists = msg[sid].loginedList;
-			for(var i=0;i<lists.length;i++){
+			let lists = msg[sid].loginedList;
+			for(let i=0;i<lists.length;i++){
 				list.push({
 					address : lists[i].address,
 					serverId : sid,
@@ -86,7 +86,7 @@ setInterval(function() {
 
 		contentUpdate(totalConnCount, loginedCount);
 
-		var store = Ext.getCmp('userGridId').getStore();
+		let store = Ext.getCmp('userGridId').getStore();
 		console.log(list);
 		store.loadData(list);
 	});

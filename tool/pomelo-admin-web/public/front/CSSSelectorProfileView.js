@@ -37,7 +37,7 @@ WebInspector.CSSSelectorDataGridNode = function(profileView, data)
 WebInspector.CSSSelectorDataGridNode.prototype = {
     get data()
     {
-        var data = {};
+        let data = {};
         data.selector = this._data.selector;
         data.matches = this._data.matchCount;
 
@@ -56,7 +56,7 @@ WebInspector.CSSSelectorDataGridNode.prototype = {
 
     createCell: function(columnIdentifier)
     {
-        var cell = WebInspector.DataGridNode.prototype.createCell.call(this, columnIdentifier);
+        let cell = WebInspector.DataGridNode.prototype.createCell.call(this, columnIdentifier);
         if (columnIdentifier === "selector" && cell.firstChild) {
             cell.firstChild.title = this.rawData.selector;
             return cell;
@@ -68,7 +68,7 @@ WebInspector.CSSSelectorDataGridNode.prototype = {
         cell.removeChildren();
 
         if (this.rawData.url) {
-            var wrapperDiv = cell.createChild("div");
+            let wrapperDiv = cell.createChild("div");
             wrapperDiv.appendChild(WebInspector.linkifyResourceAsNode(this.rawData.url, this.rawData.lineNumber));
         }
 
@@ -91,7 +91,7 @@ WebInspector.CSSSelectorProfileView = function(profile)
 
     this.showTimeAsPercent = WebInspector.settings.createSetting("selectorProfilerShowTimeAsPercent", true);
 
-    var columns = { "selector": { title: WebInspector.UIString("Selector"), width: "550px", sortable: true },
+    let columns = { "selector": { title: WebInspector.UIString("Selector"), width: "550px", sortable: true },
                     "source": { title: WebInspector.UIString("Source"), width: "100px", sortable: true },
                     "time": { title: WebInspector.UIString("Total"), width: "72px", sort: "descending", sortable: true },
                     "matches": { title: WebInspector.UIString("Matches"), width: "72px", sortable: true } };
@@ -130,16 +130,16 @@ WebInspector.CSSSelectorProfileView.prototype = {
 
     _createProfileNodes: function()
     {
-        var data = this.profile.data;
+        let data = this.profile.data;
         if (!data) {
             // The profiler may have been terminated with the "Clear all profiles." button.
             return;
         }
 
         this.profile.children = [];
-        for (var i = 0; i < data.length; ++i) {
+        for (let i = 0; i < data.length; ++i) {
             data[i].timePercent = data[i].time * 100 / this.profile.totalTime;
-            var node = new WebInspector.CSSSelectorDataGridNode(this, data[i]);
+            let node = new WebInspector.CSSSelectorDataGridNode(this, data[i]);
             this.profile.children.push(node);
         }
     },
@@ -148,16 +148,16 @@ WebInspector.CSSSelectorProfileView.prototype = {
     {
         this.dataGrid.removeChildren();
 
-        var children = this.profile.children;
-        var count = children.length;
+        let children = this.profile.children;
+        let count = children.length;
 
-        for (var index = 0; index < count; ++index)
+        for (let index = 0; index < count; ++index)
             this.dataGrid.appendChild(children[index]);
     },
 
     refreshData: function()
     {
-        var child = this.dataGrid.children[0];
+        let child = this.dataGrid.children[0];
         while (child) {
             child.refresh();
             child = child.traverseNextNode(false, null, true);
@@ -189,20 +189,20 @@ WebInspector.CSSSelectorProfileView.prototype = {
 
     _sortProfile: function()
     {
-        var sortAscending = this.dataGrid.sortOrder === "ascending";
-        var sortColumnIdentifier = this.dataGrid.sortColumnIdentifier;
+        let sortAscending = this.dataGrid.sortOrder === "ascending";
+        let sortColumnIdentifier = this.dataGrid.sortColumnIdentifier;
 
         function selectorComparator(a, b)
         {
-            var result = b.rawData.selector.localeCompare(a.rawData.selector);
+            let result = b.rawData.selector.localeCompare(a.rawData.selector);
             return sortAscending ? -result : result;
         }
 
         function sourceComparator(a, b)
         {
-            var aRawData = a.rawData;
-            var bRawData = b.rawData;
-            var result = bRawData.url.localeCompare(aRawData.url);
+            let aRawData = a.rawData;
+            let bRawData = b.rawData;
+            let result = bRawData.url.localeCompare(aRawData.url);
             if (!result)
                 result = bRawData.lineNumber - aRawData.lineNumber;
             return sortAscending ? -result : result;
@@ -220,7 +220,7 @@ WebInspector.CSSSelectorProfileView.prototype = {
             return sortAscending ? -result : result;
         }
 
-        var comparator;
+        let comparator;
         switch (sortColumnIdentifier) {
         case "time":
             comparator = timeComparator;
@@ -246,7 +246,7 @@ WebInspector.CSSSelectorProfileView.prototype = {
         if (event.detail < 2)
             return;
 
-        var cell = event.target.enclosingNodeOrSelfWithNodeName("td");
+        let cell = event.target.enclosingNodeOrSelfWithNodeName("td");
         if (!cell)
             return;
 

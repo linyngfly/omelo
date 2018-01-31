@@ -38,8 +38,8 @@
 // | sed 's|[*]cursor|this._charAt(cursor)|' \
 // | sed 's|yych = \*\([^;]*\)|yych = this._charAt\1|' \
 // | sed 's|{ gotoCase = \([^; continue; };]*\)|{ gotoCase = \1; continue; }|' \
-// | sed 's|unsigned\ int|var|' \
-// | sed 's|var\ yych|case 1: case 1: var yych|'
+// | sed 's|unsigned\ int|let|' \
+// | sed 's|let\ yych|case 1: case 1: let yych|'
 
 /**
  * @constructor
@@ -86,13 +86,13 @@ WebInspector.SourceHTMLTokenizer.prototype = {
 
     set line(line) {
         if (this._condition.internalJavaScriptTokenizerCondition) {
-            var match = /<\/script/i.exec(line);
+            let match = /<\/script/i.exec(line);
             if (match) {
                 this._internalJavaScriptTokenizer.line = line.substring(0, match.index);
             } else
                 this._internalJavaScriptTokenizer.line = line;
         } else if (this._condition.internalCSSTokenizerCondition) {
-            var match = /<\/style/i.exec(line);
+            let match = /<\/style/i.exec(line);
             if (match) {
                 this._internalCSSTokenizer.line = line.substring(0, match.index);
             } else
@@ -186,7 +186,7 @@ WebInspector.SourceHTMLTokenizer.prototype = {
             if (cursor !== this._internalJavaScriptTokenizer._line.length) {
                 // Tokenizer is stateless, so restore its condition before tokenizing and save it after.
                 this._internalJavaScriptTokenizer.condition = this._condition.internalJavaScriptTokenizerCondition;
-                var result = this._internalJavaScriptTokenizer.nextToken(cursor);
+                let result = this._internalJavaScriptTokenizer.nextToken(cursor);
                 this.tokenType = this._internalJavaScriptTokenizer.tokenType;
                 this._condition.internalJavaScriptTokenizerCondition = this._internalJavaScriptTokenizer.condition;
                 return result;
@@ -198,7 +198,7 @@ WebInspector.SourceHTMLTokenizer.prototype = {
             if (cursor !== this._internalCSSTokenizer._line.length) {
                 // Tokenizer is stateless, so restore its condition before tokenizing and save it after.
                 this._internalCSSTokenizer.condition = this._condition.internalCSSTokenizerCondition;
-                var result = this._internalCSSTokenizer.nextToken(cursor);
+                let result = this._internalCSSTokenizer.nextToken(cursor);
                 this.tokenType = this._internalCSSTokenizer.tokenType;
                 this._condition.internalCSSTokenizerCondition = this._internalCSSTokenizer.condition;
                 return result;
@@ -206,16 +206,16 @@ WebInspector.SourceHTMLTokenizer.prototype = {
                 delete this._condition.internalCSSTokenizerCondition;
         }
 
-        var cursorOnEnter = cursor;
-        var gotoCase = 1;
-        var YYMARKER;
+        let cursorOnEnter = cursor;
+        let gotoCase = 1;
+        let YYMARKER;
         while (1) {
             switch (gotoCase)
             // Following comment is replaced with generated state machine.
 
         {
-            case 1: var yych;
-            var yyaccept = 0;
+            case 1: let yych;
+            let yyaccept = 0;
             if (this.getLexCondition() < 3) {
                 if (this.getLexCondition() < 1) {
                     { gotoCase = this.case_INITIAL; continue; };
@@ -688,13 +688,13 @@ case 99:
                     if (this._condition.parseCondition === this._parseConditions.INITIAL) {
                         this.tokenType = "html-tag";
                         this._setExpectingAttribute();
-                        var token = this._line.substring(cursorOnEnter, cursor);
+                        let token = this._line.substring(cursorOnEnter, cursor);
                         if (token === "a")
                             this._condition.parseCondition |= this._parseConditions.A_NODE;
                         else if (this._condition.parseCondition & this._parseConditions.A_NODE)
                             this._condition.parseCondition ^= this._parseConditions.A_NODE;
                     } else if (this._isExpectingAttribute()) {
-                        var token = this._line.substring(cursorOnEnter, cursor);
+                        let token = this._line.substring(cursorOnEnter, cursor);
                         if (token === "href" || token === "src")
                             this._condition.parseCondition |= this._parseConditions.LINKIFY;
                         else if (this._condition.parseCondition |= this._parseConditions.LINKIFY)

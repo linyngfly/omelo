@@ -29,7 +29,7 @@
  */
 
 
-var Preferences = {
+let Preferences = {
     maxInlineTextChildLength: 80,
     minConsoleHeight: 75,
     minSidebarWidth: 100,
@@ -47,7 +47,7 @@ var Preferences = {
     showDockToRight: false
 }
 
-var Capabilities = {
+let Capabilities = {
     samplingCPUProfiler: false,
     debuggerCausesRecompilation: true,
     profilerCausesRecompilation: true,
@@ -207,7 +207,7 @@ WebInspector.ExperimentsSettings.prototype = {
      */
     _createExperiment: function(experimentName, experimentTitle)
     {
-        var experiment = new WebInspector.Experiment(this, experimentName, experimentTitle);
+        let experiment = new WebInspector.Experiment(this, experimentName, experimentTitle);
         this._experiments.push(experiment);
         return experiment;
     },
@@ -224,7 +224,7 @@ WebInspector.ExperimentsSettings.prototype = {
         if (!this.experimentsEnabled)
             return false;
         
-        var experimentsSetting = this._setting.get();
+        let experimentsSetting = this._setting.get();
         return experimentsSetting[experimentName];
     },
     
@@ -234,7 +234,7 @@ WebInspector.ExperimentsSettings.prototype = {
      */
     setEnabled: function(experimentName, enabled)
     {
-        var experimentsSetting = this._setting.get();
+        let experimentsSetting = this._setting.get();
         experimentsSetting[experimentName] = enabled;
         this._setting.set(experimentsSetting);
     },
@@ -249,10 +249,10 @@ WebInspector.ExperimentsSettings.prototype = {
 
     _cleanUpSetting: function()
     {
-        var experimentsSetting = this._setting.get();
-        var cleanedUpExperimentSetting = {};
-        for (var i = 0; i < this._experiments.length; ++i) {
-            var experimentName = this._experiments[i].name;
+        let experimentsSetting = this._setting.get();
+        let cleanedUpExperimentSetting = {};
+        for (let i = 0; i < this._experiments.length; ++i) {
+            let experimentName = this._experiments[i].name;
             if (experimentsSetting[experimentName])
                 cleanedUpExperimentSetting[experimentName] = true;
         }

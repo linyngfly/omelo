@@ -32,7 +32,7 @@ WebInspector.CSSKeywordCompletions = {}
 
 WebInspector.CSSKeywordCompletions.forProperty = function(propertyName)
 {
-    var acceptedKeywords = ["initial"];
+    let acceptedKeywords = ["initial"];
     if (propertyName in WebInspector.CSSKeywordCompletions._propertyKeywordMap)
         acceptedKeywords = acceptedKeywords.concat(WebInspector.CSSKeywordCompletions._propertyKeywordMap[propertyName]);
     if (propertyName in WebInspector.CSSKeywordCompletions._colorAwareProperties)

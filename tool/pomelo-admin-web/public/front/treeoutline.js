@@ -68,7 +68,7 @@ TreeOutline.prototype.setFocusable = function(focusable)
 
 TreeOutline.prototype.appendChild = function(child)
 {
-    var insertionIndex;
+    let insertionIndex;
     if (this.treeOutline.comparator)
         insertionIndex = insertionIndexForObjectInListSortedByFunction(child, this.children, this.treeOutline.comparator);
     else
@@ -81,7 +81,7 @@ TreeOutline.prototype.insertChild = function(child, index)
     if (!child)
         throw("child can't be undefined or null");
 
-    var previousChild = (index > 0 ? this.children[index - 1] : null);
+    let previousChild = (index > 0 ? this.children[index - 1] : null);
     if (previousChild) {
         previousChild.nextSibling = child;
         child.previousSibling = previousChild;
@@ -89,7 +89,7 @@ TreeOutline.prototype.insertChild = function(child, index)
         child.previousSibling = null;
     }
 
-    var nextChild = this.children[index];
+    let nextChild = this.children[index];
     if (nextChild) {
         nextChild.previousSibling = child;
         child.nextSibling = nextChild;
@@ -103,7 +103,7 @@ TreeOutline.prototype.insertChild = function(child, index)
     child.treeOutline = this.treeOutline;
     child.treeOutline._rememberTreeElement(child);
 
-    var current = child.children[0];
+    let current = child.children[0];
     while (current) {
         current.treeOutline = this.treeOutline;
         current.treeOutline._rememberTreeElement(current);
@@ -132,10 +132,10 @@ TreeOutline.prototype.removeChildAtIndex = function(childIndex)
     if (childIndex < 0 || childIndex >= this.children.length)
         throw("childIndex out of range");
 
-    var child = this.children[childIndex];
+    let child = this.children[childIndex];
     this.children.splice(childIndex, 1);
 
-    var parent = child.parent;
+    let parent = child.parent;
     if (child.deselect()) {
         if (child.previousSibling)
             child.previousSibling.select();
@@ -167,7 +167,7 @@ TreeOutline.prototype.removeChild = function(child)
     if (!child)
         throw("child can't be undefined or null");
 
-    var childIndex = this.children.indexOf(child);
+    let childIndex = this.children.indexOf(child);
     if (childIndex === -1)
         throw("child not found in this node's children");
 
@@ -176,8 +176,8 @@ TreeOutline.prototype.removeChild = function(child)
 
 TreeOutline.prototype.removeChildren = function()
 {
-    for (var i = 0; i < this.children.length; ++i) {
-        var child = this.children[i];
+    for (let i = 0; i < this.children.length; ++i) {
+        let child = this.children[i];
         child.deselect();
 
         if (child.treeOutline) {
@@ -197,16 +197,16 @@ TreeOutline.prototype.removeChildren = function()
 
 TreeOutline.prototype.removeChildrenRecursive = function()
 {
-    var childrenToRemove = this.children;
+    let childrenToRemove = this.children;
 
-    var child = this.children[0];
+    let child = this.children[0];
     while (child) {
         if (child.children.length)
             childrenToRemove = childrenToRemove.concat(child.children);
         child = child.traverseNextTreeElement(false, this, true);
     }
 
-    for (var i = 0; i < childrenToRemove.length; ++i) {
+    for (let i = 0; i < childrenToRemove.length; ++i) {
         child = childrenToRemove[i];
         child.deselect();
         if (child.treeOutline)
@@ -228,7 +228,7 @@ TreeOutline.prototype._rememberTreeElement = function(element)
         this._treeElementsMap.put(element.representedObject, []);
         
     // check if the element is already known
-    var elements = this._treeElementsMap.get(element.representedObject);
+    let elements = this._treeElementsMap.get(element.representedObject);
     if (elements.indexOf(element) !== -1)
         return;
 
@@ -244,7 +244,7 @@ TreeOutline.prototype._forgetTreeElement = function(element)
 
 TreeOutline.prototype._forgetChildrenRecursive = function(parentElement)
 {
-    var child = parentElement.children[0];
+    let child = parentElement.children[0];
     while (child) {
         this._forgetTreeElement(child);
         child = child.traverseNextTreeElement(false, parentElement, true);
@@ -256,7 +256,7 @@ TreeOutline.prototype.getCachedTreeElement = function(representedObject)
     if (!representedObject)
         return null;
 
-    var elements = this._treeElementsMap.get(representedObject);
+    let elements = this._treeElementsMap.get(representedObject);
     if (elements && elements.length)
         return elements[0];
     return null;
@@ -267,15 +267,15 @@ TreeOutline.prototype.findTreeElement = function(representedObject, isAncestor, 
     if (!representedObject)
         return null;
 
-    var cachedElement = this.getCachedTreeElement(representedObject);
+    let cachedElement = this.getCachedTreeElement(representedObject);
     if (cachedElement)
         return cachedElement;
 
     // The representedObject isn't known, so we start at the top of the tree and work down to find the first
     // tree element that represents representedObject or one of its ancestors.
-    var item;
-    var found = false;
-    for (var i = 0; i < this.children.length; ++i) {
+    let item;
+    let found = false;
+    for (let i = 0; i < this.children.length; ++i) {
         item = this.children[i];
         if (item.representedObject === representedObject || isAncestor(item.representedObject, representedObject)) {
             found = true;
@@ -288,8 +288,8 @@ TreeOutline.prototype.findTreeElement = function(representedObject, isAncestor, 
 
     // Make sure the item that we found is connected to the root of the tree.
     // Build up a list of representedObject's ancestors that aren't already in our tree.
-    var ancestors = [];
-    var currentObject = representedObject;
+    let ancestors = [];
+    let currentObject = representedObject;
     while (currentObject) {
         ancestors.unshift(currentObject);
         if (currentObject === item.representedObject)
@@ -298,7 +298,7 @@ TreeOutline.prototype.findTreeElement = function(representedObject, isAncestor, 
     }
 
     // For each of those ancestors we populate them to fill in the tree.
-    for (var i = 0; i < ancestors.length; ++i) {
+    for (let i = 0; i < ancestors.length; ++i) {
         // Make sure we don't call findTreeElement with the same representedObject
         // again, to prevent infinite recursion.
         if (ancestors[i] === representedObject)
@@ -324,11 +324,11 @@ TreeOutline.prototype._treeElementDidChange = function(treeElement)
 
 TreeOutline.prototype.treeElementFromPoint = function(x, y)
 {
-    var node = this._childrenListNode.ownerDocument.elementFromPoint(x, y);
+    let node = this._childrenListNode.ownerDocument.elementFromPoint(x, y);
     if (!node)
         return null;
 
-    var listNode = node.enclosingNodeOrSelfWithNodeNameInArray(["ol", "li"]);
+    let listNode = node.enclosingNodeOrSelfWithNodeNameInArray(["ol", "li"]);
     if (listNode)
         return listNode.parentTreeElement || listNode.treeElement;
     return null;
@@ -339,7 +339,7 @@ TreeOutline.prototype._treeKeyPress = function(event)
     if (!this.searchable || WebInspector.isBeingEdited(this._childrenListNode))
         return;
     
-    var searchText = String.fromCharCode(event.charCode);
+    let searchText = String.fromCharCode(event.charCode);
     // Ignore whitespace.
     if (searchText.trim() !== searchText)
         return;
@@ -356,8 +356,8 @@ TreeOutline.prototype._treeKeyDown = function(event)
     if (!this.selectedTreeElement || event.shiftKey || event.metaKey || event.ctrlKey)
         return;
 
-    var handled = false;
-    var nextSelectedElement;
+    let handled = false;
+    let nextSelectedElement;
     if (event.keyIdentifier === "Up" && !event.altKey) {
         nextSelectedElement = this.selectedTreeElement.traversePreviousTreeElement(true);
         while (nextSelectedElement && !nextSelectedElement.selectable)
@@ -491,7 +491,7 @@ TreeOutline.prototype._searchTextChanged = function()
 {
     function updateSearch()
     {
-        var nextSelectedElement = this._nextSearchMatch(this.searchInputElement.value, this.selectedTreeElement, false);
+        let nextSelectedElement = this._nextSearchMatch(this.searchInputElement.value, this.selectedTreeElement, false);
         if (!nextSelectedElement)
             nextSelectedElement = this._nextSearchMatch(this.searchInputElement.value, this.children[0], false);
         this._showSearchMatchElement(nextSelectedElement);
@@ -518,8 +518,8 @@ TreeOutline.prototype._searchInputKeyDown = function(event)
     if (event.shiftKey || event.metaKey || event.ctrlKey || event.altKey)
         return;
 
-    var handled = false;
-    var nextSelectedElement;
+    let handled = false;
+    let nextSelectedElement;
     if (event.keyIdentifier === "Down") {
         nextSelectedElement = this._nextSearchMatch(this.searchInputElement.value, this.selectedTreeElement, true);
         handled = true;
@@ -530,7 +530,7 @@ TreeOutline.prototype._searchInputKeyDown = function(event)
         this._searchFinished();
         handled = true;
     } else if (isEnterKey(event)) {
-        var lastSearchMatchElement = this._currentSearchMatchElement;
+        let lastSearchMatchElement = this._currentSearchMatchElement;
         this._searchFinished();
         if (lastSearchMatchElement && lastSearchMatchElement.onenter)
             lastSearchMatchElement.onenter();
@@ -553,8 +553,8 @@ TreeOutline.prototype._searchInputKeyDown = function(event)
  */
 TreeOutline.prototype._nextSearchMatch = function(searchText, startTreeElement, skipStartTreeElement)
 {
-    var currentTreeElement = startTreeElement;
-    var skipCurrentTreeElement = skipStartTreeElement;
+    let currentTreeElement = startTreeElement;
+    let skipCurrentTreeElement = skipStartTreeElement;
     while (currentTreeElement && (skipCurrentTreeElement || !currentTreeElement.matchesSearchText || !currentTreeElement.matchesSearchText(searchText))) {
         currentTreeElement = currentTreeElement.traverseNextTreeElement(true, null, true);
         skipCurrentTreeElement = false;
@@ -569,8 +569,8 @@ TreeOutline.prototype._nextSearchMatch = function(searchText, startTreeElement, 
  */
 TreeOutline.prototype._previousSearchMatch = function(searchText, startTreeElement)
 {
-    var currentTreeElement = startTreeElement;
-    var skipCurrentTreeElement = true;
+    let currentTreeElement = startTreeElement;
+    let skipCurrentTreeElement = true;
     while (currentTreeElement && (skipCurrentTreeElement || !currentTreeElement.matchesSearchText || !currentTreeElement.matchesSearchText(searchText))) {
         currentTreeElement = currentTreeElement.traversePreviousTreeElement(true, true);
         skipCurrentTreeElement = false;
@@ -805,7 +805,7 @@ TreeElement.prototype._attach = function()
             this.onattach(this);
     }
 
-    var nextSibling = null;
+    let nextSibling = null;
     if (this.nextSibling && this.nextSibling._listItemNode && this.nextSibling._listItemNode.parentNode === this.parent._childrenListNode)
         nextSibling = this.nextSibling._listItemNode;
     this.parent._childrenListNode.insertBefore(this._listItemNode, nextSibling);
@@ -827,7 +827,7 @@ TreeElement.prototype._detach = function()
 
 TreeElement.treeElementMouseDown = function(event)
 {
-    var element = event.currentTarget;
+    let element = event.currentTarget;
     if (!element || !element.treeElement || !element.treeElement.selectable)
         return;
 
@@ -839,12 +839,12 @@ TreeElement.treeElementMouseDown = function(event)
 
 TreeElement.treeElementToggled = function(event)
 {
-    var element = event.currentTarget;
+    let element = event.currentTarget;
     if (!element || !element.treeElement)
         return;
 
-    var toggleOnClick = element.treeElement.toggleOnClick && !element.treeElement.selectable;
-    var isInTriangle = element.treeElement.isEventWithinDisclosureTriangle(event);
+    let toggleOnClick = element.treeElement.toggleOnClick && !element.treeElement.selectable;
+    let isInTriangle = element.treeElement.isEventWithinDisclosureTriangle(event);
     if (!toggleOnClick && !isInTriangle)
         return;
 
@@ -864,12 +864,12 @@ TreeElement.treeElementToggled = function(event)
 
 TreeElement.treeElementDoubleClicked = function(event)
 {
-    var element = event.currentTarget;
+    let element = event.currentTarget;
     if (!element || !element.treeElement)
         return;
 
     if (element.treeElement.ondblclick) {
-        var handled = element.treeElement.ondblclick.call(element.treeElement, event);
+        let handled = element.treeElement.ondblclick.call(element.treeElement, event);
         if (handled)
             return;
     } else if (element.treeElement.hasChildren && !element.treeElement.expanded)
@@ -894,7 +894,7 @@ TreeElement.prototype.collapse = function()
 
 TreeElement.prototype.collapseRecursively = function()
 {
-    var item = this;
+    let item = this;
     while (item) {
         if (item.expanded)
             item.collapse();
@@ -928,7 +928,7 @@ TreeElement.prototype.expand = function()
 
         this.onpopulate();
 
-        for (var i = 0; i < this.children.length; ++i)
+        for (let i = 0; i < this.children.length; ++i)
             this.children[i]._attach();
 
         delete this._shouldRefreshChildren;
@@ -949,9 +949,9 @@ TreeElement.prototype.expand = function()
 
 TreeElement.prototype.expandRecursively = function(maxDepth)
 {
-    var item = this;
-    var info = {};
-    var depth = 0;
+    let item = this;
+    let info = {};
+    let depth = 0;
 
     // The Inspector uses TreeOutlines to represents object properties, so recursive expansion
     // in some case can be infinite, since JavaScript objects can hold circular references.
@@ -971,7 +971,7 @@ TreeElement.prototype.hasAncestor = function(ancestor) {
     if (!ancestor)
         return false;
 
-    var currentNode = this.parent;
+    let currentNode = this.parent;
     while (currentNode) {
         if (ancestor === currentNode)
             return true;
@@ -983,7 +983,7 @@ TreeElement.prototype.hasAncestor = function(ancestor) {
 
 TreeElement.prototype.reveal = function()
 {
-    var currentAncestor = this.parent;
+    let currentAncestor = this.parent;
     while (currentAncestor && !currentAncestor.root) {
         if (!currentAncestor.expanded)
             currentAncestor.expand();
@@ -996,7 +996,7 @@ TreeElement.prototype.reveal = function()
 
 TreeElement.prototype.revealed = function()
 {
-    var currentAncestor = this.parent;
+    let currentAncestor = this.parent;
     while (currentAncestor && !currentAncestor.root) {
         if (!currentAncestor.expanded)
             return false;
@@ -1089,7 +1089,7 @@ TreeElement.prototype.traverseNextTreeElement = function(skipUnrevealed, stayWit
     if (info)
         info.depthChange = 0;
 
-    var element = skipUnrevealed ? (this.revealed() ? this.children[0] : null) : this.children[0];
+    let element = skipUnrevealed ? (this.revealed() ? this.children[0] : null) : this.children[0];
     if (element && (!skipUnrevealed || (skipUnrevealed && this.expanded))) {
         if (info)
             info.depthChange = 1;
@@ -1123,7 +1123,7 @@ TreeElement.prototype.traverseNextTreeElement = function(skipUnrevealed, stayWit
  */
 TreeElement.prototype.traversePreviousTreeElement = function(skipUnrevealed, dontPopulate)
 {
-    var element = skipUnrevealed ? (this.revealed() ? this.previousSibling : null) : this.previousSibling;
+    let element = skipUnrevealed ? (this.revealed() ? this.previousSibling : null) : this.previousSibling;
     if (!dontPopulate && element && element.hasChildren)
         element.onpopulate();
 
@@ -1145,7 +1145,7 @@ TreeElement.prototype.traversePreviousTreeElement = function(skipUnrevealed, don
 TreeElement.prototype.isEventWithinDisclosureTriangle = function(event)
 {
     // FIXME: We should not use getComputedStyle(). For that we need to get rid of using ::before for disclosure triangle. (http://webk.it/74446) 
-    var computedLeftPadding = window.getComputedStyle(this._listItemNode).getPropertyCSSValue("padding-left").getFloatValue(CSSPrimitiveValue.CSS_PX);
-    var left = this._listItemNode.totalOffsetLeft() + computedLeftPadding;
+    let computedLeftPadding = window.getComputedStyle(this._listItemNode).getPropertyCSSValue("padding-left").getFloatValue(CSSPrimitiveValue.CSS_PX);
+    let left = this._listItemNode.totalOffsetLeft() + computedLeftPadding;
     return event.pageX >= left && event.pageX <= left + this.arrowToggleWidth && this.hasChildren;
 }

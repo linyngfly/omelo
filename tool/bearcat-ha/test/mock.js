@@ -1,4 +1,4 @@
-var Mock = {
+let Mock = {
 	"node_0": {
 		"master": "127.0.0.1:5331/ddb_test1",
 		"slaves": [],

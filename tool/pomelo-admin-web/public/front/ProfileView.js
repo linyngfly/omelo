@@ -36,7 +36,7 @@ WebInspector.CPUProfileView = function(profile)
     this.showAverageTimeAsPercent = WebInspector.settings.createSetting("cpuProfilerShowAverageTimeAsPercent", true);
     this._viewType = WebInspector.settings.createSetting("cpuProfilerView", WebInspector.CPUProfileView._TypeHeavy);
 
-    var columns = { "self": { title: WebInspector.UIString("Self"), width: "72px", sort: "descending", sortable: true },
+    let columns = { "self": { title: WebInspector.UIString("Self"), width: "72px", sort: "descending", sortable: true },
                     "total": { title: WebInspector.UIString("Total"), width: "72px", sortable: true },
                     "average": { title: WebInspector.UIString("Average"), width: "72px", sortable: true },
                     "calls": { title: WebInspector.UIString("Calls"), width: "54px", sortable: true },
@@ -56,9 +56,9 @@ WebInspector.CPUProfileView = function(profile)
     this.viewSelectElement.className = "status-bar-item";
     this.viewSelectElement.addEventListener("change", this._changeView.bind(this), false);
 
-    var heavyViewOption = document.createElement("option");
+    let heavyViewOption = document.createElement("option");
     heavyViewOption.label = WebInspector.UIString("Heavy (Bottom Up)");
-    var treeViewOption = document.createElement("option");
+    let treeViewOption = document.createElement("option");
     treeViewOption.label = WebInspector.UIString("Tree (Top Down)");
     this.viewSelectElement.appendChild(heavyViewOption);
     this.viewSelectElement.appendChild(treeViewOption);
@@ -176,14 +176,14 @@ WebInspector.CPUProfileView.prototype = {
 
     refresh: function()
     {
-        var selectedProfileNode = this.dataGrid.selectedNode ? this.dataGrid.selectedNode.profileNode : null;
+        let selectedProfileNode = this.dataGrid.selectedNode ? this.dataGrid.selectedNode.profileNode : null;
 
         this.dataGrid.removeChildren();
 
-        var children = this.profileDataGridTree.children;
-        var count = children.length;
+        let children = this.profileDataGridTree.children;
+        let count = children.length;
 
-        for (var index = 0; index < count; ++index)
+        for (let index = 0; index < count; ++index)
             this.dataGrid.appendChild(children[index]);
 
         if (selectedProfileNode)
@@ -192,7 +192,7 @@ WebInspector.CPUProfileView.prototype = {
 
     refreshVisibleData: function()
     {
-        var child = this.dataGrid.children[0];
+        let child = this.dataGrid.children[0];
         while (child) {
             child.refresh();
             child = child.traverseNextNode(false, null, true);
@@ -208,8 +208,8 @@ WebInspector.CPUProfileView.prototype = {
     searchCanceled: function()
     {
         if (this._searchResults) {
-            for (var i = 0; i < this._searchResults.length; ++i) {
-                var profileNode = this._searchResults[i].profileNode;
+            for (let i = 0; i < this._searchResults.length; ++i) {
+                let profileNode = this._searchResults[i].profileNode;
 
                 delete profileNode._searchMatchedSelfColumn;
                 delete profileNode._searchMatchedTotalColumn;
@@ -237,14 +237,14 @@ WebInspector.CPUProfileView.prototype = {
 
         this._searchFinishedCallback = finishedCallback;
 
-        var greaterThan = (query.indexOf(">") === 0);
-        var lessThan = (query.indexOf("<") === 0);
-        var equalTo = (query.indexOf("=") === 0 || ((greaterThan || lessThan) && query.indexOf("=") === 1));
-        var percentUnits = (query.lastIndexOf("%") === (query.length - 1));
-        var millisecondsUnits = (query.length > 2 && query.lastIndexOf("ms") === (query.length - 2));
-        var secondsUnits = (!millisecondsUnits && query.lastIndexOf("s") === (query.length - 1));
+        let greaterThan = (query.indexOf(">") === 0);
+        let lessThan = (query.indexOf("<") === 0);
+        let equalTo = (query.indexOf("=") === 0 || ((greaterThan || lessThan) && query.indexOf("=") === 1));
+        let percentUnits = (query.lastIndexOf("%") === (query.length - 1));
+        let millisecondsUnits = (query.length > 2 && query.lastIndexOf("ms") === (query.length - 2));
+        let secondsUnits = (!millisecondsUnits && query.lastIndexOf("s") === (query.length - 1));
 
-        var queryNumber = parseFloat(query);
+        let queryNumber = parseFloat(query);
         if (greaterThan || lessThan || equalTo) {
             if (equalTo && (greaterThan || lessThan))
                 queryNumber = parseFloat(query.substring(2));
@@ -252,7 +252,7 @@ WebInspector.CPUProfileView.prototype = {
                 queryNumber = parseFloat(query.substring(1));
         }
 
-        var queryNumberMilliseconds = (secondsUnits ? (queryNumber * 1000) : queryNumber);
+        let queryNumberMilliseconds = (secondsUnits ? (queryNumber * 1000) : queryNumber);
 
         // Make equalTo implicitly true if it wasn't specified there is no other operator.
         if (!isNaN(queryNumber) && !(greaterThan || lessThan))
@@ -341,7 +341,7 @@ WebInspector.CPUProfileView.prototype = {
             return false;
         }
 
-        var current = this.profileDataGridTree.children[0];
+        let current = this.profileDataGridTree.children[0];
 
         while (current) {
             if (matchesQuery(current)) {
@@ -400,11 +400,11 @@ WebInspector.CPUProfileView.prototype = {
 
     _jumpToSearchResult: function(index)
     {
-        var searchResult = this._searchResults[index];
+        let searchResult = this._searchResults[index];
         if (!searchResult)
             return;
 
-        var profileNode = searchResult.profileNode;
+        let profileNode = searchResult.profileNode;
         profileNode.revealAndSelect();
     },
 
@@ -435,7 +435,7 @@ WebInspector.CPUProfileView.prototype = {
 
     _percentClicked: function(event)
     {
-        var currentState = this.showSelfTimeAsPercent.get() && this.showTotalTimeAsPercent.get() && this.showAverageTimeAsPercent.get();
+        let currentState = this.showSelfTimeAsPercent.get() && this.showTotalTimeAsPercent.get() && this.showAverageTimeAsPercent.get();
         this.showSelfTimeAsPercent.set(!currentState);
         this.showTotalTimeAsPercent.set(!currentState);
         this.showAverageTimeAsPercent.set(!currentState);
@@ -466,7 +466,7 @@ WebInspector.CPUProfileView.prototype = {
 
     _excludeClicked: function(event)
     {
-        var selectedNode = this.dataGrid.selectedNode
+        let selectedNode = this.dataGrid.selectedNode
 
         if (!selectedNode)
             return;
@@ -507,9 +507,9 @@ WebInspector.CPUProfileView.prototype = {
 
     _sortProfile: function()
     {
-        var sortAscending = this.dataGrid.sortOrder === "ascending";
-        var sortColumnIdentifier = this.dataGrid.sortColumnIdentifier;
-        var sortProperty = {
+        let sortAscending = this.dataGrid.sortOrder === "ascending";
+        let sortColumnIdentifier = this.dataGrid.sortColumnIdentifier;
+        let sortProperty = {
                 "average": "averageTime",
                 "self": "selfTime",
                 "total": "totalTime",
@@ -527,7 +527,7 @@ WebInspector.CPUProfileView.prototype = {
         if (event.detail < 2)
             return;
 
-        var cell = event.target.enclosingNodeOrSelfWithNodeName("td");
+        let cell = event.target.enclosingNodeOrSelfWithNodeName("td");
         if (!cell || (!cell.hasStyleClass("total-column") && !cell.hasStyleClass("self-column") && !cell.hasStyleClass("average-column")))
             return;
 
@@ -545,16 +545,16 @@ WebInspector.CPUProfileView.prototype = {
 
     _assignParentsInProfile: function()
     {
-        var head = this.profile.head;
+        let head = this.profile.head;
         head.parent = null;
         head.head = null;
-        var nodesToTraverse = [ { parent: head, children: head.children } ];
+        let nodesToTraverse = [ { parent: head, children: head.children } ];
         while (nodesToTraverse.length > 0) {
-            var pair = nodesToTraverse.shift();
-            var parent = pair.parent;
-            var children = pair.children;
-            var length = children.length;
-            for (var i = 0; i < length; ++i) {
+            let pair = nodesToTraverse.shift();
+            let parent = pair.parent;
+            let children = pair.children;
+            let length = children.length;
+            for (let i = 0; i < length; ++i) {
                 children[i].head = head;
                 children[i].parent = parent;
                 if (children[i].children.length > 0)

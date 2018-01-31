@@ -39,9 +39,9 @@ WebInspector.HelpScreen = function(title)
     this._element.tabIndex = 0;
     this._element.addEventListener("focus", this._onBlur.bind(this), false);
 
-    var mainWindow = this._element.createChild("div", "help-window-main");
-    var captionWindow = mainWindow.createChild("div", "help-window-caption");
-    var closeButton = captionWindow.createChild("button", "help-close-button");
+    let mainWindow = this._element.createChild("div", "help-window-main");
+    let captionWindow = mainWindow.createChild("div", "help-window-caption");
+    let closeButton = captionWindow.createChild("button", "help-close-button");
     this.contentElement = mainWindow.createChild("div", "help-content");
     captionWindow.createChild("h1", "help-window-title").textContent = title;
 

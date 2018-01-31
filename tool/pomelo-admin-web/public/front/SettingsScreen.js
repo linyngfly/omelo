@@ -38,7 +38,7 @@ WebInspector.SettingsScreen = function()
 
     this._leftColumnElement = document.createElement("td");
     this._rightColumnElement = document.createElement("td");
-    var p;
+    let p;
 
     if (Preferences.showDockToRight || Preferences.exposeDisableCache) {
         p = this._appendSection(WebInspector.UIString("General"));
@@ -89,22 +89,22 @@ WebInspector.SettingsScreen = function()
     p.appendChild(this._createCheckboxSetting(WebInspector.UIString("Preserve log upon navigation"), WebInspector.settings.preserveConsoleLog));
 
     if (WebInspector.extensionServer.hasExtensions()) {
-        var handlerSelector = new WebInspector.HandlerSelector(WebInspector.openAnchorLocationRegistry);
+        let handlerSelector = new WebInspector.HandlerSelector(WebInspector.openAnchorLocationRegistry);
         p = this._appendSection(WebInspector.UIString("Extensions"), true);
         p.appendChild(this._createCustomSetting(WebInspector.UIString("Open links in"), handlerSelector.element));
     }
 
-    var experiments = WebInspector.experimentsSettings.experiments;
+    let experiments = WebInspector.experimentsSettings.experiments;
     if (WebInspector.experimentsSettings.experimentsEnabled && experiments.length) {
-        var experimentsSection = this._appendSection(WebInspector.UIString("Experiments"), true);
+        let experimentsSection = this._appendSection(WebInspector.UIString("Experiments"), true);
         experimentsSection.appendChild(this._createExperimentsWarningSubsection());
-        for (var i = 0; i < experiments.length; ++i)
+        for (let i = 0; i < experiments.length; ++i)
             experimentsSection.appendChild(this._createExperimentCheckbox(experiments[i]));
     }
     
-    var table = document.createElement("table");
+    let table = document.createElement("table");
     table.className = "help-table";
-    var tr = document.createElement("tr");
+    let tr = document.createElement("tr");
     tr.appendChild(this._leftColumnElement);
     tr.appendChild(this._rightColumnElement);
     table.appendChild(tr);
@@ -118,9 +118,9 @@ WebInspector.SettingsScreen.prototype = {
      */
     _appendSection: function(name, right)
     {
-        var p = document.createElement("p");
+        let p = document.createElement("p");
         p.className = "help-section";
-        var title = document.createElement("div");
+        let title = document.createElement("div");
         title.className = "help-section-title";
         title.textContent = name;
         p.appendChild(title);
@@ -133,11 +133,11 @@ WebInspector.SettingsScreen.prototype = {
      */
     _createExperimentsWarningSubsection: function()
     {
-        var subsection = document.createElement("div");
-        var warning = subsection.createChild("span", "settings-experiments-warning-subsection-warning");
+        let subsection = document.createElement("div");
+        let warning = subsection.createChild("span", "settings-experiments-warning-subsection-warning");
         warning.textContent = WebInspector.UIString("WARNING:");
         subsection.appendChild(document.createTextNode(" "));
-        var message = subsection.createChild("span", "settings-experiments-warning-subsection-message");
+        let message = subsection.createChild("span", "settings-experiments-warning-subsection-message");
         message.textContent = WebInspector.UIString("These experiments could be dangerous and may require restart.");
         return subsection;
     },
@@ -149,7 +149,7 @@ WebInspector.SettingsScreen.prototype = {
 
     _createCheckboxSetting: function(name, setting)
     {
-        var input = document.createElement("input");
+        let input = document.createElement("input");
         input.type = "checkbox";
         input.name = name;
         input.checked = setting.get();
@@ -159,8 +159,8 @@ WebInspector.SettingsScreen.prototype = {
         }
         input.addEventListener("click", listener, false);
 
-        var p = document.createElement("p");
-        var label = document.createElement("label");
+        let p = document.createElement("p");
+        let label = document.createElement("label");
         label.appendChild(input);
         label.appendChild(document.createTextNode(name));
         p.appendChild(label);
@@ -169,7 +169,7 @@ WebInspector.SettingsScreen.prototype = {
 
     _createExperimentCheckbox: function(experiment)
     {
-        var input = document.createElement("input");
+        let input = document.createElement("input");
         input.type = "checkbox";
         input.name = experiment.name;
         input.checked = experiment.isEnabled();
@@ -179,8 +179,8 @@ WebInspector.SettingsScreen.prototype = {
         }
         input.addEventListener("click", listener, false);
 
-        var p = document.createElement("p");
-        var label = document.createElement("label");
+        let p = document.createElement("p");
+        let label = document.createElement("label");
         label.appendChild(input);
         label.appendChild(document.createTextNode(WebInspector.UIString(experiment.title)));
         p.appendChild(label);
@@ -189,14 +189,14 @@ WebInspector.SettingsScreen.prototype = {
 
     _createSelectSetting: function(name, options, setting)
     {
-        var fieldsetElement = document.createElement("fieldset");
+        let fieldsetElement = document.createElement("fieldset");
         fieldsetElement.createChild("label").textContent = name;
 
-        var select = document.createElement("select");
-        var settingValue = setting.get();
+        let select = document.createElement("select");
+        let settingValue = setting.get();
 
-        for (var i = 0; i < options.length; ++i) {
-            var option = options[i];
+        for (let i = 0; i < options.length; ++i) {
+            let option = options[i];
             select.add(new Option(option[0], option[1]));
             if (settingValue === option[1])
                 select.selectedIndex = i;
@@ -210,16 +210,16 @@ WebInspector.SettingsScreen.prototype = {
         select.addEventListener("change", changeListener, false);
         fieldsetElement.appendChild(select);
 
-        var p = document.createElement("p");
+        let p = document.createElement("p");
         p.appendChild(fieldsetElement);
         return p;
     },
 
     _createRadioSetting: function(name, options, setting)
     {
-        var pp = document.createElement("p");
-        var fieldsetElement = document.createElement("fieldset");
-        var legendElement = document.createElement("legend");
+        let pp = document.createElement("p");
+        let fieldsetElement = document.createElement("fieldset");
+        let legendElement = document.createElement("legend");
         legendElement.textContent = name;
         fieldsetElement.appendChild(legendElement);
 
@@ -228,13 +228,13 @@ WebInspector.SettingsScreen.prototype = {
             setting.set(e.target.value);
         }
 
-        var settingValue = setting.get();
-        for (var i = 0; i < options.length; ++i) {
-            var p = document.createElement("p");
-            var label = document.createElement("label");
+        let settingValue = setting.get();
+        for (let i = 0; i < options.length; ++i) {
+            let p = document.createElement("p");
+            let label = document.createElement("label");
             p.appendChild(label);
 
-            var input = document.createElement("input");
+            let input = document.createElement("input");
             input.type = "radio";
             input.name = setting.name;
             input.value = options[i][0];
@@ -254,8 +254,8 @@ WebInspector.SettingsScreen.prototype = {
 
     _createCustomSetting: function(name, element)
     {
-        var p = document.createElement("p");
-        var fieldsetElement = document.createElement("fieldset");
+        let p = document.createElement("p");
+        let fieldsetElement = document.createElement("fieldset");
         fieldsetElement.createChild("label").textContent = name;
         fieldsetElement.appendChild(element);
         p.appendChild(fieldsetElement);
@@ -264,17 +264,17 @@ WebInspector.SettingsScreen.prototype = {
 
     _createUserActionControl: function()
     {
-        var userAgent = WebInspector.settings.userAgent.get();
+        let userAgent = WebInspector.settings.userAgent.get();
 
-        var p = document.createElement("p");
-        var labelElement = p.createChild("label");
-        var checkboxElement = labelElement.createChild("input");
+        let p = document.createElement("p");
+        let labelElement = p.createChild("label");
+        let checkboxElement = labelElement.createChild("input");
         checkboxElement.type = "checkbox";
         checkboxElement.checked = !!userAgent;
         checkboxElement.addEventListener("click", checkboxClicked.bind(this), false);
         labelElement.appendChild(document.createTextNode("Override User Agent"));
 
-        var selectSectionElement;
+        let selectSectionElement;
         function checkboxClicked()
         {
             if (checkboxElement.checked) {
@@ -295,7 +295,7 @@ WebInspector.SettingsScreen.prototype = {
 
     _createUserAgentSelectRowElement: function()
     {
-        var userAgent = WebInspector.settings.userAgent.get();
+        let userAgent = WebInspector.settings.userAgent.get();
         const userAgents = [
             ["Internet Explorer 9", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)"],
             ["Internet Explorer 8", "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0)"],
@@ -322,15 +322,15 @@ WebInspector.SettingsScreen.prototype = {
             [WebInspector.UIString("Other..."), "Other"]
         ];
 
-        var fieldsetElement = document.createElement("fieldset");
-        var selectElement = fieldsetElement.createChild("select");
-        var otherUserAgentElement = fieldsetElement.createChild("input");
+        let fieldsetElement = document.createElement("fieldset");
+        let selectElement = fieldsetElement.createChild("select");
+        let otherUserAgentElement = fieldsetElement.createChild("input");
         otherUserAgentElement.value = userAgent;
         otherUserAgentElement.title = userAgent;
 
-        var selectionRestored = false;
-        for (var i = 0; i < userAgents.length; ++i) {
-            var agent = userAgents[i];
+        let selectionRestored = false;
+        for (let i = 0; i < userAgents.length; ++i) {
+            let agent = userAgents[i];
             selectElement.add(new Option(agent[0], agent[1]));
             if (userAgent === agent[1]) {
                 selectElement.selectedIndex = i;
@@ -349,7 +349,7 @@ WebInspector.SettingsScreen.prototype = {
 
         function selectionChanged()
         {
-            var value = selectElement.options[selectElement.selectedIndex].value;
+            let value = selectElement.options[selectElement.selectedIndex].value;
             if (value !== "Other") {
                 WebInspector.settings.userAgent.set(value);
                 otherUserAgentElement.value = value;

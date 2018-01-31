@@ -89,18 +89,18 @@ WebInspector.ConcatenatedScriptsContentProvider.prototype = {
 
         this._sortedScriptsArray = [];
         
-        var scripts = this._scripts.slice();
+        let scripts = this._scripts.slice();
         scripts.sort(function(x, y) { return x.lineOffset - y.lineOffset || x.columnOffset - y.columnOffset; });
         
-        var scriptOpenTagLength = WebInspector.ConcatenatedScriptsContentProvider.scriptOpenTag.length;
-        var scriptCloseTagLength = WebInspector.ConcatenatedScriptsContentProvider.scriptCloseTag.length;
+        let scriptOpenTagLength = WebInspector.ConcatenatedScriptsContentProvider.scriptOpenTag.length;
+        let scriptCloseTagLength = WebInspector.ConcatenatedScriptsContentProvider.scriptCloseTag.length;
         
         this._sortedScriptsArray.push(scripts[0]);
-        for (var i = 1; i < scripts.length; ++i) {
-            var previousScript = this._sortedScriptsArray[this._sortedScriptsArray.length - 1];
+        for (let i = 1; i < scripts.length; ++i) {
+            let previousScript = this._sortedScriptsArray[this._sortedScriptsArray.length - 1];
             
-            var lineNumber = previousScript.endLine;
-            var columnNumber = previousScript.endColumn + scriptCloseTagLength + scriptOpenTagLength;
+            let lineNumber = previousScript.endLine;
+            let columnNumber = previousScript.endColumn + scriptCloseTagLength + scriptOpenTagLength;
             
             if (lineNumber < scripts[i].lineOffset || (lineNumber === scripts[i].lineOffset && columnNumber <= scripts[i].columnOffset))
                 this._sortedScriptsArray.push(scripts[i]);
@@ -113,15 +113,15 @@ WebInspector.ConcatenatedScriptsContentProvider.prototype = {
      */
     requestContent: function(callback)
     {
-        var scripts = this._sortedScripts();
-        var sources = [];
+        let scripts = this._sortedScripts();
+        let sources = [];
         function didRequestSource(source)
         {
             sources.push(source);
             if (sources.length == scripts.length)
                 callback(this._mimeType, this._concatenateScriptsContent(scripts, sources));
         }
-        for (var i = 0; i < scripts.length; ++i)
+        for (let i = 0; i < scripts.length; ++i)
             scripts[i].requestSource(didRequestSource.bind(this));
     },
 
@@ -133,17 +133,17 @@ WebInspector.ConcatenatedScriptsContentProvider.prototype = {
      */
     searchInContent: function(query, caseSensitive, isRegex, callback)
     {
-        var results = {};
-        var scripts = this._sortedScripts();
-        var scriptsLeft = scripts.length;
+        let results = {};
+        let scripts = this._sortedScripts();
+        let scriptsLeft = scripts.length;
 
         function maybeCallback()
         {
             if (scriptsLeft)
                 return;
 
-            var result = [];
-            for (var i = 0; i < scripts.length; ++i)
+            let result = [];
+            for (let i = 0; i < scripts.length; ++i)
                 result = result.concat(results[scripts[i].scriptId]);
             callback(result);
         }
@@ -155,8 +155,8 @@ WebInspector.ConcatenatedScriptsContentProvider.prototype = {
         function searchCallback(script, searchMatches)
         {
             results[script.scriptId] = [];
-            for (var i = 0; i < searchMatches.length; ++i) {
-                var searchMatch = new WebInspector.ContentProvider.SearchMatch(searchMatches[i].lineNumber + script.lineOffset, searchMatches[i].lineContent);
+            for (let i = 0; i < searchMatches.length; ++i) {
+                let searchMatch = new WebInspector.ContentProvider.SearchMatch(searchMatches[i].lineNumber + script.lineOffset, searchMatches[i].lineContent);
                 results[script.scriptId].push(searchMatch);
             }
             scriptsLeft--;
@@ -164,7 +164,7 @@ WebInspector.ConcatenatedScriptsContentProvider.prototype = {
         }
 
         maybeCallback();
-        for (var i = 0; i < scripts.length; ++i)
+        for (let i = 0; i < scripts.length; ++i)
             scripts[i].searchInContent(query, caseSensitive, isRegex, searchCallback.bind(this, scripts[i]));
     },
 
@@ -173,19 +173,19 @@ WebInspector.ConcatenatedScriptsContentProvider.prototype = {
      */
     _concatenateScriptsContent: function(scripts, sources)
     {
-        var content = "";
-        var lineNumber = 0;
-        var columnNumber = 0;
+        let content = "";
+        let lineNumber = 0;
+        let columnNumber = 0;
 
-        var scriptOpenTag = WebInspector.ConcatenatedScriptsContentProvider.scriptOpenTag;
-        var scriptCloseTag = WebInspector.ConcatenatedScriptsContentProvider.scriptCloseTag;
-        for (var i = 0; i < scripts.length; ++i) {
+        let scriptOpenTag = WebInspector.ConcatenatedScriptsContentProvider.scriptOpenTag;
+        let scriptCloseTag = WebInspector.ConcatenatedScriptsContentProvider.scriptCloseTag;
+        for (let i = 0; i < scripts.length; ++i) {
             // Fill the gap with whitespace characters.
-            for (var newLinesCount = scripts[i].lineOffset - lineNumber; newLinesCount > 0; --newLinesCount) {
+            for (let newLinesCount = scripts[i].lineOffset - lineNumber; newLinesCount > 0; --newLinesCount) {
                 columnNumber = 0;
                 content += "\n";
             }
-            for (var spacesCount = scripts[i].columnOffset - columnNumber - scriptOpenTag.length; spacesCount > 0; --spacesCount)
+            for (let spacesCount = scripts[i].columnOffset - columnNumber - scriptOpenTag.length; spacesCount > 0; --spacesCount)
                 content += " ";
 
             // Add script tag.
@@ -255,7 +255,7 @@ WebInspector.CompilerSourceMappingContentProvider.prototype = {
      */
     requestContent: function(callback)
     {
-        var sourceCode = "";
+        let sourceCode = "";
         try {
             // FIXME: make sendRequest async.
             sourceCode = InspectorFrontendHost.loadResourceSynchronously(this._sourceURL);
@@ -308,14 +308,14 @@ WebInspector.StaticContentProvider.prototype = {
     {
         function performSearch()
         {
-            var regex = createSearchRegex(query, caseSensitive, isRegex);
+            let regex = createSearchRegex(query, caseSensitive, isRegex);
             
-            var result = [];
-            var lineEndings = this._content.lineEndings();
-            for (var i = 0; i < lineEndings.length; ++i) {
-                var lineStart = i > 0 ? lineEndings[i - 1] + 1 : 0;
-                var lineEnd = lineEndings[i];
-                var lineContent = this._content.substring(lineStart, lineEnd);
+            let result = [];
+            let lineEndings = this._content.lineEndings();
+            for (let i = 0; i < lineEndings.length; ++i) {
+                let lineStart = i > 0 ? lineEndings[i - 1] + 1 : 0;
+                let lineEnd = lineEndings[i];
+                let lineContent = this._content.substring(lineStart, lineEnd);
                 if (lineContent.length > 0 && lineContent.charAt(lineContent.length - 1) === "\r")
                     lineContent = lineContent.substring(0, lineContent.length - 1)
                 

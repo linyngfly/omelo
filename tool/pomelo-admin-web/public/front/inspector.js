@@ -28,12 +28,12 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-var WebInspector = {
+let WebInspector = {
     _createPanels: function()
     {
         this.panels = {};
         WebInspector.inspectorView = new WebInspector.InspectorView();
-        var parentElement = document.getElementById("main");
+        let parentElement = document.getElementById("main");
         WebInspector.inspectorView.show(parentElement);
         WebInspector.inspectorView.addEventListener(WebInspector.InspectorView.Events.PanelSelected, this._panelSelected, this);
 
@@ -44,7 +44,7 @@ var WebInspector = {
             this.panels.console = new WebInspector.ConsolePanel();
             return;
         }
-        var hiddenPanels = (InspectorFrontendHost.hiddenPanels() || "").split(',');
+        let hiddenPanels = (InspectorFrontendHost.hiddenPanels() || "").split(',');
         							/**
         if (hiddenPanels.indexOf("elements") === -1)
             this.panels.elements = new WebInspector.ElementsPanel();
@@ -81,7 +81,7 @@ var WebInspector = {
         this._settingsButton = new WebInspector.StatusBarButton(WebInspector.UIString("Settings"), "settings-status-bar-item");
         this._settingsButton.addEventListener("click", this._toggleSettings.bind(this), false);
 
-        var anchoredStatusBar = document.getElementById("anchored-status-bar-items");
+        let anchoredStatusBar = document.getElementById("anchored-status-bar-items");
         anchoredStatusBar.appendChild(this._dockToggleButton.element);
 
         this._toggleConsoleButton = new WebInspector.StatusBarButton(WebInspector.UIString("Show console."), "console-status-bar-item");
@@ -116,7 +116,7 @@ var WebInspector = {
 
         this._toggleConsoleButton.toggled = !this._toggleConsoleButton.toggled;
 
-        var animationType = window.event && window.event.shiftKey ? WebInspector.Drawer.AnimationType.Slow : WebInspector.Drawer.AnimationType.Normal;
+        let animationType = window.event && window.event.shiftKey ? WebInspector.Drawer.AnimationType.Slow : WebInspector.Drawer.AnimationType.Normal;
         if (this._toggleConsoleButton.toggled) {
             this._toggleConsoleButton.title = WebInspector.UIString("Hide console.");
             this.drawer.show(this.consoleView, animationType);
@@ -208,7 +208,7 @@ var WebInspector = {
 
     _setCompactMode: function(x)
     {
-        var body = document.body;
+        let body = document.body;
         if (x)
             body.addStyleClass("compact");
         else
@@ -228,12 +228,12 @@ var WebInspector = {
 
     _updateErrorAndWarningCounts: function()
     {
-        var errorWarningElement = document.getElementById("error-warning-count");
+        let errorWarningElement = document.getElementById("error-warning-count");
         if (!errorWarningElement)
             return;
 
-        var errors = WebInspector.console.errors;
-        var warnings = WebInspector.console.warnings;
+        let errors = WebInspector.console.errors;
+        let warnings = WebInspector.console.warnings;
         if (!errors && !warnings) {
             errorWarningElement.addStyleClass("hidden");
             return;
@@ -244,20 +244,20 @@ var WebInspector = {
         errorWarningElement.removeChildren();
 
         if (errors) {
-            var errorImageElement = document.createElement("img");
+            let errorImageElement = document.createElement("img");
             errorImageElement.id = "error-count-img";
             errorWarningElement.appendChild(errorImageElement);
-            var errorElement = document.createElement("span");
+            let errorElement = document.createElement("span");
             errorElement.id = "error-count";
             errorElement.textContent = errors;
             errorWarningElement.appendChild(errorElement);
         }
 
         if (warnings) {
-            var warningsImageElement = document.createElement("img");
+            let warningsImageElement = document.createElement("img");
             warningsImageElement.id = "warning-count-img";
             errorWarningElement.appendChild(warningsImageElement);
-            var warningsElement = document.createElement("span");
+            let warningsElement = document.createElement("span");
             warningsElement.id = "warning-count";
             warningsElement.textContent = warnings;
             errorWarningElement.appendChild(warningsElement);
@@ -293,7 +293,7 @@ var WebInspector = {
 
     get inspectedPageDomain()
     {
-        var parsedURL = WebInspector.inspectedPageURL && WebInspector.inspectedPageURL.asParsedURL();
+        let parsedURL = WebInspector.inspectedPageURL && WebInspector.inspectedPageURL.asParsedURL();
         return parsedURL ? parsedURL.host : "";
     },
 
@@ -336,12 +336,12 @@ WebInspector.Events = {
 {(function parseQueryParameters()
 {
     WebInspector.queryParamsObject = {};
-    var queryParams = window.location.search;
+    let queryParams = window.location.search;
     if (!queryParams)
         return;
-    var params = queryParams.substring(1).split("&");
-    for (var i = 0; i < params.length; ++i) {
-        var pair = params[i].split("=");
+    let params = queryParams.substring(1).split("&");
+    for (let i = 0; i < params.length; ++i) {
+        let pair = params[i].split("=");
         WebInspector.queryParamsObject[pair[0]] = pair[1];
     }
 })();}
@@ -351,8 +351,8 @@ WebInspector.loaded = function()
     InspectorBackend.loadFromJSONIfNeeded();
     /*
     if ("page" in WebInspector.queryParamsObject) {
-        var page = WebInspector.queryParamsObject.page;
-        var host = "host" in WebInspector.queryParamsObject ? WebInspector.queryParamsObject.host : window.location.host;
+        let page = WebInspector.queryParamsObject.page;
+        let host = "host" in WebInspector.queryParamsObject ? WebInspector.queryParamsObject.host : window.location.host;
         WebInspector.socket = new WebSocket("ws://" + host + "/devtools/page/" + page);
         WebInspector.socket.onmessage = function(message) { 
             InspectorBackend.dispatch(message.data); 
@@ -446,19 +446,19 @@ WebInspector._doLoadedDoneWithCapabilities = function()
     this.toolbar = new WebInspector.Toolbar();
     WebInspector._installDockToRight();
 
-    for (var panelName in this.panels)
+    for (let panelName in this.panels)
         this.addPanel(this.panels[panelName]);
 
     this.addMainEventListeners(document);
 
     window.addEventListener("resize", this.windowResize.bind(this), true);
 
-    var errorWarningCount = document.getElementById("error-warning-count");
+    let errorWarningCount = document.getElementById("error-warning-count");
     errorWarningCount.addEventListener("click", this.showConsole.bind(this), false);
     this._updateErrorAndWarningCounts();
 
-    var autoselectPanel = WebInspector.UIString("a panel chosen automatically");
-    var openAnchorLocationSetting = WebInspector.settings.createSetting("openLinkHandler", autoselectPanel);
+    let autoselectPanel = WebInspector.UIString("a panel chosen automatically");
+    let openAnchorLocationSetting = WebInspector.settings.createSetting("openLinkHandler", autoselectPanel);
     this.openAnchorLocationRegistry = new WebInspector.HandlerRegistry(openAnchorLocationSetting);
     this.openAnchorLocationRegistry.registerHandler(autoselectPanel, function() { return false; });
 
@@ -498,7 +498,7 @@ WebInspector._installDockToRight = function()
 
     function listener(event)
     {
-        var value = WebInspector.settings.dockToRight.get();
+        let value = WebInspector.settings.dockToRight.get();
         if (value) {
             InspectorFrontendHost.requestSetDockSide("right");
             document.body.addStyleClass("dock-to-right");
@@ -516,11 +516,11 @@ WebInspector.addPanel = function(panel)
     WebInspector.inspectorView.addPanel(panel);
 }
 
-var windowLoaded = function()
+let windowLoaded = function()
 {
-    var localizedStringsURL = InspectorFrontendHost.localizedStringsURL();
+    let localizedStringsURL = InspectorFrontendHost.localizedStringsURL();
     if (localizedStringsURL) {
-        var localizedStringsScriptElement = document.createElement("script");
+        let localizedStringsScriptElement = document.createElement("script");
         localizedStringsScriptElement.addEventListener("load", WebInspector.loaded.bind(WebInspector), false);
         localizedStringsScriptElement.type = "text/javascript";
         localizedStringsScriptElement.src = localizedStringsURL;
@@ -542,7 +542,7 @@ window.addEventListener("DOMContentLoaded", windowLoaded, false);
 // enforce serialization using 'messagesToDispatch' queue. It is also important that JSC debugger
 // tests require that each command was dispatch within individual timeout callback, so we don't batch them.
 
-var messagesToDispatch = [];
+let messagesToDispatch = [];
 
 WebInspector.dispatchQueueIsEmpty = function() {
     return messagesToDispatch.length == 0;
@@ -597,7 +597,7 @@ WebInspector.close = function(event)
 
 WebInspector.documentClick = function(event)
 {
-    var anchor = event.target.enclosingNodeOrSelfWithNodeName("a");
+    let anchor = event.target.enclosingNodeOrSelfWithNodeName("a");
     if (!anchor || anchor.target === "_blank")
         return;
 
@@ -615,10 +615,10 @@ WebInspector.documentClick = function(event)
             return;
         }
 
-        var parsedURL = anchor.href.asParsedURL();
+        let parsedURL = anchor.href.asParsedURL();
         if (parsedURL && parsedURL.scheme === "webkit-link-action") {
             if (parsedURL.host === "show-panel") {
-                var panel = parsedURL.path.substring(1);
+                let panel = parsedURL.path.substring(1);
                 if (WebInspector.panels[panel])
                     WebInspector.showPanel(panel);
             }
@@ -644,7 +644,7 @@ WebInspector.documentClick = function(event)
 
 WebInspector.openResource = function(resourceURL, inResourcesPanel)
 {
-    var resource = WebInspector.resourceForURL(resourceURL);
+    let resource = WebInspector.resourceForURL(resourceURL);
     if (inResourcesPanel && resource) {
         WebInspector.showPanel("resources");
         WebInspector.panels.resources.showResource(resource);
@@ -660,15 +660,15 @@ WebInspector.openRequestInNetworkPanel = function(resource)
 
 WebInspector._registerShortcuts = function()
 {
-    var shortcut = WebInspector.KeyboardShortcut;
-    var section = WebInspector.shortcutsScreen.section(WebInspector.UIString("All Panels"));
-    var keys = [
+    let shortcut = WebInspector.KeyboardShortcut;
+    let section = WebInspector.shortcutsScreen.section(WebInspector.UIString("All Panels"));
+    let keys = [
         shortcut.shortcutToString("]", shortcut.Modifiers.CtrlOrMeta),
         shortcut.shortcutToString("[", shortcut.Modifiers.CtrlOrMeta)
     ];
     section.addRelatedKeys(keys, WebInspector.UIString("Go to the panel to the left/right"));
 
-    var keys = [
+    let keys = [
         shortcut.shortcutToString("[", shortcut.Modifiers.CtrlOrMeta | shortcut.Modifiers.Alt),
         shortcut.shortcutToString("]", shortcut.Modifiers.CtrlOrMeta | shortcut.Modifiers.Alt)
     ];
@@ -677,7 +677,7 @@ WebInspector._registerShortcuts = function()
     section.addKey(shortcut.shortcutToString(shortcut.Keys.Esc), WebInspector.UIString("Toggle console"));
     section.addKey(shortcut.shortcutToString("f", shortcut.Modifiers.CtrlOrMeta), WebInspector.UIString("Search"));
     
-    var advancedSearchShortcut = WebInspector.AdvancedSearchController.createShortcut();
+    let advancedSearchShortcut = WebInspector.AdvancedSearchController.createShortcut();
     section.addKey(advancedSearchShortcut.name, WebInspector.UIString("Search across all scripts"));
     
     if (WebInspector.isMac()) {
@@ -688,7 +688,7 @@ WebInspector._registerShortcuts = function()
         section.addRelatedKeys(keys, WebInspector.UIString("Find next/previous"));
     }
 
-    var goToShortcut = WebInspector.GoToLineDialog.createShortcut();
+    let goToShortcut = WebInspector.GoToLineDialog.createShortcut();
     section.addKey(goToShortcut.name, WebInspector.UIString("Go to line"));
 }
 
@@ -726,7 +726,7 @@ WebInspector.documentKeyDown = function(event)
         return;
     }
 
-    var isMac = WebInspector.isMac();
+    let isMac = WebInspector.isMac();
     switch (event.keyIdentifier) {
         case "U+0052": // R key
             if ((event.metaKey && isMac) || (event.ctrlKey && !isMac)) {
@@ -742,7 +742,7 @@ WebInspector.documentKeyDown = function(event)
             break;
     }
 
-    var isValidZoomShortcut = WebInspector.KeyboardShortcut.eventHasCtrlOrMeta(event) &&
+    let isValidZoomShortcut = WebInspector.KeyboardShortcut.eventHasCtrlOrMeta(event) &&
         !event.shiftKey &&
         !event.altKey &&
         !InspectorFrontendHost.isStub;
@@ -834,14 +834,14 @@ WebInspector.bringToFront = function()
 
 WebInspector.didCreateWorker = function()
 {
-    var workersPane = WebInspector.panels.scripts.sidebarPanes.workers;
+    let workersPane = WebInspector.panels.scripts.sidebarPanes.workers;
     if (workersPane)
         workersPane.addWorker.apply(workersPane, arguments);
 }
 
 WebInspector.didDestroyWorker = function()
 {
-    var workersPane = WebInspector.panels.scripts.sidebarPanes.workers;
+    let workersPane = WebInspector.panels.scripts.sidebarPanes.workers;
     if (workersPane)
         workersPane.removeWorker.apply(workersPane, arguments);
 }
@@ -853,7 +853,7 @@ WebInspector.didDestroyWorker = function()
 WebInspector.log = function(message, messageLevel, showConsole)
 {
     // remember 'this' for setInterval() callback
-    var self = this;
+    let self = this;
 
     // return indication if we can actually log a message
     function isLogAvailable()
@@ -864,11 +864,11 @@ WebInspector.log = function(message, messageLevel, showConsole)
     // flush the queue of pending messages
     function flushQueue()
     {
-        var queued = WebInspector.log.queued;
+        let queued = WebInspector.log.queued;
         if (!queued)
             return;
 
-        for (var i = 0; i < queued.length; ++i)
+        for (let i = 0; i < queued.length; ++i)
             logMessage(queued[i]);
 
         delete WebInspector.log.queued;
@@ -891,7 +891,7 @@ WebInspector.log = function(message, messageLevel, showConsole)
     function logMessage(message)
     {
         // post the message
-        var msg = WebInspector.ConsoleMessage.create(
+        let msg = WebInspector.ConsoleMessage.create(
             WebInspector.ConsoleMessage.MessageSource.Other,
             messageLevel || WebInspector.ConsoleMessage.MessageLevel.Debug,
             message);
@@ -923,7 +923,7 @@ WebInspector.log = function(message, messageLevel, showConsole)
 
 WebInspector.inspect = function(payload, hints)
 {
-    var object = WebInspector.RemoteObject.fromPayload(payload);
+    let object = WebInspector.RemoteObject.fromPayload(payload);
     if (object.subtype === "node") {
         // Request node from backend and focus it.
         WebInspector.inspectorView.setCurrentPanel(WebInspector.panels.elements);
@@ -949,10 +949,10 @@ WebInspector.updateFocusedNode = function(nodeId)
 
 WebInspector.populateResourceContextMenu = function(contextMenu, url, preferredLineNumber)
 {
-    var registry = WebInspector.openAnchorLocationRegistry;
+    let registry = WebInspector.openAnchorLocationRegistry;
     // Skip 0th handler, as it's 'Use default panel' one.
-    for (var i = 1; i < registry.handlerNames.length; ++i) {
-        var handler = registry.handlerNames[i];
+    for (let i = 1; i < registry.handlerNames.length; ++i) {
+        let handler = registry.handlerNames[i];
         contextMenu.appendItem(WebInspector.UIString(WebInspector.useLowerCaseMenuTitles() ? "Open using %s" : "Open Using %s", handler),
             registry.dispatchToHandler.bind(registry, handler, { url: url, preferredLineNumber: preferredLineNumber }));
     }
@@ -962,7 +962,7 @@ WebInspector._showAnchorLocation = function(anchor)
 {
     if (WebInspector.openAnchorLocationRegistry.dispatch({ url: anchor.href, lineNumber: anchor.lineNumber}))
         return true;
-    var preferedPanel = this.panels[anchor.preferredPanel || "resources"];
+    let preferedPanel = this.panels[anchor.preferredPanel || "resources"];
     if (WebInspector._showAnchorLocationInPanel(anchor, preferedPanel))
         return true;
     if (preferedPanel !== this.panels.resources && WebInspector._showAnchorLocationInPanel(anchor, this.panels.resources))
@@ -1021,6 +1021,6 @@ WebInspector.frontendReused = function()
 
 WebInspector._toolbarItemClicked = function(event)
 {
-    var toolbarItem = event.currentTarget;
+    let toolbarItem = event.currentTarget;
     WebInspector.inspectorView.setCurrentPanel(toolbarItem.panel);
 }

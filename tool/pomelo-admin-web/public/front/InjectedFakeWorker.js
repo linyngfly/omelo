@@ -28,12 +28,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-var InjectedFakeWorker = function(InjectedScriptHost, inspectedWindow, injectedScriptId)
+let InjectedFakeWorker = function(InjectedScriptHost, inspectedWindow, injectedScriptId)
 {
 
 Worker = function(url)
 {
-    var impl = new FakeWorker(this, url);
+    let impl = new FakeWorker(this, url);
     if (impl === null)
         return null;
 
@@ -58,7 +58,7 @@ Worker = function(url)
 
 function FakeWorker(worker, url)
 {
-    var scriptURL = this._expandURLAndCheckOrigin(document.baseURI, location.href, url);
+    let scriptURL = this._expandURLAndCheckOrigin(document.baseURI, location.href, url);
 
     this._worker = worker;
     this._id = InjectedScriptHost.nextWorkerId();
@@ -94,8 +94,8 @@ FakeWorker.prototype = {
 
     _buildWorker: function(url)
     {
-        var code = this._loadScript(url.url);
-        var iframeElement = document.createElement("iframe");
+        let code = this._loadScript(url.url);
+        let iframeElement = document.createElement("iframe");
         iframeElement.style.display = "none";
 
         this._document = document;
@@ -114,15 +114,15 @@ FakeWorker.prototype = {
 
     _onWorkerFrameLoaded: function(iframeElement, url, code)
     {
-        var frame = iframeElement.contentWindow;
+        let frame = iframeElement.contentWindow;
         this._frame = frame;
         this._setupWorkerContext(frame, url);
 
-        var frameContents = '(function() { var location = __devtools.location; var window; ' + code + '})();\n' + '//@ sourceURL=' + url.url;
+        let frameContents = '(function() { let location = __devtools.location; let window; ' + code + '})();\n' + '//@ sourceURL=' + url.url;
 
         frame.eval(frameContents);
         if (this._pendingMessages) {
-            for (var msg = 0; msg < this._pendingMessages.length; ++msg)
+            for (let msg = 0; msg < this._pendingMessages.length; ++msg)
                 this.postMessage.apply(this, this._pendingMessages[msg]);
             delete this._pendingMessages;
         }
@@ -135,7 +135,7 @@ FakeWorker.prototype = {
             location: url.mockLocation()
         };
 
-        var self = this;
+        let self = this;
 
         function onmessageGetter()
         {
@@ -144,7 +144,7 @@ FakeWorker.prototype = {
 
         function onmessageSetter(callback)
         {
-            var wrappedCallback = bind(self._callbackWrapper, self, callback);
+            let wrappedCallback = bind(self._callbackWrapper, self, callback);
             wrappedCallback.originalCallback = callback;
             self.channel.port2.onmessage = wrappedCallback;
         }
@@ -161,7 +161,7 @@ FakeWorker.prototype = {
 
     _addEventListener: function(type, callback, useCapture)
     {
-        var wrappedCallback = bind(this._callbackWrapper, this, callback);
+        let wrappedCallback = bind(this._callbackWrapper, this, callback);
         wrappedCallback.originalCallback = callback;
         wrappedCallback.type = type;
         wrappedCallback.useCapture = Boolean(useCapture);
@@ -172,8 +172,8 @@ FakeWorker.prototype = {
 
     _removeEventListener: function(type, callback, useCapture)
     {
-        var listeners = this._listeners;
-        for (var i = 0; i < listeners.length; ++i) {
+        let listeners = this._listeners;
+        for (let i = 0; i < listeners.length; ++i) {
             if (listeners[i].originalCallback === callback &&
                 listeners[i].type === type &&
                 listeners[i].useCapture === Boolean(useCapture)) {
@@ -204,11 +204,11 @@ FakeWorker.prototype = {
     {
         // NB: it should be an ErrorEvent, but creating it from script is not
         // currently supported, so emulate it on top of plain vanilla Event.
-        var errorEvent = this._document.createEvent("Event");
+        let errorEvent = this._document.createEvent("Event");
         errorEvent.initEvent("Event", false, false);
         errorEvent.message = "Uncaught exception";
 
-        for (var i = 1; i < arguments.length; ++i) {
+        for (let i = 1; i < arguments.length; ++i) {
             if (arguments[i] && arguments[i](errorEvent))
                 return;
         }
@@ -218,20 +218,20 @@ FakeWorker.prototype = {
 
     _importScripts: function(targetFrame)
     {
-        for (var i = 1; i < arguments.length; ++i) {
-            var workerOrigin = targetFrame.__devtools.location.href;
-            var url = this._expandURLAndCheckOrigin(workerOrigin, workerOrigin, arguments[i]);
+        for (let i = 1; i < arguments.length; ++i) {
+            let workerOrigin = targetFrame.__devtools.location.href;
+            let url = this._expandURLAndCheckOrigin(workerOrigin, workerOrigin, arguments[i]);
             targetFrame.eval(this._loadScript(url.url) + "\n//@ sourceURL= " + url.url);
         }
     },
 
     _loadScript: function(url)
     {
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         xhr.open("GET", url, false);
         xhr.send(null);
 
-        var text = xhr.responseText;
+        let text = xhr.responseText;
         if (xhr.status != 0 && xhr.status/100 !== 2) { // We're getting status === 0 when using file://.
             console.error("Failed to load worker: " + url + "[" + xhr.status + "]");
             text = ""; // We've got error message, not worker code.
@@ -241,7 +241,7 @@ FakeWorker.prototype = {
 
     _expandURLAndCheckOrigin: function(baseURL, origin, url)
     {
-        var scriptURL = new URL(baseURL).completeWith(url);
+        let scriptURL = new URL(baseURL).completeWith(url);
 
         if (!scriptURL.sameOrigin(origin))
             throw new DOMCoreException("SECURITY_ERR",18);
@@ -264,7 +264,7 @@ URL.prototype = {
         {
             return str == null ? "" : str;
         }
-        var parts = this.urlRegEx.exec(this.url);
+        let parts = this.urlRegEx.exec(this.url);
 
         this.schema = parts[1];
         this.host = parts[2];
@@ -276,7 +276,7 @@ URL.prototype = {
 
     mockLocation: function()
     {
-        var host = this.host.replace(/^[^@]*@/, "");
+        let host = this.host.replace(/^[^@]*@/, "");
 
         return {
             href:     this.url,
@@ -295,9 +295,9 @@ URL.prototype = {
         if (url === "" || /^[^/]*:/.exec(url)) // If given absolute url, return as is now.
             return new URL(url);
 
-        var relParts = /^([^#?]*)(.*)$/.exec(url); // => [ url, path, query-andor-fragment ]
+        let relParts = /^([^#?]*)(.*)$/.exec(url); // => [ url, path, query-andor-fragment ]
 
-        var path = (relParts[1].slice(0, 1) === "/" ? "" : this.path.replace(/[^/]*$/, "")) + relParts[1];
+        let path = (relParts[1].slice(0, 1) === "/" ? "" : this.path.replace(/[^/]*$/, "")) + relParts[1];
         path = path.replace(/(\/\.)+(\/|$)/g, "/").replace(/[^/]*\/\.\.(\/|$)/g, "");
 
         return new URL(this.schema + "://" + this.host + this.port + path + relParts[2]);
@@ -307,11 +307,11 @@ URL.prototype = {
     {
         function normalizePort(schema, port)
         {
-            var portNo = port.slice(1);
+            let portNo = port.slice(1);
             return (schema === "https" && portNo == 443 || schema === "http" && portNo == 80) ? "" : port;
         }
 
-        var other = new URL(url);
+        let other = new URL(url);
 
         return this.schema === other.schema &&
             this.host === other.host &&
@@ -334,7 +334,7 @@ function DOMCoreException(name, code)
 
 function bind(func, thisObject)
 {
-    var args = Array.prototype.slice.call(arguments, 2);
+    let args = Array.prototype.slice.call(arguments, 2);
     return function() { return func.apply(thisObject, args.concat(Array.prototype.slice.call(arguments, 0))); };
 }
 

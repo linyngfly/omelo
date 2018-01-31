@@ -98,7 +98,7 @@ WebInspector.DOMStorageDispatcher.prototype = {
      */
     addDOMStorage: function(payload)
     {
-        var domStorage = new WebInspector.DOMStorage(
+        let domStorage = new WebInspector.DOMStorage(
             payload.id,
             payload.host,
             payload.isLocalStorage);

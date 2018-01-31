@@ -38,21 +38,21 @@ WebInspector.HeapSnapshotWorkerDispatcher = function(globalObject, postMessage)
 WebInspector.HeapSnapshotWorkerDispatcher.prototype = {
     _findFunction: function(name)
     {
-        var path = name.split(".");
-        var result = this._global;
-        for (var i = 0; i < path.length; ++i)
+        let path = name.split(".");
+        let result = this._global;
+        for (let i = 0; i < path.length; ++i)
             result = result[path[i]];
         return result;
     },
 
     dispatchMessage: function(event)
     {
-        var data = event.data;
-        var response = {callId: data.callId};
+        let data = event.data;
+        let response = {callId: data.callId};
         try {
             switch (data.disposition) {
                 case "create": {
-                    var constructorFunction = this._findFunction(data.methodName);
+                    let constructorFunction = this._findFunction(data.methodName);
                     this._objects[data.objectId] = new constructorFunction();
                     break;
                 }
@@ -61,21 +61,21 @@ WebInspector.HeapSnapshotWorkerDispatcher.prototype = {
                     break;
                 }
                 case "getter": {
-                    var object = this._objects[data.objectId];
-                    var result = object[data.methodName];
+                    let object = this._objects[data.objectId];
+                    let result = object[data.methodName];
                     response.result = result;
                     break;
                 }
                 case "factory": {
-                    var object = this._objects[data.objectId];
-                    var result = object[data.methodName].apply(object, data.methodArguments);
+                    let object = this._objects[data.objectId];
+                    let result = object[data.methodName].apply(object, data.methodArguments);
                     if (result)
                         this._objects[data.newObjectId] = result;
                     response.result = !!result;
                     break;
                 }
                 case "method": {
-                    var object = this._objects[data.objectId];
+                    let object = this._objects[data.objectId];
                     response.result = object[data.methodName].apply(object, data.methodArguments);
                     break;
                 }

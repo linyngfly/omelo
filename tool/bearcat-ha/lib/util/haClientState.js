@@ -1,4 +1,4 @@
-var HaClientState = {
+let HaClientState = {
 	STATE_INIT: 0,
 	STATE_TIMEOUT: 1,
 	STATE_RECONNECTING: 2,

@@ -11,15 +11,15 @@
  * MIT Licensed
  */
 
-var logger = require('pomelo-logger').getLogger('bearcat-ha', 'WatcherCluster');
-var ZookeeperClient = require('../client/zookeeperClient');
-var WatcherManager = require('./watcherManager');
-var async = require('async');
+let logger = require('pomelo-logger').getLogger('bearcat-ha', 'WatcherCluster');
+let ZookeeperClient = require('../client/zookeeperClient');
+let WatcherManager = require('./watcherManager');
+let async = require('async');
 
-var watcherManagers = {};
-var START_WATCHER_DELAY = -1;
+let watcherManagers = {};
+let START_WATCHER_DELAY = -1;
 
-var WatcherCluster = {};
+let WatcherCluster = {};
 
 //set up
 WatcherCluster.setup = function(config) {
@@ -30,7 +30,7 @@ WatcherCluster.setup = function(config) {
       node.zooKeeper = config.zooKeeper;
       node.type = config.type;
 
-      var name = node.name;
+      let name = node.name;
       if (!name || watcherManagers[name]) {
         throw new Error('node name must be unequal!');
       }
@@ -54,7 +54,7 @@ WatcherCluster.reset = function(config) {
 
   ZookeeperClient.createClient(config.zooKeeper, function() {
     async.eachSeries(config.nodes, function(node, next) {
-      var watcher = watcherManagers[node.name];
+      let watcher = watcherManagers[node.name];
       node.zooKeeper = config.zooKeeper;
       node.type = config.type;
 

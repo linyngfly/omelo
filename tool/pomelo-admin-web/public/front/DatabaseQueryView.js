@@ -63,16 +63,16 @@ WebInspector.DatabaseQueryView.prototype = {
     
     completions: function(textPrompt, wordRange, force, completionsReadyCallback)
     {
-        var prefix = wordRange.toString().toLowerCase();
+        let prefix = wordRange.toString().toLowerCase();
         if (!prefix.length && !force)
             return;
 
-        var results = [];
+        let results = [];
 
         function accumulateMatches(textArray)
         {
-            for (var i = 0; i < textArray.length; ++i) {
-                var text = textArray[i].toLowerCase();
+            for (let i = 0; i < textArray.length; ++i) {
+                let text = textArray[i].toLowerCase();
                 if (text.length < prefix.length)
                     continue;
                 if (text.indexOf(prefix) !== 0)
@@ -123,7 +123,7 @@ WebInspector.DatabaseQueryView.prototype = {
 
         this.prompt.clearAutoComplete(true);
 
-        var query = this.prompt.text;
+        let query = this.prompt.text;
         if (!query.length)
             return;
 
@@ -135,8 +135,8 @@ WebInspector.DatabaseQueryView.prototype = {
 
     _queryFinished: function(query, columnNames, values)
     {
-        var dataGrid = WebInspector.DataGrid.createSortableDataGrid(columnNames, values);
-        var trimmedQuery = query.trim();
+        let dataGrid = WebInspector.DataGrid.createSortableDataGrid(columnNames, values);
+        let trimmedQuery = query.trim();
 
         if (dataGrid) {
             dataGrid.element.addStyleClass("inline");
@@ -151,11 +151,11 @@ WebInspector.DatabaseQueryView.prototype = {
     _queryError: function(query, error)
     {
         if (error.message)
-            var message = error.message;
+            let message = error.message;
         else if (error.code == 2)
-            var message = WebInspector.UIString("Database no longer has expected version.");
+            let message = WebInspector.UIString("Database no longer has expected version.");
         else
-            var message = WebInspector.UIString("An unexpected error %s occurred.", error.code);
+            let message = WebInspector.UIString("An unexpected error %s occurred.", error.code);
 
         this._appendErrorQueryResult(query, message);
     },
@@ -166,7 +166,7 @@ WebInspector.DatabaseQueryView.prototype = {
      */
     _appendViewQueryResult: function(query, view)
     {
-        var resultElement = this._appendQueryResult(query);
+        let resultElement = this._appendQueryResult(query);
         view.show(resultElement);
 
         this._promptElement.scrollIntoView(false);
@@ -178,7 +178,7 @@ WebInspector.DatabaseQueryView.prototype = {
      */
     _appendErrorQueryResult: function(query, errorText)
     {
-        var resultElement = this._appendQueryResult(query);
+        let resultElement = this._appendQueryResult(query);
         resultElement.addStyleClass("error")
         resultElement.textContent = errorText;
 
@@ -187,16 +187,16 @@ WebInspector.DatabaseQueryView.prototype = {
 
     _appendQueryResult: function(query)
     {
-        var element = document.createElement("div");
+        let element = document.createElement("div");
         element.className = "database-user-query";
         this.element.insertBefore(element, this.prompt.proxyElement);
 
-        var commandTextElement = document.createElement("span");
+        let commandTextElement = document.createElement("span");
         commandTextElement.className = "database-query-text";
         commandTextElement.textContent = query;
         element.appendChild(commandTextElement);
 
-        var resultElement = document.createElement("div");
+        let resultElement = document.createElement("div");
         resultElement.className = "database-query-result";
         element.appendChild(resultElement);
         return resultElement;

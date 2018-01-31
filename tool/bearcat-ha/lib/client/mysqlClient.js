@@ -1,15 +1,15 @@
-var logger = require('pomelo-logger').getLogger('bearcat-ha', 'MysqlClient');
-var EventEmitter = require('events').EventEmitter;
-var Constant = require('../util/constant');
-var mysql = require('mysql');
-var Util = require('util');
+let logger = require('pomelo-logger').getLogger('bearcat-ha', 'MysqlClient');
+let EventEmitter = require('events').EventEmitter;
+let Constant = require('../util/constant');
+let mysql = require('mysql');
+let Util = require('util');
 
 /**
  * MysqlClient constructor function.
  *
  * @api public
  */
-var MysqlClient = function(opts) {
+let MysqlClient = function(opts) {
 	this.$id = "mysqlClient";
 	this.$scope = "prototype";
 	this.opts = opts || {};
@@ -43,7 +43,7 @@ var MysqlClient = function(opts) {
 Util.inherits(MysqlClient, EventEmitter);
 
 MysqlClient.prototype.init = function() {
-	var self = this;
+	let self = this;
 
 	this.getConnection(function(err, connection) {
 		if (err) {
@@ -72,12 +72,12 @@ MysqlClient.prototype.init = function() {
 }
 
 MysqlClient.prototype.parsePort = function(left) {
-	var ports = left.split("/");
+	let ports = left.split("/");
 	if (ports.length <= 1) {
 		return left;
 	}
 
-	var port = ports[0];
+	let port = ports[0];
 	return port;
 }
 
@@ -94,14 +94,14 @@ MysqlClient.prototype.close = function() {
 };
 
 MysqlClient.prototype.slaveOf = function(master, cb) {
-	var self = this;
+	let self = this;
 
-	var read_only = 1;
+	let read_only = 1;
 	this.setReadOnly(read_only, cb);
 }
 
 MysqlClient.prototype.makeMaster = function(cb) {
-	var self = this;
+	let self = this;
 
 	this.updateInfo(function(err) {
 		if (err) {
@@ -112,7 +112,7 @@ MysqlClient.prototype.makeMaster = function(cb) {
 			return cb();
 		}
 
-		var read_only = 0;
+		let read_only = 0;
 		self.setReadOnly(read_only, function(err) {
 			if (err) {
 				return cb(err);
@@ -124,7 +124,7 @@ MysqlClient.prototype.makeMaster = function(cb) {
 }
 
 MysqlClient.prototype.onError = function(force) {
-	var self = this;
+	let self = this;
 	if (this.available || force) {
 		this.available = false;
 		this.ready = false;
@@ -155,7 +155,7 @@ MysqlClient.prototype.emitUnavailable = function() {
 }
 
 MysqlClient.prototype.updateInfo = function(cb) {
-	var self = this;
+	let self = this;
 	self.getInfo(function(err, info) {
 		if (err) {
 			return cb(err);
@@ -188,11 +188,11 @@ MysqlClient.prototype.checkSlaveInfo = function(info) {
 		return false;
 	}
 
-	var Master_Log_File = info['Master_Log_File'];
-	var Read_Master_Log_Pos = info['Read_Master_Log_Pos'];
-	var Relay_Master_Log_File = info['Relay_Master_Log_File'];
-	var Exec_Master_Log_Pos = info['Exec_Master_Log_Pos'];
-	var Slave_SQL_Running = info['Slave_SQL_Running'];
+	let Master_Log_File = info['Master_Log_File'];
+	let Read_Master_Log_Pos = info['Read_Master_Log_Pos'];
+	let Relay_Master_Log_File = info['Relay_Master_Log_File'];
+	let Exec_Master_Log_Pos = info['Exec_Master_Log_Pos'];
+	let Slave_SQL_Running = info['Slave_SQL_Running'];
 
 	if (Master_Log_File != Relay_Master_Log_File) {
 		return false;
@@ -218,7 +218,7 @@ MysqlClient.prototype.checkIfMaster = function(info) {
 }
 
 MysqlClient.prototype.getInfo = function(cb) {
-	var self = this;
+	let self = this;
 	this.showSlaveStatus(function(err, info) {
 		if (err) {
 			return cb(err);
@@ -243,7 +243,7 @@ MysqlClient.prototype.getInfo = function(cb) {
 }
 
 MysqlClient.prototype.showSlaveStatus = function(cb) {
-	var sql = 'show slave status';
+	let sql = 'show slave status';
 	this.connection.query(sql, [], function(err, results) {
 		if (err) {
 			return cb(err);
@@ -253,13 +253,13 @@ MysqlClient.prototype.showSlaveStatus = function(cb) {
 			return cb();
 		}
 
-		var info = results[0];
+		let info = results[0];
 		cb(null, info);
 	});
 }
 
 MysqlClient.prototype.showReadOnly = function(cb) {
-	var sql = "show variables like '%read_only%'";
+	let sql = "show variables like '%read_only%'";
 	this.connection.query(sql, [], function(err, results) {
 		if (err) {
 			return cb(err);
@@ -269,13 +269,13 @@ MysqlClient.prototype.showReadOnly = function(cb) {
 			return cb();
 		}
 
-		var info = results[0];
+		let info = results[0];
 		cb(null, info);
 	});
 }
 
 MysqlClient.prototype.setReadOnly = function(read_only, cb) {
-	var sql = "set global read_only = ?";
+	let sql = "set global read_only = ?";
 	this.connection.query(sql, [read_only], function(err, results) {
 		if (err) {
 			return cb(err);
@@ -318,7 +318,7 @@ MysqlClient.prototype.toJSON = function() {
 };
 
 MysqlClient.prototype.watch = function() {
-	var self = this;
+	let self = this;
 	if (this.interval) {
 		this.stopWatch();
 	}
@@ -332,13 +332,13 @@ MysqlClient.prototype.stopWatch = function() {
 }
 
 MysqlClient.prototype.ping = function() {
-	var self = this;
+	let self = this;
 	// TEST USE
 	// this.fail();
 	// logger.warn('%s mysql ping timeout %s failures %s', self.name, self.pingTimeout, self.failures);
 	// return;
 
-	var timeout = setTimeout(function() {
+	let timeout = setTimeout(function() {
 		logger.warn('%s mysql ping timeout %s failures %s', self.name, self.pingTimeout, self.failures);
 		self.fail();
 	}, self.pingTimeout);
@@ -365,12 +365,12 @@ MysqlClient.prototype.fail = function() {
 };
 
 MysqlClient.prototype.query = function(sql, param, cb) {
-	var self = this;
+	let self = this;
 	if (!this.available) {
 		return cb();
 	}
 
-	var timeout = setTimeout(function() {
+	let timeout = setTimeout(function() {
 		logger.error('%s mysql query timeout %s', self.name, self.queryTimeout);
 		return cb(new Error('mysql query timeout'));
 	}, self.queryTimeout);
@@ -380,7 +380,7 @@ MysqlClient.prototype.query = function(sql, param, cb) {
 			return cb(err);
 		}
 
-		var query = connection.query(sql, param, function(err, results) {
+		let query = connection.query(sql, param, function(err, results) {
 			clearTimeout(timeout);
 			if (err) {
 				logger.error('%s query mysql error %s', self.name, err.stack);
@@ -399,7 +399,7 @@ MysqlClient.prototype.query = function(sql, param, cb) {
  * @api public
  */
 MysqlClient.prototype.getConnection = function(cb) {
-	var self = this;
+	let self = this;
 	if (this.connection) {
 		return cb(null, this.connection);
 	}
@@ -468,7 +468,7 @@ MysqlClient.prototype.fetchConnector = function(cb) {
 			cb(err, connection);
 		});
 	} else {
-		var connection = this.createConnection();
+		let connection = this.createConnection();
 		cb(null, connection);
 	}
 }
@@ -483,9 +483,9 @@ MysqlClient.prototype.bindEvents = function(connection) {
  * @api public
  */
 MysqlClient.prototype.createPool = function() {
-	var options = this.getConnectionOptions();
+	let options = this.getConnectionOptions();
 
-	var pool = mysql.createPool(options);
+	let pool = mysql.createPool(options);
 
 	return pool;
 }
@@ -496,9 +496,9 @@ MysqlClient.prototype.createPool = function() {
  * @api public
  */
 MysqlClient.prototype.createConnection = function() {
-	var options = this.getConnectionOptions();
+	let options = this.getConnectionOptions();
 
-	var connection = mysql.createConnection(options);
+	let connection = mysql.createConnection(options);
 
 	return this.postProcessConnection(connection);
 }
@@ -510,8 +510,8 @@ MysqlClient.prototype.createConnection = function() {
  * @api public
  */
 MysqlClient.prototype.getConnectionOptions = function() {
-	var options = this.opts;
-	var result = {};
+	let options = this.opts;
+	let result = {};
 	result['host'] = this.host;
 	result['port'] = this.port;
 	logger.info('getConnectionOptions %s %s', this.host, this.port);

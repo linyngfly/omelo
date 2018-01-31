@@ -1,6 +1,6 @@
-var os = require('os');
+let os = require('os');
 
-var Utils = {};
+let Utils = {};
 
 Utils.getHostName = function() {
 	return os.hostname();

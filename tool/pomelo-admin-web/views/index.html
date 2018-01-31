@@ -11,9 +11,9 @@
 		<script src="/js/util/protocol.js"></script>
 		<script src="/js/client.js"></script>
 		<script>
-			var host = '<%= host %>';
-			var port = <%= port %>;
-			var client = window.client = new ConsoleClient();
+			let host = '<%= host %>';
+			let port = <%= port %>;
+			let client = window.client = new ConsoleClient();
 			// TODO: add login logic
 			client.connect('browser-' + Date.now(), host, port, function(err){
 				if(err) {

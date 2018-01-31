@@ -47,7 +47,7 @@ WebInspector.ProfileLauncherView = function(profilesPanel)
     this._contentElement.className = "profile-launcher-view-content";
     this.element.appendChild(this._contentElement);
 
-    var header = this._contentElement.createChild("h1");
+    let header = this._contentElement.createChild("h1");
     header.textContent = WebInspector.UIString("Select profiling type");
 
     this._profileTypeSelectorForm = this._contentElement.createChild("form");
@@ -73,21 +73,21 @@ WebInspector.ProfileLauncherView.prototype = {
 
     addProfileType: function(profileType)
     {
-        var checked = !this._profileTypeSelectorForm.children.length;
-        var labelElement = this._profileTypeSelectorForm.createChild("label");
+        let checked = !this._profileTypeSelectorForm.children.length;
+        let labelElement = this._profileTypeSelectorForm.createChild("label");
         labelElement.textContent = profileType.name;
-        var optionElement = document.createElement("input");
+        let optionElement = document.createElement("input");
         labelElement.insertBefore(optionElement, labelElement.firstChild);
         optionElement.type = "radio";
         optionElement.name = "profile-type";
-        var optionId = this._optionIdPrefix + profileType.id;
+        let optionId = this._optionIdPrefix + profileType.id;
         optionElement.id = optionId;
         if (checked) {
             optionElement.checked = checked;
             this.dispatchEventToListeners(WebInspector.ProfileLauncherView.EventTypes.ProfileTypeSelected, profileType);
         }
         optionElement.addEventListener("change", this._boundProfileTypeChangeListener, false);
-        var descriptionElement = labelElement.createChild("p");
+        let descriptionElement = labelElement.createChild("p");
         descriptionElement.textContent = profileType.description;
     },
 
@@ -111,7 +111,7 @@ WebInspector.ProfileLauncherView.prototype = {
 
     _profileTypeChanged: function(event)
     {
-        var selectedProfileType = this._panel.getProfileType(event.target.id.substring(this._optionIdPrefix.length));
+        let selectedProfileType = this._panel.getProfileType(event.target.id.substring(this._optionIdPrefix.length));
         this.dispatchEventToListeners(WebInspector.ProfileLauncherView.EventTypes.ProfileTypeSelected, selectedProfileType);
     },
 

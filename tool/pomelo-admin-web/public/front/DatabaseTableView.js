@@ -71,7 +71,7 @@ WebInspector.DatabaseTableView.prototype = {
         this.detachChildViews();
         this.element.removeChildren();
 
-        var dataGrid = WebInspector.DataGrid.createSortableDataGrid(columnNames, values);
+        let dataGrid = WebInspector.DataGrid.createSortableDataGrid(columnNames, values);
         if (!dataGrid) {
             this._emptyView = new WebInspector.EmptyView(WebInspector.UIString("The “%s”\ntable is empty.", this.tableName));
             this._emptyView.show(this.element);
@@ -86,7 +86,7 @@ WebInspector.DatabaseTableView.prototype = {
         this.detachChildViews();
         this.element.removeChildren();
 
-        var errorMsgElement = document.createElement("div");
+        let errorMsgElement = document.createElement("div");
         errorMsgElement.className = "storage-table-error";
         errorMsgElement.textContent = WebInspector.UIString("An error occurred trying to\nread the “%s” table.", this.tableName);
         this.element.appendChild(errorMsgElement);

@@ -1,13 +1,13 @@
-var should = require('should');
-var pomelo = require('../../');
-var consoleModule = require('../../lib/modules/console');
+let should = require('should');
+let pomelo = require('../../');
+let consoleModule = require('../../lib/modules/console');
 
 describe('console module test', function() {
 	describe('#monitorHandler', function() {
 		it('should execute the corresponding command with different signals', function() {
-			var flag;
-			var rs;
-			var opts = {
+			let flag;
+			let rs;
+			let opts = {
 				app: {
 					components: {
 						__connector__: {
@@ -28,16 +28,16 @@ describe('console module test', function() {
 					}
 				}
 			};
-			var module = new consoleModule(opts);
-			var agent1 = {
+			let module = new consoleModule(opts);
+			let agent1 = {
 				type: 'area'
 			};
-			var msg1 = {signal: 'stop'};
+			let msg1 = {signal: 'stop'};
 			module.monitorHandler(agent1, msg1);
 			flag.should.eql(true);
 
-			var msg2 = {signal: 'list'};
-			var agent2 = {
+			let msg2 = {signal: 'list'};
+			let agent2 = {
 				type: 'chat',
 				id: 'chat-server-1'
 			};
@@ -46,15 +46,15 @@ describe('console module test', function() {
 				obj.body.serverType.should.eql('chat');
 			});
 
-			var msg3 = {signal: 'addCron'};
+			let msg3 = {signal: 'addCron'};
 			module.monitorHandler(agent2, msg3, null);
 		 	rs.length.should.eql(1);
 
-		 	var msg4 = {signal: 'removeCron'};
+		 	let msg4 = {signal: 'removeCron'};
 		 	module.monitorHandler(agent2, msg4, null);
 		 	rs.length.should.eql(1);
 
-		 	var msg5 = {signal: 'blacklist', blacklist: ['127.0.0.1']};
+		 	let msg5 = {signal: 'blacklist', blacklist: ['127.0.0.1']};
 		 	module.monitorHandler(agent1, msg5, null);
 		 	opts.app.components.__connector__.blacklist.length.should.eql(1);
 
@@ -63,9 +63,9 @@ describe('console module test', function() {
 	});
 
 	describe('#clientHandler', function() {
-    var _exit;
-    var _setTimeout;
-    var exitCount = 0;
+    let _exit;
+    let _setTimeout;
+    let exitCount = 0;
 
     before(function(done) {
       _exit = process.exit;
@@ -79,7 +79,7 @@ describe('console module test', function() {
       done();
     });
 
-		var opts = {
+		let opts = {
 				app: {
 					clusterSeq: {},
 					stop: function(value) {
@@ -113,9 +113,9 @@ describe('console module test', function() {
 					}
 				}
 			};
-		var module = new consoleModule(opts);
+		let module = new consoleModule(opts);
 		it('should execute kill command', function(done) {
-			var msg = {signal: 'kill'};
+			let msg = {signal: 'kill'};
       process.exit = function() {exitCount++;};
       setTimeout = function(cb, timeout) {
         if (timeout > 3000) {
@@ -124,7 +124,7 @@ describe('console module test', function() {
         _setTimeout(cb, timeout);
       };
 
-      var agent1 = {
+      let agent1 = {
 				request: function(recordId, moduleId, msg, cb) {
 					cb('chat-server-1');
         },
@@ -140,7 +140,7 @@ describe('console module test', function() {
         should.exist(result.code);
 			});
 
-      var agent2 = {
+      let agent2 = {
 				request: function(recordId, moduleId, msg, cb) {
 					cb(null);
         },
@@ -160,9 +160,9 @@ describe('console module test', function() {
 		});
 
 		it('should execute stop command', function(done) {
-			var msg1 = {signal: 'stop', ids: ['chat-server-1']};
-			var msg2 = {signal: 'stop', ids:[]};
-			var agent = {
+			let msg1 = {signal: 'stop', ids: ['chat-server-1']};
+			let msg2 = {signal: 'stop', ids:[]};
+			let agent = {
 				notifyById: function(serverId, moduleId, msg) {
 
 				},
@@ -181,8 +181,8 @@ describe('console module test', function() {
 		});
 
 		it('should execute list command', function() {
-			var msg = {signal: 'list'};
-			var agent = {
+			let msg = {signal: 'list'};
+			let agent = {
 				request: function(recordId, moduleId, msg, cb) {
 					cb({serverId: 'chat-server-1', body: {'server':{}}});
 				},
@@ -199,9 +199,9 @@ describe('console module test', function() {
 		});
 
 		it('should execute add command', function() {
-			var msg1 = {signal: 'add', args: ['host=127.0.0.1', 'port=88888', 'clusterCount=2']};
-			var msg2 = {signal: 'add', args: ['host=127.0.0.1', 'port=88888', 'id=chat-server-1', 'serverType=chat']};
-			var agent = {};
+			let msg1 = {signal: 'add', args: ['host=127.0.0.1', 'port=88888', 'clusterCount=2']};
+			let msg2 = {signal: 'add', args: ['host=127.0.0.1', 'port=88888', 'id=chat-server-1', 'serverType=chat']};
+			let agent = {};
 			module.clientHandler(agent, msg1, function(err, result) {
 				should.not.exist(err);
 				result.length.should.eql(0);
@@ -212,9 +212,9 @@ describe('console module test', function() {
 		});
 
 		it('should execute blacklist command', function() {
-			var msg1 = {signal: 'blacklist', args: ['127.0.0.1']};
-			var msg2 = {signal: 'blacklist', args: ['abc']};
-			var agent = {
+			let msg1 = {signal: 'blacklist', args: ['127.0.0.1']};
+			let msg2 = {signal: 'blacklist', args: ['abc']};
+			let agent = {
 				notifyAll: function(moduleId, msg) {
 
 				}
@@ -228,9 +228,9 @@ describe('console module test', function() {
 		});
 
 		it('should execute restart command', function() {
-			var msg1 = {signal: 'restart', ids:['chat-server-1']};
-			var msg2 = {signal: 'restart', type:'chat', ids:[]};
-			var agent = {
+			let msg1 = {signal: 'restart', ids:['chat-server-1']};
+			let msg2 = {signal: 'restart', type:'chat', ids:[]};
+			let agent = {
 				request: function(recordId, moduleId, msg, cb) {
 					cb(null);
 				}

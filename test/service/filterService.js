@@ -1,9 +1,9 @@
-var should = require('should');
-var FilterService = require('../../lib/common/service/filterService');
+let should = require('should');
+let FilterService = require('../../lib/common/service/filterService');
 
-var WAIT_TIME = 50;
+let WAIT_TIME = 50;
 
-var mockFilter1 = {
+let mockFilter1 = {
   before: function(msg, session, cb) {
     session.beforeCount1++;
     cb();
@@ -15,7 +15,7 @@ var mockFilter1 = {
   }
 };
 
-var mockFilter2 = {
+let mockFilter2 = {
   before: function(msg, session, cb) {
     session.beforeCount2++;
     cb();
@@ -27,12 +27,12 @@ var mockFilter2 = {
   }
 };
 
-var blackholdFilter = {
+let blackholdFilter = {
   before: function() {},
   after: function() {}
 };
 
-var MockSession = function(){
+let MockSession = function(){
   this.beforeCount1 = 0;
   this.afterCount1 = 0;
   this.beforeCount2 = 0;
@@ -42,8 +42,8 @@ var MockSession = function(){
 describe('filter service test', function() {
   describe('#filter', function() {
     it('should register before filter by calling before method and fire filter chain by calling beforeFilter', function(done) {
-      var session = new MockSession();
-      var service = new FilterService();
+      let session = new MockSession();
+      let service = new FilterService();
       service.before(mockFilter1);
       service.before(mockFilter2);
       service.beforeFilter(null, session, function() {
@@ -57,8 +57,8 @@ describe('filter service test', function() {
     });
 
     it('should register after filter by calling after method and fire filter chain by calling afterFilter', function(done) {
-      var session = new MockSession();
-      var service = new FilterService();
+      let session = new MockSession();
+      let service = new FilterService();
       service.after(mockFilter1);
       service.after(mockFilter2);
       service.afterFilter(null, null, session, null, function() {
@@ -72,9 +72,9 @@ describe('filter service test', function() {
     });
 
     it('should be ok if filter is a function', function(done) {
-      var session = {beforeCount: 0, afterCount: 0};
-      var service = new FilterService();
-      var beforeCount = 0, afterCount = 0;
+      let session = {beforeCount: 0, afterCount: 0};
+      let service = new FilterService();
+      let beforeCount = 0, afterCount = 0;
 
       service.before(function(msg, session, cb) {
         session.beforeCount++;
@@ -102,9 +102,9 @@ describe('filter service test', function() {
     });
 
     it('should not invoke the callback if filter not invoke callback', function(done) {
-      var session = new MockSession();
-      var service = new FilterService();
-      var beforeCount = 0, afterCount = 0;
+      let session = new MockSession();
+      let service = new FilterService();
+      let beforeCount = 0, afterCount = 0;
 
       service.before(blackholdFilter);
       service.after(blackholdFilter);
@@ -128,11 +128,11 @@ describe('filter service test', function() {
     });
 
     it('should pass the err and resp parameters to callback and ignore the filters behind if them specified in before filter', function(done) {
-      var session = new MockSession();
-      var service = new FilterService();
-      var error = 'some error message';
-      var response = {key: 'some value'};
-      var respFilter = {
+      let session = new MockSession();
+      let service = new FilterService();
+      let error = 'some error message';
+      let response = {key: 'some value'};
+      let respFilter = {
         before: function(msg, session, cb) {
           cb(error, response);
         }

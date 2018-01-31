@@ -52,9 +52,9 @@ WebInspector.BreakpointManager = function(breakpointStorage, debuggerModel, scri
     this._breakpointsByDebuggerId = {};
     this._debuggerModel.addEventListener(WebInspector.DebuggerModel.Events.BreakpointResolved, this._breakpointResolved, this);
 
-    var breakpoints = this._breakpointStorage.get();
-    for (var i = 0; i < breakpoints.length; ++i) {
-        var breakpoint = WebInspector.Breakpoint.deserialize(breakpoints[i]);
+    let breakpoints = this._breakpointStorage.get();
+    for (let i = 0; i < breakpoints.length; ++i) {
+        let breakpoint = WebInspector.Breakpoint.deserialize(breakpoints[i]);
         if (!this._breakpoint(breakpoint.uiSourceCodeId, breakpoint.lineNumber))
             this._addBreakpointToModel(breakpoint);
     }
@@ -66,9 +66,9 @@ WebInspector.BreakpointManager.prototype = {
      */
     uiSourceCodeAdded: function(uiSourceCode)
     {
-        var breakpoints = this._breakpoints(uiSourceCode.id);
-        for (var lineNumber in breakpoints) {
-            var breakpoint = breakpoints[lineNumber];
+        let breakpoints = this._breakpoints(uiSourceCode.id);
+        for (let lineNumber in breakpoints) {
+            let breakpoint = breakpoints[lineNumber];
             this._addBreakpointToUI(breakpoint, uiSourceCode);
             this._materializeBreakpoint(breakpoint, uiSourceCode);
             if (breakpoint._debuggerLocation)
@@ -81,9 +81,9 @@ WebInspector.BreakpointManager.prototype = {
      */
     uiSourceCodeRemoved: function(uiSourceCode)
     {
-        var uiBreakpoints = uiSourceCode.breakpoints();
-        for (var lineNumber in uiBreakpoints) {
-            var uiBreakpoint = uiBreakpoints[lineNumber];
+        let uiBreakpoints = uiSourceCode.breakpoints();
+        for (let lineNumber in uiBreakpoints) {
+            let uiBreakpoint = uiBreakpoints[lineNumber];
             this._removeBreakpointFromUI(uiBreakpoint);
         }
     },
@@ -98,7 +98,7 @@ WebInspector.BreakpointManager.prototype = {
     {
         if (uiSourceCode.breakpoints()[lineNumber])
             return;
-        var breakpoint = new WebInspector.Breakpoint(uiSourceCode.id, lineNumber, condition, enabled, !!uiSourceCode.url);
+        let breakpoint = new WebInspector.Breakpoint(uiSourceCode.id, lineNumber, condition, enabled, !!uiSourceCode.url);
         this._addBreakpointToModel(breakpoint);
         this._addBreakpointToUI(breakpoint, uiSourceCode);
         this._materializeBreakpoint(breakpoint, uiSourceCode);
@@ -110,7 +110,7 @@ WebInspector.BreakpointManager.prototype = {
      */
     removeBreakpoint: function(uiSourceCode, lineNumber)
     {
-        var uiBreakpoint = uiSourceCode.breakpoints()[lineNumber];
+        let uiBreakpoint = uiSourceCode.breakpoints()[lineNumber];
         if (!uiBreakpoint)
             return;
         this._innerRemoveBreakpoint(uiBreakpoint.breakpoint);
@@ -142,7 +142,7 @@ WebInspector.BreakpointManager.prototype = {
             return;
 
         breakpoint._materialized = true;
-        var rawLocation = this._scriptMapping.uiLocationToRawLocation(uiSourceCode, breakpoint.lineNumber, 0);
+        let rawLocation = this._scriptMapping.uiLocationToRawLocation(uiSourceCode, breakpoint.lineNumber, 0);
         this._setBreakpointInDebugger(breakpoint, rawLocation);
     },
 
@@ -151,7 +151,7 @@ WebInspector.BreakpointManager.prototype = {
      */
     _breakpointDebuggerLocationChanged: function(breakpoint)
     {
-        var uiLocation = this._scriptMapping.rawLocationToUILocation(breakpoint._debuggerLocation);
+        let uiLocation = this._scriptMapping.rawLocationToUILocation(breakpoint._debuggerLocation);
         if (!uiLocation)
             return;
         if (uiLocation.lineNumber === breakpoint.lineNumber)
@@ -168,8 +168,8 @@ WebInspector.BreakpointManager.prototype = {
      */
     _moveBreakpointInUI: function(breakpoint, lineNumber)
     {
-        var uiSourceCode;
-        var uiBreakpoint = breakpoint.uiBreakpoint;
+        let uiSourceCode;
+        let uiBreakpoint = breakpoint.uiBreakpoint;
         if (uiBreakpoint) {
             this._removeBreakpointFromUI(uiBreakpoint);
             uiSourceCode = uiBreakpoint.uiSourceCode;
@@ -193,7 +193,7 @@ WebInspector.BreakpointManager.prototype = {
      */
     _addBreakpointToUI: function(breakpoint, uiSourceCode)
     {
-        var uiBreakpoint = breakpoint.createUIBreakpoint(uiSourceCode);
+        let uiBreakpoint = breakpoint.createUIBreakpoint(uiSourceCode);
         uiSourceCode.breakpointAdded(uiBreakpoint.lineNumber, uiBreakpoint);
     },
 
@@ -202,8 +202,8 @@ WebInspector.BreakpointManager.prototype = {
      */
     _removeBreakpointFromUI: function(uiBreakpoint)
     {
-        var uiSourceCode = uiBreakpoint.uiSourceCode;
-        var lineNumber = uiBreakpoint.lineNumber;
+        let uiSourceCode = uiBreakpoint.uiSourceCode;
+        let lineNumber = uiBreakpoint.lineNumber;
         console.assert(uiSourceCode.breakpoints()[lineNumber] === uiBreakpoint);
         uiSourceCode.breakpointRemoved(lineNumber);
         uiBreakpoint.breakpoint.removeUIBreakpoint();
@@ -255,9 +255,9 @@ WebInspector.BreakpointManager.prototype = {
      */
     _forEachBreakpoint: function(handler)
     {
-        for (var id in this._breakpointsByUILocation) {
-            var breakpoints = this._breakpointsByUILocation[id];
-            for (var lineNumber in breakpoints)
+        for (let id in this._breakpointsByUILocation) {
+            let breakpoints = this._breakpointsByUILocation[id];
+            for (let lineNumber in breakpoints)
                 handler(breakpoints[lineNumber]);
         }
     },
@@ -315,14 +315,14 @@ WebInspector.BreakpointManager.prototype = {
      */
     _breakpointResolved: function(event)
     {
-        var breakpoint = this._breakpointsByDebuggerId[event.data["breakpointId"]];
+        let breakpoint = this._breakpointsByDebuggerId[event.data["breakpointId"]];
         breakpoint._debuggerLocation = event.data["location"];
         this._breakpointDebuggerLocationChanged(breakpoint);
     },
 
     _saveBreakpoints: function()
     {
-        var serializedBreakpoints = [];
+        let serializedBreakpoints = [];
         /**
          * @this {WebInspector.BreakpointManager}
          * @param {WebInspector.Breakpoint} breakpoint
@@ -369,9 +369,9 @@ WebInspector.BreakpointManager.prototype = {
         }
         this._forEachBreakpoint(resetOrDeleteBreakpoint.bind(this));
 
-        for (var id in this._breakpointsByUILocation) {
-            var empty = true;
-            for (var lineNumber in this._breakpointsByUILocation[id]) {
+        for (let id in this._breakpointsByUILocation) {
+            let empty = true;
+            for (let lineNumber in this._breakpointsByUILocation[id]) {
                 empty = false;
                 break;
             }
@@ -404,7 +404,7 @@ WebInspector.Breakpoint.prototype = {
      */
     serialize: function()
     {
-        var serializedBreakpoint = {};
+        let serializedBreakpoint = {};
         serializedBreakpoint.sourceFileId = this.uiSourceCodeId;
         serializedBreakpoint.lineNumber = this.lineNumber;
         serializedBreakpoint.condition = this.condition;

@@ -1,16 +1,16 @@
-var should = require('should');
-var pomelo = require('../../');
-var SessionService = require('../../lib/common/service/sessionService');
+let should = require('should');
+let pomelo = require('../../');
+let SessionService = require('../../lib/common/service/sessionService');
 
 describe('session service test', function() {
   describe('#bind', function() {
     it('should get session by uid after binded', function(done) {
-      var service = new SessionService();
-      var sid = 1, fid = 'frontend-server-1', socket = {};
-      var uid = 'changchang';
-      var eventCount = 0;
+      let service = new SessionService();
+      let sid = 1, fid = 'frontend-server-1', socket = {};
+      let uid = 'changchang';
+      let eventCount = 0;
 
-      var session = service.create(sid, fid, socket);
+      let session = service.create(sid, fid, socket);
 
       should.exist(session);
 
@@ -23,7 +23,7 @@ describe('session service test', function() {
 
       service.bind(sid, uid, function(err) {
         should.not.exist(err);
-        var sessions = service.getByUid(uid);
+        let sessions = service.getByUid(uid);
         should.exist(sessions);
         sessions.length.should.equal(1);
         session.should.eql(sessions[0]);
@@ -35,11 +35,11 @@ describe('session service test', function() {
       });
     });
     it('should fail if already binded uid', function(done) {
-      var service = new SessionService();
-      var sid = 1, fid = 'frontend-server-1', socket = {};
-      var uid = 'py', test_uid = 'test';
+      let service = new SessionService();
+      let sid = 1, fid = 'frontend-server-1', socket = {};
+      let uid = 'py', test_uid = 'test';
 
-      var session = service.create(sid, fid, socket);
+      let session = service.create(sid, fid, socket);
 
       service.bind(sid, uid, null);
 
@@ -49,8 +49,8 @@ describe('session service test', function() {
       });
     });
     it('should fail if try to bind a session not exist', function(done) {
-      var service = new SessionService();
-      var sid = 1, uid = 'changchang';
+      let service = new SessionService();
+      let sid = 1, uid = 'changchang';
 
       service.bind(sid, uid, function(err) {
         should.exist(err);
@@ -61,9 +61,9 @@ describe('session service test', function() {
 
   describe('#unbind', function() {
     it('should fail unbind session if session not exist', function(done) {
-      var service = new SessionService();
-      var sid = 1;
-      var uid = 'py';
+      let service = new SessionService();
+      let sid = 1;
+      let uid = 'py';
   
       service.unbind(sid, uid, function(err) {
         should.exist(err);
@@ -71,11 +71,11 @@ describe('session service test', function() {
       });      
     });
     it('should fail unbind session if session not binded', function(done) {
-      var service = new SessionService();
-      var sid = 1, fid = 'frontend-server-1', socket = {};
-      var uid = 'py';
+      let service = new SessionService();
+      let sid = 1, fid = 'frontend-server-1', socket = {};
+      let uid = 'py';
 
-      var session = service.create(sid, fid, socket);
+      let session = service.create(sid, fid, socket);
 
       service.unbind(sid, uid, function(err) {
         should.exist(err);
@@ -83,16 +83,16 @@ describe('session service test', function() {
       });
     });
     it('should fail to get session after session unbinded', function(done) {
-      var service = new SessionService();
-      var sid = 1, fid = 'frontend-server-1', socket = {};
-      var uid = 'py';
+      let service = new SessionService();
+      let sid = 1, fid = 'frontend-server-1', socket = {};
+      let uid = 'py';
 
-      var session = service.create(sid, fid, socket);
+      let session = service.create(sid, fid, socket);
       service.bind(sid, uid, null);
 
       service.unbind(sid, uid, function(err) {
         should.not.exist(err);
-        var sessions = service.getByUid(uid);
+        let sessions = service.getByUid(uid);
         should.not.exist(sessions);
         done();
       });
@@ -101,11 +101,11 @@ describe('session service test', function() {
 
   describe('#remove', function() {
     it('should not get the session after remove', function(done) {
-      var service = new SessionService();
-      var sid = 1, fid = 'frontend-server-1', socket = {};
-      var uid = 'changchang';
+      let service = new SessionService();
+      let sid = 1, fid = 'frontend-server-1', socket = {};
+      let uid = 'changchang';
 
-      var session = service.create(sid, fid, socket);
+      let session = service.create(sid, fid, socket);
 
       service.bind(sid, uid, function(err) {
         service.remove(sid);
@@ -118,11 +118,11 @@ describe('session service test', function() {
 
   describe('#import', function() {
     it('should update the session with the key/value pair', function(done) {
-      var service = new SessionService();
-      var sid = 1, fid = 'frontend-server-1', socket = {};
-      var key = 'key-1', value = 'value-1';
+      let service = new SessionService();
+      let sid = 1, fid = 'frontend-server-1', socket = {};
+      let key = 'key-1', value = 'value-1';
 
-      var session = service.create(sid, fid, socket);
+      let session = service.create(sid, fid, socket);
 
       service.import(sid, key, value, function(err) {
         should.not.exist(err);
@@ -132,9 +132,9 @@ describe('session service test', function() {
     });
 
     it('should fail if try to update a session not exist', function(done) {
-      var service = new SessionService();
-      var sid = 1;
-      var key = 'key-1', value = 'value-1';
+      let service = new SessionService();
+      let sid = 1;
+      let key = 'key-1', value = 'value-1';
 
       service.import(sid, key, value, function(err) {
         should.exist(err);
@@ -143,15 +143,15 @@ describe('session service test', function() {
     });
 
     it('should update the session with the key/value pairs', function(done) {
-      var service = new SessionService();
-      var sid = 1, fid = 'frontend-server-1', socket = {};
-      var key = 'key-1', value = 'value-1', key2 = 'key-2', value2 = {};
+      let service = new SessionService();
+      let sid = 1, fid = 'frontend-server-1', socket = {};
+      let key = 'key-1', value = 'value-1', key2 = 'key-2', value2 = {};
 
-      var settings = {};
+      let settings = {};
       settings[key] = value;
       settings[key2] = value2;
 
-      var session = service.create(sid, fid, socket);
+      let session = service.create(sid, fid, socket);
 
       service.importAll(sid, settings, function(err) {
         should.not.exist(err);
@@ -162,9 +162,9 @@ describe('session service test', function() {
     });
 
     it('should fail if try to update a session not exist', function(done) {
-      var service = new SessionService();
-      var sid = 1;
-      var key = 'key-1', value = 'value-1';
+      let service = new SessionService();
+      let sid = 1;
+      let key = 'key-1', value = 'value-1';
 
       service.import(sid, key, value, function(err) {
         should.exist(err);
@@ -173,11 +173,11 @@ describe('session service test', function() {
     });
 
     it('should fail if try to update a session not exist', function(done) {
-      var service = new SessionService();
-      var sid = 1;
-      var key = 'key-1', value = 'value-1', key2 = 'key-2', value2 = {};
+      let service = new SessionService();
+      let sid = 1;
+      let key = 'key-1', value = 'value-1', key2 = 'key-2', value2 = {};
 
-      var settings = {};
+      let settings = {};
       settings[key] = value;
       settings[key2] = value2;
 
@@ -190,19 +190,19 @@ describe('session service test', function() {
 
   describe('#kick', function() {
     it('should kick the sessions', function(done) {
-      var service = new SessionService();
-      var sid1 = 1, fid1 = 'frontend-server-1';
-      var sid2 = 2, fid2 = 'frontend-server-1';
+      let service = new SessionService();
+      let sid1 = 1, fid1 = 'frontend-server-1';
+      let sid2 = 2, fid2 = 'frontend-server-1';
 
-      var socket = {
+      let socket = {
         emit: function(){},
         disconnect: function(){}
       };
-      var uid = 'changchang';
-      var eventCount = 0;
+      let uid = 'changchang';
+      let eventCount = 0;
 
-      var session1 = service.create(sid1, fid1, socket);
-      var session2 = service.create(sid2, fid2, socket);
+      let session1 = service.create(sid1, fid1, socket);
+      let session2 = service.create(sid2, fid2, socket);
       session1.on('closed', function() {
         eventCount++;
       });
@@ -226,19 +226,19 @@ describe('session service test', function() {
     });
 
     it('should kick the session by sessionId', function(done) {
-      var service = new SessionService();
-      var sid1 = 1, fid1 = 'frontend-server-1';
-      var sid2 = 2, fid2 = 'frontend-server-1';
+      let service = new SessionService();
+      let sid1 = 1, fid1 = 'frontend-server-1';
+      let sid2 = 2, fid2 = 'frontend-server-1';
 
-      var socket = {
+      let socket = {
         emit: function(){},
         disconnect: function(){}
       };
-      var uid = 'changchang';
-      var eventCount = 0;
+      let uid = 'changchang';
+      let eventCount = 0;
 
-      var session1 = service.create(sid1, fid1, socket);
-      var session2 = service.create(sid2, fid2, socket);
+      let session1 = service.create(sid1, fid1, socket);
+      let session2 = service.create(sid2, fid2, socket);
       session1.on('closed', function() {
         eventCount++;
       });
@@ -262,8 +262,8 @@ describe('session service test', function() {
     });
 
     it('should ok if kick a session not exist', function(done) {
-      var service = new SessionService();
-      var uid = 'changchang';
+      let service = new SessionService();
+      let uid = 'changchang';
 
       service.kick(uid, function(err) {
         should.not.exist(err);
@@ -272,15 +272,15 @@ describe('session service test', function() {
     });
 
     it('should kick session by sid', function(done) {
-      var service = new SessionService();
-      var sid = 1, fid = 'frontend-server-1';
-      var socket = {
+      let service = new SessionService();
+      let sid = 1, fid = 'frontend-server-1';
+      let socket = {
         emit: function(){},
         disconnect: function(){}
       };
-      var eventCount = 0;
+      let eventCount = 0;
 
-      var session = service.create(sid, fid, socket);
+      let session = service.create(sid, fid, socket);
       session.on('closed', function() {
         eventCount++;
       });
@@ -294,8 +294,8 @@ describe('session service test', function() {
     });
 
     it('should ok if kick a session not exist', function(done) {
-      var service = new SessionService();
-      var sid = 1;
+      let service = new SessionService();
+      let sid = 1;
 
       service.kickBySessionId(sid, function(err) {
         should.not.exist(err);
@@ -306,11 +306,11 @@ describe('session service test', function() {
 
   describe('#forEachSession', function() {
     it('should iterate all created sessions', function(done) {
-      var service = new SessionService();
-      var sid = 1, fid = 'frontend-server-1', socket = {};
-      var eventCount = 0;
+      let service = new SessionService();
+      let sid = 1, fid = 'frontend-server-1', socket = {};
+      let eventCount = 0;
 
-      var outter_session = service.create(sid, fid, socket);
+      let outter_session = service.create(sid, fid, socket);
 
       service.forEachSession(function(session) {
         should.exist(session);
@@ -322,11 +322,11 @@ describe('session service test', function() {
 
   describe('#forEachBindedSession', function() {
     it('should iterate all binded sessions', function(done) {
-      var service = new SessionService();
-      var sid = 1, fid = 'frontend-server-1', socket = {};
-      var uid = 'py';
+      let service = new SessionService();
+      let sid = 1, fid = 'frontend-server-1', socket = {};
+      let uid = 'py';
 
-      var outter_session = service.create(sid, fid, socket);
+      let outter_session = service.create(sid, fid, socket);
       service.bind(sid, uid, null);
 
       service.forEachBindedSession(function(session) {
@@ -342,13 +342,13 @@ describe('session service test', function() {
 describe('frontend session test', function() {
   describe('#bind', function() {
     it('should get session by uid after binded', function(done) {
-      var service = new SessionService();
-      var sid = 1, fid = 'frontend-server-1', socket = {};
-      var uid = 'changchang';
-      var eventCount = 0;
+      let service = new SessionService();
+      let sid = 1, fid = 'frontend-server-1', socket = {};
+      let uid = 'changchang';
+      let eventCount = 0;
 
-      var session = service.create(sid, fid, socket);
-      var fsession = session.toFrontendSession();
+      let session = service.create(sid, fid, socket);
+      let fsession = session.toFrontendSession();
 
       should.exist(fsession);
 
@@ -359,7 +359,7 @@ describe('frontend session test', function() {
 
       fsession.bind(uid, function(err) {
         should.not.exist(err);
-        var sessions = service.getByUid(uid);
+        let sessions = service.getByUid(uid);
         should.exist(sessions);
         sessions.length.should.equal(1);
         session.should.eql(sessions[0]);
@@ -371,17 +371,17 @@ describe('frontend session test', function() {
 
   describe('#unbind', function() {
     it('should fail to get session after session unbinded', function(done) {
-      var service = new SessionService();
-      var sid = 1, fid = 'frontend-server-1', socket = {};
-      var uid = 'py';
+      let service = new SessionService();
+      let sid = 1, fid = 'frontend-server-1', socket = {};
+      let uid = 'py';
 
-      var session = service.create(sid, fid, socket);
-      var fsession = session.toFrontendSession();
+      let session = service.create(sid, fid, socket);
+      let fsession = session.toFrontendSession();
 
       fsession.bind(uid, null);
       fsession.unbind(uid, function(err) {
         should.not.exist(err);
-        var sessions = service.getByUid(uid);
+        let sessions = service.getByUid(uid);
         should.not.exist(sessions);
         done();
       });
@@ -391,12 +391,12 @@ describe('frontend session test', function() {
   describe('#set/get', function() {
     it('should update the key/value pair in frontend session but not session',
         function() {
-      var service = new SessionService();
-      var sid = 1, fid = 'frontend-server-1', socket = {};
-      var key = 'key-1', value = 'value-1';
+      let service = new SessionService();
+      let sid = 1, fid = 'frontend-server-1', socket = {};
+      let key = 'key-1', value = 'value-1';
 
-      var session = service.create(sid, fid, socket);
-      var fsession = session.toFrontendSession();
+      let session = service.create(sid, fid, socket);
+      let fsession = session.toFrontendSession();
 
       fsession.set(key, value);
 
@@ -407,12 +407,12 @@ describe('frontend session test', function() {
 
   describe('#push', function() {
     it('should push the specified key/value pair to session', function(done) {
-      var service = new SessionService();
-      var sid = 1, fid = 'frontend-server-1', socket = {};
-      var key = 'key-1', value = 'value-1', key2 = 'key-2', value2 = {};
+      let service = new SessionService();
+      let sid = 1, fid = 'frontend-server-1', socket = {};
+      let key = 'key-1', value = 'value-1', key2 = 'key-2', value2 = {};
 
-      var session = service.create(sid, fid, socket);
-      var fsession = session.toFrontendSession();
+      let session = service.create(sid, fid, socket);
+      let fsession = session.toFrontendSession();
 
       fsession.set(key, value);
       fsession.set(key2, value2);
@@ -426,12 +426,12 @@ describe('frontend session test', function() {
     });
 
     it('should push all the key/value pairs to session', function(done) {
-      var service = new SessionService();
-      var sid = 1, fid = 'frontend-server-1', socket = {};
-      var key = 'key-1', value = 'value-1', key2 = 'key-2', value2 = {};
+      let service = new SessionService();
+      let sid = 1, fid = 'frontend-server-1', socket = {};
+      let key = 'key-1', value = 'value-1', key2 = 'key-2', value2 = {};
 
-      var session = service.create(sid, fid, socket);
-      var fsession = session.toFrontendSession();
+      let session = service.create(sid, fid, socket);
+      let fsession = session.toFrontendSession();
 
       fsession.set(key, value);
       fsession.set(key2, value2);
@@ -447,13 +447,13 @@ describe('frontend session test', function() {
   
   describe('#export', function() {
     it('should equal frontend session after export', function(done) {
-      var service = new SessionService();
-      var sid = 1, fid = 'frontend-server-1', socket = {};
-      var uid = 'py';
+      let service = new SessionService();
+      let sid = 1, fid = 'frontend-server-1', socket = {};
+      let uid = 'py';
 
-      var session = service.create(sid, fid, socket);
-      var fsession = session.toFrontendSession();
-      var esession = fsession.export();
+      let session = service.create(sid, fid, socket);
+      let fsession = session.toFrontendSession();
+      let esession = fsession.export();
       esession.id.should.eql(fsession.id);
       esession.frontendId.should.eql(fsession.frontendId);
       done();

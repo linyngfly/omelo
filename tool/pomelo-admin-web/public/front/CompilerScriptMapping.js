@@ -48,8 +48,8 @@ WebInspector.CompilerScriptMapping.prototype = {
      */
     rawLocationToUILocation: function(rawLocation)
     {
-        var sourceMap = this._sourceMapForScriptId[rawLocation.scriptId];
-        var entry = sourceMap.findEntry(rawLocation.lineNumber, rawLocation.columnNumber || 0);
+        let sourceMap = this._sourceMapForScriptId[rawLocation.scriptId];
+        let entry = sourceMap.findEntry(rawLocation.lineNumber, rawLocation.columnNumber || 0);
         return new WebInspector.UILocation(this._uiSourceCodeByURL[entry[2]], entry[3], entry[4]);
     },
 
@@ -61,8 +61,8 @@ WebInspector.CompilerScriptMapping.prototype = {
      */
     uiLocationToRawLocation: function(uiSourceCode, lineNumber, columnNumber)
     {
-        var sourceMap = this._sourceMapForUISourceCode.get(uiSourceCode);
-        var entry = sourceMap.findEntryReversed(uiSourceCode.url, lineNumber);
+        let sourceMap = this._sourceMapForUISourceCode.get(uiSourceCode);
+        let entry = sourceMap.findEntryReversed(uiSourceCode.url, lineNumber);
         return WebInspector.debuggerModel.createRawLocation(this._scriptForSourceMap.get(sourceMap), entry[0], entry[1]);
     },
 
@@ -71,8 +71,8 @@ WebInspector.CompilerScriptMapping.prototype = {
      */
     uiSourceCodeList: function()
     {
-        var result = []
-        for (var url in this._uiSourceCodeByURL)
+        let result = []
+        for (let url in this._uiSourceCodeByURL)
             result.push(this._uiSourceCodeByURL[url]);
         return result;
     },
@@ -83,9 +83,9 @@ WebInspector.CompilerScriptMapping.prototype = {
      */
     _uiSourceCodesForSourceMap: function(sourceMap)
     {
-        var result = []
-        var sourceURLs = sourceMap.sources();
-        for (var i = 0; i < sourceURLs.length; ++i)
+        let result = []
+        let sourceURLs = sourceMap.sources();
+        for (let i = 0; i < sourceURLs.length; ++i)
             result.push(this._uiSourceCodeByURL[sourceURLs[i]]);
         return result;
     },
@@ -95,29 +95,29 @@ WebInspector.CompilerScriptMapping.prototype = {
      */
     addScript: function(script)
     {
-        var sourceMap = this.loadSourceMapForScript(script);
+        let sourceMap = this.loadSourceMapForScript(script);
 
         if (this._scriptForSourceMap.get(sourceMap)) {
             this._sourceMapForScriptId[script.scriptId] = sourceMap;
-            var uiSourceCodes = this._uiSourceCodesForSourceMap(sourceMap);
-            var data = { scriptId: script.scriptId, uiSourceCodes: uiSourceCodes };
+            let uiSourceCodes = this._uiSourceCodesForSourceMap(sourceMap);
+            let data = { scriptId: script.scriptId, uiSourceCodes: uiSourceCodes };
             this.dispatchEventToListeners(WebInspector.ScriptMapping.Events.ScriptBound, data);
             return;
         }
 
-        var uiSourceCodeList = [];
-        var sourceURLs = sourceMap.sources();
-        for (var i = 0; i < sourceURLs.length; ++i) {
-            var sourceURL = sourceURLs[i];
+        let uiSourceCodeList = [];
+        let sourceURLs = sourceMap.sources();
+        for (let i = 0; i < sourceURLs.length; ++i) {
+            let sourceURL = sourceURLs[i];
             if (this._uiSourceCodeByURL[sourceURL])
                 continue;
-            var sourceContent = sourceMap.sourceContent(sourceURL);
-            var contentProvider;
+            let sourceContent = sourceMap.sourceContent(sourceURL);
+            let contentProvider;
             if (sourceContent)
                 contentProvider = new WebInspector.StaticContentProvider("text/javascript", sourceContent);
             else
                 contentProvider = new WebInspector.CompilerSourceMappingContentProvider(sourceURL);
-            var uiSourceCode = new WebInspector.UISourceCodeImpl(sourceURL, sourceURL, contentProvider);
+            let uiSourceCode = new WebInspector.UISourceCodeImpl(sourceURL, sourceURL, contentProvider);
             uiSourceCode.isContentScript = script.isContentScript;
             uiSourceCode.isEditable = false;
             this._uiSourceCodeByURL[sourceURL] = uiSourceCode;
@@ -127,9 +127,9 @@ WebInspector.CompilerScriptMapping.prototype = {
 
         this._sourceMapForScriptId[script.scriptId] = sourceMap;
         this._scriptForSourceMap.put(sourceMap, script);
-        var data = { removedItems: [], addedItems: uiSourceCodeList };
+        let data = { removedItems: [], addedItems: uiSourceCodeList };
         this.dispatchEventToListeners(WebInspector.ScriptMapping.Events.UISourceCodeListChanged, data);
-        var data = { scriptId: script.scriptId, uiSourceCodes: uiSourceCodeList };
+        let data = { scriptId: script.scriptId, uiSourceCodes: uiSourceCodeList };
         this.dispatchEventToListeners(WebInspector.ScriptMapping.Events.ScriptBound, data);
     },
 
@@ -139,17 +139,17 @@ WebInspector.CompilerScriptMapping.prototype = {
      */
     loadSourceMapForScript: function(script)
     {
-        var sourceMapURL = WebInspector.SourceMapParser.prototype._canonicalizeURL(script.sourceMapURL, script.sourceURL);
-        var sourceMap = this._sourceMapByURL[sourceMapURL];
+        let sourceMapURL = WebInspector.SourceMapParser.prototype._canonicalizeURL(script.sourceMapURL, script.sourceURL);
+        let sourceMap = this._sourceMapByURL[sourceMapURL];
         if (sourceMap)
             return sourceMap;
 
         try {
             // FIXME: make sendRequest async.
-            var response = InspectorFrontendHost.loadResourceSynchronously(sourceMapURL);
+            let response = InspectorFrontendHost.loadResourceSynchronously(sourceMapURL);
             if (response.slice(0, 3) === ")]}")
                 response = response.substring(response.indexOf('\n'));
-            var payload = /** @type {WebInspector.SourceMapPayload} */ JSON.parse(response);
+            let payload = /** @type {WebInspector.SourceMapPayload} */ JSON.parse(response);
             sourceMap = new WebInspector.SourceMapParser(sourceMapURL, payload);
         } catch(e) {
             console.error(e.message);
@@ -161,7 +161,7 @@ WebInspector.CompilerScriptMapping.prototype = {
 
     reset: function()
     {
-        var data = { removedItems: this.uiSourceCodeList(), addedItems: [] };
+        let data = { removedItems: this.uiSourceCodeList(), addedItems: [] };
         this.dispatchEventToListeners(WebInspector.ScriptMapping.Events.UISourceCodeListChanged, data);
 
         this._sourceMapByURL = {};
@@ -197,7 +197,7 @@ WebInspector.SourceMapParser = function(sourceMappingURL, payload)
     if (!WebInspector.SourceMapParser.prototype._base64Map) {
         const base64Digits = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         WebInspector.SourceMapParser.prototype._base64Map = {};
-        for (var i = 0; i < base64Digits.length; ++i)
+        for (let i = 0; i < base64Digits.length; ++i)
             WebInspector.SourceMapParser.prototype._base64Map[base64Digits.charAt(i)] = i;
     }
 
@@ -214,8 +214,8 @@ WebInspector.SourceMapParser.prototype = {
      */
     sources: function()
     {
-        var sources = [];
-        for (var sourceURL in this._reverseMappingsBySourceURL)
+        let sources = [];
+        for (let sourceURL in this._reverseMappingsBySourceURL)
             sources.push(sourceURL);
         return sources;
     },
@@ -227,12 +227,12 @@ WebInspector.SourceMapParser.prototype = {
 
     findEntry: function(lineNumber, columnNumber)
     {
-        var first = 0;
-        var count = this._mappings.length;
+        let first = 0;
+        let count = this._mappings.length;
         while (count > 1) {
-          var step = count >> 1;
-          var middle = first + step;
-          var mapping = this._mappings[middle];
+          let step = count >> 1;
+          let middle = first + step;
+          let mapping = this._mappings[middle];
           if (lineNumber < mapping[0] || (lineNumber == mapping[0] && columnNumber < mapping[1]))
               count = step;
           else {
@@ -245,9 +245,9 @@ WebInspector.SourceMapParser.prototype = {
 
     findEntryReversed: function(sourceURL, lineNumber)
     {
-        var mappings = this._reverseMappingsBySourceURL[sourceURL];
+        let mappings = this._reverseMappingsBySourceURL[sourceURL];
         for ( ; lineNumber < mappings.length; ++lineNumber) {
-            var mapping = mappings[lineNumber];
+            let mapping = mappings[lineNumber];
             if (mapping)
                 return mapping;
         }
@@ -264,25 +264,25 @@ WebInspector.SourceMapParser.prototype = {
 
     _parseSections: function(sections)
     {
-        for (var i = 0; i < sections.length; ++i) {
-            var section = sections[i];
+        for (let i = 0; i < sections.length; ++i) {
+            let section = sections[i];
             this._parseMap(section.map, section.offset.line, section.offset.column)
         }
     },
 
     _parseMap: function(map, lineNumber, columnNumber)
     {
-        var sourceIndex = 0;
-        var sourceLineNumber = 0;
-        var sourceColumnNumber = 0;
-        var nameIndex = 0;
+        let sourceIndex = 0;
+        let sourceLineNumber = 0;
+        let sourceColumnNumber = 0;
+        let nameIndex = 0;
 
-        var sources = [];
-        for (var i = 0; i < map.sources.length; ++i) {
-            var sourceURL = map.sources[i];
+        let sources = [];
+        for (let i = 0; i < map.sources.length; ++i) {
+            let sourceURL = map.sources[i];
             if (map.sourceRoot)
                 sourceURL = map.sourceRoot + "/" + sourceURL;
-            var url = this._canonicalizeURL(sourceURL, this._sourceMappingURL);
+            let url = this._canonicalizeURL(sourceURL, this._sourceMappingURL);
             sources.push(url);
             if (!this._reverseMappingsBySourceURL[url])
                 this._reverseMappingsBySourceURL[url] = [];
@@ -290,9 +290,9 @@ WebInspector.SourceMapParser.prototype = {
                 this._sourceContentByURL[url] = map.sourcesContent[i];
         }
 
-        var stringCharIterator = new WebInspector.SourceMapParser.StringCharIterator(map.mappings);
-        var sourceURL = sources[sourceIndex];
-        var reverseMappings = this._reverseMappingsBySourceURL[sourceURL];
+        let stringCharIterator = new WebInspector.SourceMapParser.StringCharIterator(map.mappings);
+        let sourceURL = sources[sourceIndex];
+        let reverseMappings = this._reverseMappingsBySourceURL[sourceURL];
 
         while (true) {
             if (stringCharIterator.peek() === ",")
@@ -309,7 +309,7 @@ WebInspector.SourceMapParser.prototype = {
 
             columnNumber += this._decodeVLQ(stringCharIterator);
             if (!this._isSeparator(stringCharIterator.peek())) {
-                var sourceIndexDelta = this._decodeVLQ(stringCharIterator);
+                let sourceIndexDelta = this._decodeVLQ(stringCharIterator);
                 if (sourceIndexDelta) {
                     sourceIndex += sourceIndexDelta;
                     sourceURL = sources[sourceIndex];
@@ -335,16 +335,16 @@ WebInspector.SourceMapParser.prototype = {
     _decodeVLQ: function(stringCharIterator)
     {
         // Read unsigned value.
-        var result = 0;
-        var shift = 0;
+        let result = 0;
+        let shift = 0;
         do {
-            var digit = this._base64Map[stringCharIterator.next()];
+            let digit = this._base64Map[stringCharIterator.next()];
             result += (digit & this._VLQ_BASE_MASK) << shift;
             shift += this._VLQ_BASE_SHIFT;
         } while (digit & this._VLQ_CONTINUATION_MASK);
 
         // Fix the sign.
-        var negative = result & 1;
+        let negative = result & 1;
         result >>= 1;
         return negative ? -result : result;
     },
@@ -354,11 +354,11 @@ WebInspector.SourceMapParser.prototype = {
         if (!url || !baseURL || url.asParsedURL() || url.substring(0, 5) === "data:")
             return url;
 
-        var base = baseURL.asParsedURL();
+        let base = baseURL.asParsedURL();
         if (!base)
             return url;
 
-        var baseHost = base.scheme + "://" + base.host + (base.port ? ":" + base.port : "");
+        let baseHost = base.scheme + "://" + base.host + (base.port ? ":" + base.port : "");
         if (url[0] === "/")
             return baseHost + url;
         return baseHost + base.firstPathComponents + url;

@@ -36,12 +36,12 @@
  */
 function binarySearch(object, array, comparator)
 {
-    var first = 0;
-    var last = array.length - 1;
+    let first = 0;
+    let last = array.length - 1;
 
     while (first <= last) {
-        var mid = (first + last) >> 1;
-        var c = comparator(object, array[mid]);
+        let mid = (first + last) >> 1;
+        let c = comparator(object, array[mid]);
         if (c > 0)
             first = mid + 1;
         else if (c < 0)
@@ -56,7 +56,7 @@ function binarySearch(object, array, comparator)
 
 Object.defineProperty(Array.prototype, "binaryIndexOf", { value: function(value, comparator)
 {
-    var result = binarySearch(value, this, comparator);
+    let result = binarySearch(value, this, comparator);
     return result >= 0 ? result : -1;
 }});
 
@@ -67,7 +67,7 @@ Object.defineProperty(Array.prototype, "binaryIndexOf", { value: function(value,
  */
 function insertionIndexForObjectInListSortedByFunction(anObject, aList, aFunction)
 {
-    var index = binarySearch(anObject, aList, aFunction);
+    let index = binarySearch(anObject, aList, aFunction);
     if (index < 0)
         // See binarySearch implementation.
         return -index - 1;

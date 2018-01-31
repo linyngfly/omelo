@@ -37,7 +37,7 @@ WebInspector.FilteredItemSelectionDialog = function(delegate)
 {
     WebInspector.DialogDelegate.call(this);
 
-    var xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
     xhr.open("GET", "filteredItemSelectionDialog.css", false);
     xhr.send(null);
 
@@ -46,7 +46,7 @@ WebInspector.FilteredItemSelectionDialog = function(delegate)
     this.element.addEventListener("keydown", this._onKeyDown.bind(this), false);
     this.element.addEventListener("mousemove", this._onMouseMove.bind(this), false);
     this.element.addEventListener("click", this._onClick.bind(this), false);
-    var styleElement = this.element.createChild("style");
+    let styleElement = this.element.createChild("style");
     styleElement.type = "text/css";
     styleElement.textContent = xhr.responseText;
 
@@ -80,8 +80,8 @@ WebInspector.FilteredItemSelectionDialog.prototype = {
     {
         const minWidth = 500;
         const minHeight = 204;
-        var width = Math.max(relativeToElement.offsetWidth * 2 / 3, minWidth);
-        var height = Math.max(relativeToElement.offsetHeight * 2 / 3, minHeight);
+        let width = Math.max(relativeToElement.offsetWidth * 2 / 3, minWidth);
+        let height = Math.max(relativeToElement.offsetHeight * 2 / 3, minHeight);
 
         this.element.style.width = width + "px";
         this.element.style.height = height + "px";
@@ -121,10 +121,10 @@ WebInspector.FilteredItemSelectionDialog.prototype = {
      */
     _itemsLoaded: function(index, chunkLength, chunkIndex, chunkCount)
     {
-        var fragment = document.createDocumentFragment();
-        var candidateItem = this._selectedElement;
-        for (var i = index; i < index + chunkLength; ++i) {
-            var itemElement = this._createItemElement(i, this._delegate.itemTitleAt(i));
+        let fragment = document.createDocumentFragment();
+        let candidateItem = this._selectedElement;
+        for (let i = index; i < index + chunkLength; ++i) {
+            let itemElement = this._createItemElement(i, this._delegate.itemTitleAt(i));
             if (this._checkItemAt(i, this._promptElement.value)) {
                 if (!candidateItem)
                     candidateItem = itemElement;
@@ -153,7 +153,7 @@ WebInspector.FilteredItemSelectionDialog.prototype = {
         if (this._itemElements[index])
             return this._itemElements[index];
 
-        var itemElement = document.createElement("div");
+        let itemElement = document.createElement("div");
         itemElement.className = "item";
         itemElement.textContent = title;
         this._elementIndexes.put(itemElement, index);
@@ -193,8 +193,8 @@ WebInspector.FilteredItemSelectionDialog.prototype = {
     {
         if (!query)
             return true;
-        var regExp = this._createSearchRegExp(query);
-        var key = this._delegate.itemKeyAt(index);
+        let regExp = this._createSearchRegExp(query);
+        let key = this._delegate.itemKeyAt(index);
         return regExp.test(key);
     },
 
@@ -204,9 +204,9 @@ WebInspector.FilteredItemSelectionDialog.prototype = {
      */
     _createSearchRegExp: function(query, isGlobal)
     {
-        var trimmedQuery = query.trim();
-        var regExpString = trimmedQuery.escapeForRegExp().replace(/\\\*/g, ".*").replace(/(?!^)([A-Z])/g, "[^A-Z]*$1");
-        var isSuffix = (query.charAt(query.length - 1) === " ");
+        let trimmedQuery = query.trim();
+        let regExpString = trimmedQuery.escapeForRegExp().replace(/\\\*/g, ".*").replace(/(?!^)([A-Z])/g, "[^A-Z]*$1");
+        let isSuffix = (query.charAt(query.length - 1) === " ");
         if (isSuffix)
             regExpString += "$";
         return new RegExp(regExpString, (trimmedQuery === trimmedQuery.toLowerCase() ? "i" : "") + (isGlobal ? "g" : ""));
@@ -216,14 +216,14 @@ WebInspector.FilteredItemSelectionDialog.prototype = {
     {
         delete this._filterTimer;
 
-        var query = this._promptElement.value;
-        var charsAdded = this._previousInputLength < query.length;
+        let query = this._promptElement.value;
+        let charsAdded = this._previousInputLength < query.length;
         this._previousInputLength = query.length;
         query = query.trim();
 
-        var firstElement;
-        for (var i = 0; i < this._itemElements.length; ++i) {
-            var itemElement = this._itemElements[i];
+        let firstElement;
+        for (let i = 0; i < this._itemElements.length; ++i) {
+            let itemElement = this._itemElements[i];
             
             if (this._itemElementVisible(itemElement)) { 
                 if (!this._checkItemAt(i, query))
@@ -249,9 +249,9 @@ WebInspector.FilteredItemSelectionDialog.prototype = {
     {
         function nextItem(itemElement, isPageScroll, forward)
         {
-            var scrollItemsLeft = isPageScroll && this._rowsPerViewport ? this._rowsPerViewport : 1;
-            var candidate = itemElement;
-            var lastVisibleCandidate = candidate;
+            let scrollItemsLeft = isPageScroll && this._rowsPerViewport ? this._rowsPerViewport : 1;
+            let candidate = itemElement;
+            let lastVisibleCandidate = candidate;
             do {
                 candidate = forward ? candidate.nextSibling : candidate.previousSibling;
                 if (!candidate) {
@@ -269,10 +269,10 @@ WebInspector.FilteredItemSelectionDialog.prototype = {
             return candidate;
         }
 
-        var isPageScroll = false;
+        let isPageScroll = false;
 
         if (this._selectedElement) {
-            var candidate;
+            let candidate;
             switch (event.keyCode) {
             case WebInspector.KeyboardShortcut.Keys.Down.code:
                 candidate = nextItem.call(this, this._selectedElement, false, true);
@@ -329,7 +329,7 @@ WebInspector.FilteredItemSelectionDialog.prototype = {
 
     _onClick: function(event)
     {
-        var itemElement = event.target.enclosingNodeOrSelfWithClass("item");
+        let itemElement = event.target.enclosingNodeOrSelfWithClass("item");
         if (!itemElement)
             return;
         this._updateSelection(itemElement);
@@ -339,7 +339,7 @@ WebInspector.FilteredItemSelectionDialog.prototype = {
 
     _onMouseMove: function(event)
     {
-        var itemElement = event.target.enclosingNodeOrSelfWithClass("item");
+        let itemElement = event.target.enclosingNodeOrSelfWithClass("item");
         if (!itemElement)
             return;
         this._updateSelection(itemElement);
@@ -358,9 +358,9 @@ WebInspector.FilteredItemSelectionDialog.prototype = {
      */
     _highlightItems: function(query)
     {
-        var regex = this._createSearchRegExp(query, true);
-        for (var i = 0; i < this._delegate.itemsCount(); ++i) {
-            var itemElement = this._itemElements[i];
+        let regex = this._createSearchRegExp(query, true);
+        for (let i = 0; i < this._delegate.itemsCount(); ++i) {
+            let itemElement = this._itemElements[i];
             if (this._itemElementVisible(itemElement) && this._itemElementInViewport(itemElement))
                 this._highlightItem(itemElement, regex);
         }
@@ -368,7 +368,7 @@ WebInspector.FilteredItemSelectionDialog.prototype = {
 
     _clearHighlight: function()
     {
-        for (var i = 0; i < this._delegate.itemsCount(); ++i)
+        for (let i = 0; i < this._delegate.itemsCount(); ++i)
             this._clearElementHighlight(this._itemElements[i]);
     },
 
@@ -377,7 +377,7 @@ WebInspector.FilteredItemSelectionDialog.prototype = {
      */
     _clearElementHighlight: function(itemElement)
     {
-        var changes = this._elementHighlightChanges.get(itemElement)
+        let changes = this._elementHighlightChanges.get(itemElement)
         if (changes) {
             revertDomChanges(changes);
             this._elementHighlightChanges.remove(itemElement);
@@ -392,15 +392,15 @@ WebInspector.FilteredItemSelectionDialog.prototype = {
     {
         this._clearElementHighlight(itemElement);
 
-        var key = this._delegate.itemKeyAt(this._elementIndexes.get(itemElement));
-        var ranges = [];
+        let key = this._delegate.itemKeyAt(this._elementIndexes.get(itemElement));
+        let ranges = [];
 
-        var match;
+        let match;
         while ((match = regex.exec(key)) !== null) {
             ranges.push({ offset: match.index, length: regex.lastIndex - match.index });
         }
 
-        var changes = [];
+        let changes = [];
         highlightRangesWithStyleClass(itemElement, ranges, "highlight", changes);
 
         if (changes.length)
@@ -478,7 +478,7 @@ WebInspector.JavaScriptOutlineDialog = function(panel, view)
  */
 WebInspector.JavaScriptOutlineDialog.didAddChunk = function(data)
 {
-    var instance = WebInspector.JavaScriptOutlineDialog._instance;
+    let instance = WebInspector.JavaScriptOutlineDialog._instance;
     if (!instance)
         return;
 
@@ -492,12 +492,12 @@ WebInspector.JavaScriptOutlineDialog.install = function(panel, viewGetter)
 {
     function showJavaScriptOutlineDialog()
     {
-         var view = viewGetter();
+         let view = viewGetter();
          if (view)
              WebInspector.JavaScriptOutlineDialog._show(panel, view);
     }
 
-    var javaScriptOutlineShortcut = WebInspector.JavaScriptOutlineDialog.createShortcut();
+    let javaScriptOutlineShortcut = WebInspector.JavaScriptOutlineDialog.createShortcut();
     panel.registerShortcut(javaScriptOutlineShortcut.key, showJavaScriptOutlineDialog);
 }
 
@@ -509,7 +509,7 @@ WebInspector.JavaScriptOutlineDialog._show = function(panel, sourceView)
         return;
     WebInspector.JavaScriptOutlineDialog._instance = new WebInspector.JavaScriptOutlineDialog(panel, sourceView);
 
-    var filteredItemSelectionDialog = new WebInspector.FilteredItemSelectionDialog(WebInspector.JavaScriptOutlineDialog._instance);
+    let filteredItemSelectionDialog = new WebInspector.FilteredItemSelectionDialog(WebInspector.JavaScriptOutlineDialog._instance);
     WebInspector.Dialog.show(sourceView.element, filteredItemSelectionDialog);
 }
 
@@ -525,7 +525,7 @@ WebInspector.JavaScriptOutlineDialog.prototype = {
      */
     itemTitleAt: function(itemIndex)
     {
-        var functionItem = this._functionItems[itemIndex];
+        let functionItem = this._functionItems[itemIndex];
         return functionItem.name + (functionItem.arguments ? functionItem.arguments : "");
     },
 
@@ -560,7 +560,7 @@ WebInspector.JavaScriptOutlineDialog.prototype = {
      */
     selectItem: function(itemIndex)
     {
-        var lineNumber = this._functionItems[itemIndex].line;
+        let lineNumber = this._functionItems[itemIndex].line;
         if (!isNaN(lineNumber) && lineNumber >= 0)
             this._view.highlightLine(lineNumber);
         this._view.focus();
@@ -574,8 +574,8 @@ WebInspector.JavaScriptOutlineDialog.prototype = {
      */
     _appendItemElements: function(chunk, chunkIndex, chunkCount)
     {
-        var index = this._functionItems.length;
-        for (var i = 0; i < chunk.length; ++i) {
+        let index = this._functionItems.length;
+        for (let i = 0; i < chunk.length; ++i) {
             this._functionItems.push(chunk[i]);
         }
         this._itemsAddedCallback(index, chunk.length, chunkIndex, chunkCount);
@@ -623,7 +623,7 @@ WebInspector.OpenResourceDialog.install = function(panel, presentationModel, rel
         WebInspector.OpenResourceDialog._show(panel, presentationModel, relativeToElement);
     }
 
-    var openResourceShortcut = WebInspector.OpenResourceDialog.createShortcut();
+    let openResourceShortcut = WebInspector.OpenResourceDialog.createShortcut();
     panel.registerShortcut(openResourceShortcut.key, showOpenResourceDialog);
 }
 
@@ -637,7 +637,7 @@ WebInspector.OpenResourceDialog._show = function(panel, presentationModel, relat
     if (WebInspector.Dialog.currentInstance())
         return;
     
-    var filteredItemSelectionDialog = new WebInspector.FilteredItemSelectionDialog(new WebInspector.OpenResourceDialog(panel, presentationModel));
+    let filteredItemSelectionDialog = new WebInspector.FilteredItemSelectionDialog(new WebInspector.OpenResourceDialog(panel, presentationModel));
     WebInspector.Dialog.show(relativeToElement, filteredItemSelectionDialog);
 }
 

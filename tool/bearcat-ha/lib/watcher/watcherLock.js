@@ -11,17 +11,17 @@
  * MIT Licensed
  */
 
-var logger = require('pomelo-logger').getLogger('bearcat-ha', 'WatcherLock');
-var EventEmitter = require('events').EventEmitter;
-var Zookeeper = require('node-zookeeper-client');
-var Constant = require('../util/constant');
-var zkCreateMode = Zookeeper.CreateMode;
-var zkEvent = Zookeeper.Event;
-var Util = require('util');
+let logger = require('pomelo-logger').getLogger('bearcat-ha', 'WatcherLock');
+let EventEmitter = require('events').EventEmitter;
+let Zookeeper = require('node-zookeeper-client');
+let Constant = require('../util/constant');
+let zkCreateMode = Zookeeper.CreateMode;
+let zkEvent = Zookeeper.Event;
+let Util = require('util');
 
-var WATCHER_LOCK_PREFIX = Constant.WATCHER_LOCK_PREFIX;
+let WATCHER_LOCK_PREFIX = Constant.WATCHER_LOCK_PREFIX;
 
-var WatcherLock = function(zkClient, lockPath, acls, callback) {
+let WatcherLock = function(zkClient, lockPath, acls, callback) {
   EventEmitter.call(this);
   this.leader = null;
   this.isMaster = false;
@@ -35,7 +35,7 @@ var WatcherLock = function(zkClient, lockPath, acls, callback) {
 Util.inherits(WatcherLock, EventEmitter);
 
 WatcherLock.prototype.init = function(callback) {
-  var self = this;
+  let self = this;
   this.zkClient.create(this.lockPath + '/' + WATCHER_LOCK_PREFIX, this.acls, zkCreateMode.EPHEMERAL_SEQUENTIAL, function(err, path) {
     if (err) {
       return callback(err);
@@ -47,7 +47,7 @@ WatcherLock.prototype.init = function(callback) {
 };
 
 WatcherLock.prototype.check = function(callback) {
-  var self = this;
+  let self = this;
   callback = callback || function() {};
 
   this.getLocks(function(err, children) {
@@ -64,7 +64,7 @@ WatcherLock.prototype.check = function(callback) {
       callback(null, self);
       self.emit('promote', self);
     } else {
-      var index = children.indexOf(self.currentLockPath);
+      let index = children.indexOf(self.currentLockPath);
       self.leader = children[index - 1];
       self.watchLeader();
       callback(null, self);
@@ -91,7 +91,7 @@ WatcherLock.prototype.watchLeader = function() {
     return;
   }
 
-  var self = this;
+  let self = this;
   this.zkClient.exists(this.lockPath + '/' + this.leader, this.watcherCb.bind(this), function(err, state) {
     if (err) {
       logger.error('watchLeader exists error ' + err.stack);

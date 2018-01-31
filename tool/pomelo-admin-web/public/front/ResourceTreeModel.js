@@ -126,13 +126,13 @@ WebInspector.ResourceTreeModel.prototype = {
         // Do nothing unless cached resource tree is processed - it will overwrite everything.
         if (!this._cachedResourcesProcessed)
             return;
-        var frame = this._frames[framePayload.id];
+        let frame = this._frames[framePayload.id];
         if (frame) {
             // Navigation within existing frame.
             frame._navigate(framePayload);
         } else {
             // Either a new frame or a main frame navigation to the new backend process. 
-            var parentFrame = this._frames[framePayload.parentId];
+            let parentFrame = this._frames[framePayload.parentId];
             frame = new WebInspector.ResourceTreeFrame(this, parentFrame, framePayload);
             if (frame.isMainFrame() && this.mainFrame) {
                 // Definitely a navigation to the new backend process.
@@ -149,8 +149,8 @@ WebInspector.ResourceTreeModel.prototype = {
             this.dispatchEventToListeners(WebInspector.ResourceTreeModel.EventTypes.MainFrameNavigated, frame);
 
         // Fill frame with retained resources (the ones loaded using new loader).
-        var resources = frame.resources();
-        for (var i = 0; i < resources.length; ++i)
+        let resources = frame.resources();
+        for (let i = 0; i < resources.length; ++i)
             this.dispatchEventToListeners(WebInspector.ResourceTreeModel.EventTypes.ResourceAdded, resources[i]);
 
         if (frame.isMainFrame())
@@ -180,7 +180,7 @@ WebInspector.ResourceTreeModel.prototype = {
         if (!this._cachedResourcesProcessed)
             return;
 
-        var frame = this._frames[frameId];
+        let frame = this._frames[frameId];
         if (!frame)
             return;
 
@@ -198,13 +198,13 @@ WebInspector.ResourceTreeModel.prototype = {
         if (!this._cachedResourcesProcessed)
             return;
 
-        var resource = /** @type {WebInspector.Resource} */ event.data;
+        let resource = /** @type {WebInspector.Resource} */ event.data;
         this._addPendingConsoleMessagesToResource(resource);
 
         if (resource.failed || resource.type === WebInspector.Resource.Type.XHR)
             return;
 
-        var frame = this._frames[resource.frameId];
+        let frame = this._frames[resource.frameId];
         if (frame)
             frame._addResource(resource);
     },
@@ -217,16 +217,16 @@ WebInspector.ResourceTreeModel.prototype = {
         if (!this._cachedResourcesProcessed)
             return;
 
-        var frameId = event.data.frameId;
-        var frame = this._frames[frameId];
+        let frameId = event.data.frameId;
+        let frame = this._frames[frameId];
         if (!frame)
             return;
 
-        var url = event.data.url;
+        let url = event.data.url;
         if (frame._resourcesMap[url])
             return;
 
-        var resource = this._createResource(url, frame.url, frameId, event.data.loaderId);
+        let resource = this._createResource(url, frame.url, frameId, event.data.loaderId);
         resource.type = WebInspector.Resource.Type[event.data.resourceType];
         resource.mimeType = event.data.mimeType;
         resource.finished = true;
@@ -257,8 +257,8 @@ WebInspector.ResourceTreeModel.prototype = {
      */
     _consoleMessageAdded: function(event)
     {
-        var msg = /** @type {WebInspector.ConsoleMessage} */ event.data;
-        var resource = msg.url ? this.resourceForURL(msg.url) : null;
+        let msg = /** @type {WebInspector.ConsoleMessage} */ event.data;
+        let resource = msg.url ? this.resourceForURL(msg.url) : null;
         if (resource)
             this._addConsoleMessageToResource(msg, resource);
         else
@@ -282,9 +282,9 @@ WebInspector.ResourceTreeModel.prototype = {
      */
     _addPendingConsoleMessagesToResource: function(resource)
     {
-        var messages = this._pendingConsoleMessages[resource.url];
+        let messages = this._pendingConsoleMessages[resource.url];
         if (messages) {
-            for (var i = 0; i < messages.length; i++)
+            for (let i = 0; i < messages.length; i++)
                 this._addConsoleMessageToResource(messages[i], resource);
             delete this._pendingConsoleMessages[resource.url];
         }
@@ -334,11 +334,11 @@ WebInspector.ResourceTreeModel.prototype = {
      */
     _addFramesRecursively: function(parentFrame, frameTreePayload)
     {
-        var framePayload = frameTreePayload.frame;
-        var frame = new WebInspector.ResourceTreeFrame(this, parentFrame, framePayload);
+        let framePayload = frameTreePayload.frame;
+        let frame = new WebInspector.ResourceTreeFrame(this, parentFrame, framePayload);
 
         // Create frame resource.
-        var frameResource = this._createResourceFromFramePayload(framePayload, framePayload.url);
+        let frameResource = this._createResourceFromFramePayload(framePayload, framePayload.url);
         frameResource.mimeType = framePayload.mimeType;
         frameResource.type = WebInspector.Resource.Type.Document;
         frameResource.finished = true;
@@ -349,16 +349,16 @@ WebInspector.ResourceTreeModel.prototype = {
         this._addFrame(frame);
         frame._addResource(frameResource);
 
-        for (var i = 0; frameTreePayload.childFrames && i < frameTreePayload.childFrames.length; ++i)
+        for (let i = 0; frameTreePayload.childFrames && i < frameTreePayload.childFrames.length; ++i)
             this._addFramesRecursively(frame, frameTreePayload.childFrames[i]);
 
         if (!frameTreePayload.resources)
             return;
 
         // Create frame subresources.
-        for (var i = 0; i < frameTreePayload.resources.length; ++i) {
-            var subresource = frameTreePayload.resources[i];
-            var resource = this._createResourceFromFramePayload(framePayload, subresource.url);
+        for (let i = 0; i < frameTreePayload.resources.length; ++i) {
+            let subresource = frameTreePayload.resources[i];
+            let resource = this._createResourceFromFramePayload(framePayload, subresource.url);
             resource.type = WebInspector.Resource.Type[subresource.type];
             resource.mimeType = subresource.mimeType;
             resource.finished = true;
@@ -385,7 +385,7 @@ WebInspector.ResourceTreeModel.prototype = {
      */
     _createResource: function(url, documentURL, frameId, loaderId)
     {
-        var resource = new WebInspector.Resource("", url, frameId, loaderId);
+        let resource = new WebInspector.Resource("", url, frameId, loaderId);
         resource.documentURL = documentURL;
         return resource;
     }
@@ -501,7 +501,7 @@ WebInspector.ResourceTreeFrame.prototype = {
         this._securityOrigin = framePayload.securityOrigin;
         this._mimeType = framePayload.mimeType;
 
-        var mainResource = this._resourcesMap[this._url];
+        let mainResource = this._resourcesMap[this._url];
         this._resourcesMap = {};
         this._removeChildFrames();
         if (mainResource && mainResource.loaderId === this._loaderId)
@@ -527,8 +527,8 @@ WebInspector.ResourceTreeFrame.prototype = {
 
     _removeChildFrames: function()
     {
-        var copy = this._childFrames.slice();
-        for (var i = 0; i < copy.length; ++i)
+        let copy = this._childFrames.slice();
+        for (let i = 0; i < copy.length; ++i)
             this._removeChildFrame(copy[i]); 
     },
 
@@ -557,8 +557,8 @@ WebInspector.ResourceTreeFrame.prototype = {
      */
     resources: function()
     {
-        var result = [];
-        for (var url in this._resourcesMap)
+        let result = [];
+        for (let url in this._resourcesMap)
             result.push(this._resourcesMap[url]);
         return result;
     },
@@ -569,7 +569,7 @@ WebInspector.ResourceTreeFrame.prototype = {
      */
     resourceForURL: function(url)
     {
-        var result;
+        let result;
         function filter(resource)
         {
             if (resource.url === url) {
@@ -587,12 +587,12 @@ WebInspector.ResourceTreeFrame.prototype = {
      */
     _callForFrameResources: function(callback)
     {
-        for (var url in this._resourcesMap) {
+        for (let url in this._resourcesMap) {
             if (callback(this._resourcesMap[url]))
                 return true;
         }
 
-        for (var i = 0; i < this._childFrames.length; ++i) {
+        for (let i = 0; i < this._childFrames.length; ++i) {
             if (this._childFrames[i]._callForFrameResources(callback))
                 return true;
         }

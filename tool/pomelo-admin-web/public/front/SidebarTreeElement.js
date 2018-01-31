@@ -180,11 +180,11 @@ WebInspector.SidebarTreeElement.prototype = {
 
     refreshTitles: function()
     {
-        var mainTitle = this.mainTitle;
+        let mainTitle = this.mainTitle;
         if (this.titleElement.textContent !== mainTitle)
             this.titleElement.textContent = mainTitle;
 
-        var subtitle = this.subtitle;
+        let subtitle = this.subtitle;
         if (subtitle) {
             if (this.subtitleElement.textContent !== subtitle)
                 this.subtitleElement.textContent = subtitle;

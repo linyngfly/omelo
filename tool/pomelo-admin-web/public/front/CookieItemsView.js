@@ -102,23 +102,23 @@ WebInspector.CookieItemsView.prototype = {
 
     _filterCookiesForDomain: function(allCookies)
     {
-        var cookies = [];
-        var resourceURLsForDocumentURL = [];
+        let cookies = [];
+        let resourceURLsForDocumentURL = [];
         this._totalSize = 0;
 
         function populateResourcesForDocuments(resource)
         {
-            var url = resource.documentURL.asParsedURL();
+            let url = resource.documentURL.asParsedURL();
             if (url && url.host == this._cookieDomain)
                 resourceURLsForDocumentURL.push(resource.url);
         }
         WebInspector.forAllResources(populateResourcesForDocuments.bind(this));
 
-        for (var i = 0; i < allCookies.length; ++i) {
-            var pushed = false;
-            var size = allCookies[i].size;
-            for (var j = 0; j < resourceURLsForDocumentURL.length; ++j) {
-                var resourceURL = resourceURLsForDocumentURL[j];
+        for (let i = 0; i < allCookies.length; ++i) {
+            let pushed = false;
+            let size = allCookies[i].size;
+            for (let j = 0; j < resourceURLsForDocumentURL.length; ++j) {
+                let resourceURL = resourceURLsForDocumentURL[j];
                 if (WebInspector.Cookies.cookieMatchesResourceURL(allCookies[i], resourceURL)) {
                     this._totalSize += size;
                     if (!pushed) {
@@ -151,7 +151,7 @@ WebInspector.CookieItemsView.prototype = {
     _contextMenu: function(event)
     {
         if (!this._cookies.length) {
-            var contextMenu = new WebInspector.ContextMenu();
+            let contextMenu = new WebInspector.ContextMenu();
             contextMenu.appendItem(WebInspector.UIString("Refresh"), this._update.bind(this));
             contextMenu.show(event);
         }
@@ -168,7 +168,7 @@ WebInspector.SimpleCookiesTable = function()
 {
     WebInspector.View.call(this);
 
-    var columns = {};
+    let columns = {};
     columns[0] = {};
     columns[1] = {};
     columns[0].title = WebInspector.UIString("Name");
@@ -183,16 +183,16 @@ WebInspector.SimpleCookiesTable.prototype = {
     setCookies: function(cookies)
     {
         this._dataGrid.removeChildren();
-        var addedCookies = {};
-        for (var i = 0; i < cookies.length; ++i) {
+        let addedCookies = {};
+        for (let i = 0; i < cookies.length; ++i) {
             if (addedCookies[cookies[i].name])
                 continue;
             addedCookies[cookies[i].name] = true;
-            var data = {};
+            let data = {};
             data[0] = cookies[i].name;
             data[1] = cookies[i].value;
 
-            var node = new WebInspector.DataGridNode(data, false);
+            let node = new WebInspector.DataGridNode(data, false);
             node.selectable = true;
             this._dataGrid.appendChild(node);
         }
@@ -221,16 +221,16 @@ WebInspector.Cookies.getCookiesAsync = function(callback)
 
 WebInspector.Cookies.buildCookiesFromString = function(rawCookieString)
 {
-    var rawCookies = rawCookieString.split(/;\s*/);
-    var cookies = [];
+    let rawCookies = rawCookieString.split(/;\s*/);
+    let cookies = [];
 
     if (!(/^\s*$/.test(rawCookieString))) {
-        for (var i = 0; i < rawCookies.length; ++i) {
-            var cookie = rawCookies[i];
-            var delimIndex = cookie.indexOf("=");
-            var name = cookie.substring(0, delimIndex);
-            var value = cookie.substring(delimIndex + 1);
-            var size = name.length + value.length;
+        for (let i = 0; i < rawCookies.length; ++i) {
+            let cookie = rawCookies[i];
+            let delimIndex = cookie.indexOf("=");
+            let name = cookie.substring(0, delimIndex);
+            let value = cookie.substring(delimIndex + 1);
+            let size = name.length + value.length;
             cookies.push({ name: name, value: value, size: size });
         }
     }
@@ -240,7 +240,7 @@ WebInspector.Cookies.buildCookiesFromString = function(rawCookieString)
 
 WebInspector.Cookies.cookieMatchesResourceURL = function(cookie, resourceURL)
 {
-    var url = resourceURL.asParsedURL();
+    let url = resourceURL.asParsedURL();
     if (!url || !WebInspector.Cookies.cookieDomainMatchesResourceDomain(cookie.domain, url.host))
         return false;
     return (url.path.indexOf(cookie.path) === 0

@@ -162,12 +162,12 @@ WebInspector.DialogDelegate.prototype = {
      */
     position: function(element, relativeToElement)
     {
-        var offset = relativeToElement.offsetRelativeToWindow(window);
+        let offset = relativeToElement.offsetRelativeToWindow(window);
 
-        var positionX = offset.x + (relativeToElement.offsetWidth - element.offsetWidth) / 2;
+        let positionX = offset.x + (relativeToElement.offsetWidth - element.offsetWidth) / 2;
         positionX = Number.constrain(positionX, 0, window.innerWidth - element.offsetWidth);
 
-        var positionY = offset.y + (relativeToElement.offsetHeight - element.offsetHeight) / 2;
+        let positionY = offset.y + (relativeToElement.offsetHeight - element.offsetHeight) / 2;
         positionY = Number.constrain(positionY, 0, window.innerHeight - element.offsetHeight);
 
         element.style.left = positionX + "px";

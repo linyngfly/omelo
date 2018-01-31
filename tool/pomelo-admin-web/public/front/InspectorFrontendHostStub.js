@@ -42,7 +42,7 @@ WebInspector.InspectorFrontendHostStub = function()
 WebInspector.InspectorFrontendHostStub.prototype = {
     platform: function()
     {
-        var match = navigator.userAgent.match(/Windows NT/);
+        let match = navigator.userAgent.match(/Windows NT/);
         if (match)
             return "windows";
         match = navigator.userAgent.match(/Mac OS X/);
@@ -125,11 +125,11 @@ WebInspector.InspectorFrontendHostStub.prototype = {
 
     saveAs: function(fileName, content)
     {
-        var builder = new WebKitBlobBuilder();
+        let builder = new WebKitBlobBuilder();
         builder.append(content);
-        var blob = builder.getBlob("application/octet-stream");
+        let blob = builder.getBlob("application/octet-stream");
 
-        var fr = new FileReader();
+        let fr = new FileReader();
         fr.onload = function(e) {
             // Force download
             window.location = this.result;
@@ -163,7 +163,7 @@ WebInspector.InspectorFrontendHostStub.prototype = {
     }
 }
 
-var InspectorFrontendHost = new WebInspector.InspectorFrontendHostStub();
+let InspectorFrontendHost = new WebInspector.InspectorFrontendHostStub();
 Preferences.localizeUI = false;
 
 }

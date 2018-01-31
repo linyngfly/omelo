@@ -2,7 +2,7 @@ module.exports = function(app) {
   return new Handler(app);
 };
 
-var Handler = function(app) {
+let Handler = function(app) {
   this.app = app;
 };
 
@@ -27,7 +27,7 @@ Handler.prototype.entry = function(msg, session, next) {
  * @return {Void}
  */
 Handler.prototype.publish = function(msg, session, next) {
-	var result = {
+	let result = {
 		topic: 'publish',
 		payload: JSON.stringify({code: 200, msg: 'publish message is ok.'})
 	};
@@ -43,7 +43,7 @@ Handler.prototype.publish = function(msg, session, next) {
  * @return {Void}
  */
 Handler.prototype.subscribe = function(msg, session, next) {
-	var result = {
+	let result = {
 		topic: 'subscribe',
 		payload: JSON.stringify({code: 200, msg: 'subscribe message is ok.'})
 	};

@@ -55,7 +55,7 @@ WebInspector.ContextMenu.prototype = {
      */
     appendItem: function(label, handler, disabled)
     {
-        var id = this._items.length;
+        let id = this._items.length;
         this._items.push({type: "item", id: id, label: label, enabled: !disabled});
         this._handlers[id] = handler;
     },
@@ -65,7 +65,7 @@ WebInspector.ContextMenu.prototype = {
      */
     appendCheckboxItem: function(label, handler, checked, disabled)
     {
-        var id = this._items.length;
+        let id = this._items.length;
         this._items.push({type: "checkbox", id: id, label: label, checked: !!checked, enabled: !disabled});
         this._handlers[id] = handler;
     },

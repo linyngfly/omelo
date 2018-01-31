@@ -262,8 +262,8 @@ WebInspector.SplitView.prototype = {
      */
     _setSidebarWidthEnsuringConstraints: function(width)
     {
-        var minWidth = Math.max(this._minimalSidebarWidth, this._totalWidth * this._minimalSidebarWidthPercent);
-        var maxWidth = Math.min(this._totalWidth - this._minimalMainWidth, this._totalWidth * (100 - this._minimalMainWidthPercent) / 100 );
+        let minWidth = Math.max(this._minimalSidebarWidth, this._totalWidth * this._minimalSidebarWidthPercent);
+        let maxWidth = Math.min(this._totalWidth - this._minimalMainWidth, this._totalWidth * (100 - this._minimalMainWidthPercent) / 100 );
         width = Number.constrain(width, minWidth, maxWidth);
 
         this.setSidebarWidth(width);
@@ -359,7 +359,7 @@ WebInspector.SplitView.prototype = {
         if (!this._resizable)
             return;
 
-        var leftWidth = this.hasLeftSidebar ? this._sidebarWidth : this._totalWidth - this._sidebarWidth;
+        let leftWidth = this.hasLeftSidebar ? this._sidebarWidth : this._totalWidth - this._sidebarWidth;
         this._dragOffset = leftWidth - event.pageX;
 
         WebInspector.elementDragStart(this.sidebarResizerElement, this._resizerDragging.bind(this), this._endResizerDragging.bind(this), event, "ew-resize");
@@ -370,9 +370,9 @@ WebInspector.SplitView.prototype = {
      */
     _resizerDragging: function(event)
     {
-        var leftWidth = event.pageX + this._dragOffset;
-        var rightWidth = this._totalWidth - leftWidth;
-        var sidebarWidth = this.hasLeftSidebar ? leftWidth : rightWidth;
+        let leftWidth = event.pageX + this._dragOffset;
+        let rightWidth = this._totalWidth - leftWidth;
+        let sidebarWidth = this.hasLeftSidebar ? leftWidth : rightWidth;
 
         this._setSidebarWidthEnsuringConstraints(sidebarWidth);
         event.preventDefault();

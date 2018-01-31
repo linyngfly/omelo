@@ -153,35 +153,35 @@ WebInspector.UISourceCode.prototype = {
 
     _parseURL: function()
     {
-        var parsedURL = this.url.asParsedURL();
-        var url = parsedURL ? parsedURL.path : this.url;
+        let parsedURL = this.url.asParsedURL();
+        let url = parsedURL ? parsedURL.path : this.url;
 
-        var folderName = "";
-        var fileName = url;
+        let folderName = "";
+        let fileName = url;
 
-        var pathLength = fileName.indexOf("?");
+        let pathLength = fileName.indexOf("?");
         if (pathLength === -1)
             pathLength = fileName.length;
 
-        var fromIndex = fileName.lastIndexOf("/", pathLength - 2);
+        let fromIndex = fileName.lastIndexOf("/", pathLength - 2);
         if (fromIndex !== -1) {
             folderName = fileName.substring(0, fromIndex);
             fileName = fileName.substring(fromIndex + 1);
         }
 
-        var indexOfQuery = fileName.indexOf("?");
+        let indexOfQuery = fileName.indexOf("?");
         if (indexOfQuery === -1)
             indexOfQuery = fileName.length;
-        var lastPathComponent = fileName.substring(0, indexOfQuery);
-        var queryParams = fileName.substring(indexOfQuery, fileName.length);
+        let lastPathComponent = fileName.substring(0, indexOfQuery);
+        let queryParams = fileName.substring(indexOfQuery, fileName.length);
 
         const maxDisplayNameLength = 30;
         const minDisplayQueryParamLength = 5;
 
-        var maxDisplayQueryParamLength = Math.max(minDisplayQueryParamLength, maxDisplayNameLength - lastPathComponent.length);
-        var displayQueryParams = queryParams.trimEnd(maxDisplayQueryParamLength);
-        var displayLastPathComponent = lastPathComponent.trimMiddle(maxDisplayNameLength - displayQueryParams.length);
-        var displayName = displayLastPathComponent + displayQueryParams;
+        let maxDisplayQueryParamLength = Math.max(minDisplayQueryParamLength, maxDisplayNameLength - lastPathComponent.length);
+        let displayQueryParams = queryParams.trimEnd(maxDisplayQueryParamLength);
+        let displayLastPathComponent = lastPathComponent.trimMiddle(maxDisplayNameLength - displayQueryParams.length);
+        let displayName = displayLastPathComponent + displayQueryParams;
         if (!displayName)
             displayName = WebInspector.UIString("(program)");
 
@@ -204,7 +204,7 @@ WebInspector.UISourceCode.prototype = {
         this._mimeType = mimeType;
         this._content = content;
 
-        for (var i = 0; i < this._requestContentCallbacks.length; ++i)
+        for (let i = 0; i < this._requestContentCallbacks.length; ++i)
             this._requestContentCallbacks[i](mimeType, content);
         this._requestContentCallbacks = [];
     },

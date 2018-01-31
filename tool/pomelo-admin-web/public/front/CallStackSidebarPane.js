@@ -41,22 +41,22 @@ WebInspector.CallStackSidebarPane.prototype = {
         this.bodyElement.removeChildren();
 
         if (this.placards) {
-            for (var i = 0; i < this.placards.length; ++i)
+            for (let i = 0; i < this.placards.length; ++i)
                 this.placards[i].discard();
         }
         this.placards = [];
 
         if (!callFrames) {
-            var infoElement = document.createElement("div");
+            let infoElement = document.createElement("div");
             infoElement.className = "info";
             infoElement.textContent = WebInspector.UIString("Not Paused");
             this.bodyElement.appendChild(infoElement);
             return;
         }
 
-        for (var i = 0; i < callFrames.length; ++i) {
-            var callFrame = callFrames[i];
-            var placard = this._model.createPlacard(callFrame);
+        for (let i = 0; i < callFrames.length; ++i) {
+            let callFrame = callFrames[i];
+            let placard = this._model.createPlacard(callFrame);
             placard.callFrame = callFrame;
             placard.element.addEventListener("click", this._placardSelected.bind(this, placard), false);
             this.placards.push(placard);
@@ -66,15 +66,15 @@ WebInspector.CallStackSidebarPane.prototype = {
 
     set selectedCallFrame(x)
     {
-        for (var i = 0; i < this.placards.length; ++i) {
-            var placard = this.placards[i];
+        for (let i = 0; i < this.placards.length; ++i) {
+            let placard = this.placards[i];
             placard.selected = (placard.callFrame === x);
         }
     },
 
     _selectNextCallFrameOnStack: function()
     {
-        var index = this._selectedCallFrameIndex();
+        let index = this._selectedCallFrameIndex();
         if (index == -1)
             return;
         this._selectedPlacardByIndex(index + 1);
@@ -82,7 +82,7 @@ WebInspector.CallStackSidebarPane.prototype = {
 
     _selectPreviousCallFrameOnStack: function()
     {
-        var index = this._selectedCallFrameIndex();
+        let index = this._selectedCallFrameIndex();
         if (index == -1)
             return;
         this._selectedPlacardByIndex(index - 1);
@@ -99,8 +99,8 @@ WebInspector.CallStackSidebarPane.prototype = {
     {
         if (!this._model.selectedCallFrame)
             return -1;
-        for (var i = 0; i < this.placards.length; ++i) {
-            var placard = this.placards[i];
+        for (let i = 0; i < this.placards.length; ++i) {
+            let placard = this.placards[i];
             if (placard.callFrame === this._model.selectedCallFrame)
                 return i;
         }
@@ -117,26 +117,26 @@ WebInspector.CallStackSidebarPane.prototype = {
         if (!this.placards.length)
             return;
 
-        var contextMenu = new WebInspector.ContextMenu();
+        let contextMenu = new WebInspector.ContextMenu();
         contextMenu.appendItem(WebInspector.UIString("Copy Stack Trace"), this._copyStackTrace.bind(this));
         contextMenu.show(event);
     },
 
     _copyStackTrace: function()
     {
-        var text = "";
-        for (var i = 0; i < this.placards.length; ++i)
+        let text = "";
+        for (let i = 0; i < this.placards.length; ++i)
             text += this.placards[i].title + " (" + this.placards[i].subtitle + ")\n";
         InspectorFrontendHost.copyText(text);
     },
 
     registerShortcuts: function(section, registerShortcutDelegate)
     {
-        var nextCallFrame = WebInspector.KeyboardShortcut.makeDescriptor(WebInspector.KeyboardShortcut.Keys.Period,
+        let nextCallFrame = WebInspector.KeyboardShortcut.makeDescriptor(WebInspector.KeyboardShortcut.Keys.Period,
             WebInspector.KeyboardShortcut.Modifiers.Ctrl);
         registerShortcutDelegate(nextCallFrame.key, this._selectNextCallFrameOnStack.bind(this));
 
-        var prevCallFrame = WebInspector.KeyboardShortcut.makeDescriptor(WebInspector.KeyboardShortcut.Keys.Comma,
+        let prevCallFrame = WebInspector.KeyboardShortcut.makeDescriptor(WebInspector.KeyboardShortcut.Keys.Comma,
             WebInspector.KeyboardShortcut.Modifiers.Ctrl);
         registerShortcutDelegate(prevCallFrame.key, this._selectPreviousCallFrameOnStack.bind(this));
 
@@ -145,7 +145,7 @@ WebInspector.CallStackSidebarPane.prototype = {
 
     setStatus: function(status)
     {
-        var statusMessageElement = document.createElement("div");
+        let statusMessageElement = document.createElement("div");
         statusMessageElement.className = "info";
         if (typeof status === "string")
             statusMessageElement.textContent = status;

@@ -38,11 +38,11 @@ WebInspector.NetworkItemView = function(resource)
 
     this.element.addStyleClass("network-item-view");
 
-    var headersView = new WebInspector.ResourceHeadersView(resource);
+    let headersView = new WebInspector.ResourceHeadersView(resource);
     this.appendTab("headers", WebInspector.UIString("Headers"), headersView);
 
-    var responseView = new WebInspector.ResourceResponseView(resource);
-    var previewView = new WebInspector.ResourcePreviewView(resource, responseView);
+    let responseView = new WebInspector.ResourceResponseView(resource);
+    let previewView = new WebInspector.ResourcePreviewView(resource, responseView);
 
     this.appendTab("preview", WebInspector.UIString("Preview"), previewView);
     this.appendTab("response", WebInspector.UIString("Response"), responseView);
@@ -53,7 +53,7 @@ WebInspector.NetworkItemView = function(resource)
     }
 
     if (resource.timing) {
-        var timingView = new WebInspector.ResourceTimingView(resource);
+        let timingView = new WebInspector.ResourceTimingView(resource);
         this.appendTab("timing", WebInspector.UIString("Timing"), timingView);
     }
 

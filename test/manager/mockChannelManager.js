@@ -1,7 +1,7 @@
-var DEFAULT_PREFIX = 'POMELO:CHANNEL';
-var utils = require('../../lib/util/utils');
+let DEFAULT_PREFIX = 'POMELO:CHANNEL';
+let utils = require('../../lib/util/utils');
 
-var MockManager = function(app, opts) {
+let MockManager = function(app, opts) {
   this.app = app;
   this.opts = opts || {};
   this.prefix = opts.prefix || DEFAULT_PREFIX;
@@ -20,7 +20,7 @@ MockManager.prototype.stop = function(force, cb) {
 };
 
 MockManager.prototype.add = function(name, uid, sid, cb) {
-  var key = genKey(this, name, sid);
+  let key = genKey(this, name, sid);
   if(!this.usersMap[key]) {
     this.usersMap[key] = [];
   }
@@ -29,8 +29,8 @@ MockManager.prototype.add = function(name, uid, sid, cb) {
 };
 
 MockManager.prototype.leave = function(name, uid, sid, cb) {
-  var key = genKey(this, name, sid);
-  var res = deleteFrom(uid, this.usersMap[key]);
+  let key = genKey(this, name, sid);
+  let res = deleteFrom(uid, this.usersMap[key]);
   if(this.usersMap[key] && this.usersMap[key].length === 0) {
     delete this.usersMap[sid];
   }
@@ -38,16 +38,16 @@ MockManager.prototype.leave = function(name, uid, sid, cb) {
 };
 
 MockManager.prototype.getMembersBySid = function(name, sid, cb) {
-    var key = genKey(this, name, sid);
+    let key = genKey(this, name, sid);
     if(!this.usersMap[key])
       this.usersMap[key] = [];
     utils.invokeCallback(cb, null, this.usersMap[key]);
 };
 
 MockManager.prototype.destroyChannel = function(name, cb) {
-  var servers = this.app.getServers();
-  var server, removes = [];
-  for(var sid in servers) {
+  let servers = this.app.getServers();
+  let server, removes = [];
+  for(let sid in servers) {
     server = servers[sid];
     if(this.app.isFrontend(server)) {
       removes.push(genKey(this, name, sid));
@@ -59,22 +59,22 @@ MockManager.prototype.destroyChannel = function(name, cb) {
     return;
   }
 
-  for(var i = 0; i<removes.length; i++) {
+  for(let i = 0; i<removes.length; i++) {
     delete this.usersMap[removes[i]];
   }
   utils.invokeCallback(cb);
 };
 
-var genKey = function(self, name, sid) {
+let genKey = function(self, name, sid) {
   return self.prefix + ':' + name + ':' + sid;
 };
 
-var deleteFrom = function(uid, group) {
+let deleteFrom = function(uid, group) {
   if(!group) {
     return true;
   }
 
-  for(var i=0, l=group.length; i<l; i++) {
+  for(let i=0, l=group.length; i<l; i++) {
     if(group[i] === uid) {
       group.splice(i, 1);
       return true;

@@ -1,8 +1,8 @@
-var CountDownLatch = require('../../lib/util/countDownLatch');
-var should = require('should');
+let CountDownLatch = require('../../lib/util/countDownLatch');
+let should = require('should');
 
-var cbCreator = (function() {
-  var count =0;
+let cbCreator = (function() {
+  let count =0;
 
   return {
     callback: function() {
@@ -16,18 +16,18 @@ var cbCreator = (function() {
 })();
 
 describe('countdown latch test', function() {
-  var countDownLatch1;
-  var countDownLatch2;
+  let countDownLatch1;
+  let countDownLatch2;
 
   describe('#count down', function() {
     it('should invoke the callback after the done method was invoked the specified times', function(done) {
-      var n = 3, doneCount = 0;
-      var cdl = CountDownLatch.createCountDownLatch(n, function() {
+      let n = 3, doneCount = 0;
+      let cdl = CountDownLatch.createCountDownLatch(n, function() {
         doneCount.should.equal(n);
         done();
       });
 
-      for(var i=0; i<n; i++) {
+      for(let i=0; i<n; i++) {
         doneCount++;
         cdl.done();
       }
@@ -50,10 +50,10 @@ describe('countdown latch test', function() {
     });
 
     it('should throw exception if try to invoke done metho of a latch that has fired cb', function() {
-      var n = 3;
-      var cdl = CountDownLatch.createCountDownLatch(n, function() {});
+      let n = 3;
+      let cdl = CountDownLatch.createCountDownLatch(n, function() {});
 
-      for(var i=0; i<n; i++) {
+      for(let i=0; i<n; i++) {
         cdl.done();
       }
 
@@ -63,12 +63,12 @@ describe('countdown latch test', function() {
     });
 
     it('should invoke the callback if timeout', function() {
-      var n = 3;
-      var cdl = CountDownLatch.createCountDownLatch(n, {timeout: 3000}, function(isTimeout) {
+      let n = 3;
+      let cdl = CountDownLatch.createCountDownLatch(n, {timeout: 3000}, function(isTimeout) {
         isTimeout.should.equal(true);
       });
 
-      for(var i=0; i<n-1; i++) {
+      for(let i=0; i<n-1; i++) {
         cdl.done();
       }
     });

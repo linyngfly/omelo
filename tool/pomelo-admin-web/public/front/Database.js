@@ -135,7 +135,7 @@ WebInspector.DatabaseDispatcher.prototype = {
      */
     addDatabase: function(payload)
     {
-        var database = new WebInspector.Database(
+        let database = new WebInspector.Database(
             payload.id,
             payload.domain,
             payload.name,
@@ -153,7 +153,7 @@ WebInspector.DatabaseDispatcher.prototype = {
         if (!WebInspector.DatabaseDispatcher._callbacks[transactionId])
             return;
 
-        var callback = WebInspector.DatabaseDispatcher._callbacks[transactionId]["onSuccess"];
+        let callback = WebInspector.DatabaseDispatcher._callbacks[transactionId]["onSuccess"];
         delete WebInspector.DatabaseDispatcher._callbacks[transactionId];
         if (callback)
             callback(columnNames, values);
@@ -168,7 +168,7 @@ WebInspector.DatabaseDispatcher.prototype = {
         if (!WebInspector.DatabaseDispatcher._callbacks[transactionId])
             return;
 
-        var callback = WebInspector.DatabaseDispatcher._callbacks[transactionId]["onError"];
+        let callback = WebInspector.DatabaseDispatcher._callbacks[transactionId]["onError"];
         delete WebInspector.DatabaseDispatcher._callbacks[transactionId];
         if (callback)
              callback(errorObj);

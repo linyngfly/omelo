@@ -109,11 +109,11 @@ WebInspector.ConsoleModel.prototype = {
      */
     _messageRepeatCountUpdated: function(count)
     {
-        var msg = this._previousMessage;
+        let msg = this._previousMessage;
         if (!msg)
             return;
 
-        var prevRepeatCount = msg.totalRepeatCount;
+        let prevRepeatCount = msg.totalRepeatCount;
 
         if (!this._interruptRepeatCount) {
             msg.repeatDelta = count - prevRepeatCount;
@@ -124,7 +124,7 @@ WebInspector.ConsoleModel.prototype = {
             this._incrementErrorWarningCount(msg);
             this.dispatchEventToListeners(WebInspector.ConsoleModel.Events.RepeatCountUpdated, msg);
         } else {
-            var msgCopy = msg.clone();
+            let msgCopy = msg.clone();
             msgCopy.totalRepeatCount = count;
             msgCopy.repeatCount = (count - prevRepeatCount) || 1;
             msgCopy.repeatDelta = msgCopy.repeatCount;
@@ -244,7 +244,7 @@ WebInspector.ConsoleDispatcher.prototype = {
      */
     messageAdded: function(payload)
     {
-        var consoleMessage = WebInspector.ConsoleMessage.create(
+        let consoleMessage = WebInspector.ConsoleMessage.create(
             payload.source,
             payload.level,
             payload.text,

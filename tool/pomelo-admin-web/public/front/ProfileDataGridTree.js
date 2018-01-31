@@ -53,7 +53,7 @@ WebInspector.ProfileDataGridNode.prototype = {
             return Number.secondsToString(time / 1000, !Capabilities.samplingCPUProfiler);
         }
 
-        var data = {};
+        let data = {};
 
         data["function"] = this.functionName;
         data["calls"] = this.numberOfCalls;
@@ -78,7 +78,7 @@ WebInspector.ProfileDataGridNode.prototype = {
 
     createCell: function(columnIdentifier)
     {
-        var cell = WebInspector.DataGridNode.prototype.createCell.call(this, columnIdentifier);
+        let cell = WebInspector.DataGridNode.prototype.createCell.call(this, columnIdentifier);
 
         if (columnIdentifier === "self" && this._searchMatchedSelfColumn)
             cell.addStyleClass("highlight");
@@ -97,8 +97,8 @@ WebInspector.ProfileDataGridNode.prototype = {
 
         if (this.profileNode.url) {
             // FIXME(62725): profileNode should reference a debugger location.
-            var lineNumber = this.profileNode.lineNumber ? this.profileNode.lineNumber - 1 : 0;
-            var urlElement = this.profileView._linkifier.linkifyLocation(this.profileNode.url, lineNumber, 0, "profile-node-file");
+            let lineNumber = this.profileNode.lineNumber ? this.profileNode.lineNumber - 1 : 0;
+            let urlElement = this.profileView._linkifier.linkifyLocation(this.profileNode.url, lineNumber, 0, "profile-node-file");
             urlElement.style.maxWidth = "75%";
             cell.insertBefore(urlElement, cell.firstChild);
         }
@@ -120,14 +120,14 @@ WebInspector.ProfileDataGridNode.prototype = {
 
     sort: function(/*Function*/ comparator, /*Boolean*/ force)
     {
-        var gridNodeGroups = [[this]];
+        let gridNodeGroups = [[this]];
 
-        for (var gridNodeGroupIndex = 0; gridNodeGroupIndex < gridNodeGroups.length; ++gridNodeGroupIndex) {
-            var gridNodes = gridNodeGroups[gridNodeGroupIndex];
-            var count = gridNodes.length;
+        for (let gridNodeGroupIndex = 0; gridNodeGroupIndex < gridNodeGroups.length; ++gridNodeGroupIndex) {
+            let gridNodes = gridNodeGroups[gridNodeGroupIndex];
+            let count = gridNodes.length;
 
-            for (var index = 0; index < count; ++index) {
-                var gridNode = gridNodes[index];
+            for (let index = 0; index < count; ++index) {
+                let gridNode = gridNodes[index];
 
                 // If the grid node is collapsed, then don't sort children (save operation for later).
                 // If the grid node has the same sorting as previously, then there is no point in sorting it again.
@@ -139,13 +139,13 @@ WebInspector.ProfileDataGridNode.prototype = {
 
                 gridNode.lastComparator = comparator;
 
-                var children = gridNode.children;
-                var childCount = children.length;
+                let children = gridNode.children;
+                let childCount = children.length;
 
                 if (childCount) {
                     children.sort(comparator);
 
-                    for (var childIndex = 0; childIndex < childCount; ++childIndex)
+                    for (let childIndex = 0; childIndex < childCount; ++childIndex)
                         children[childIndex]._recalculateSiblings(childIndex);
 
                     gridNodeGroups.push(children);
@@ -212,7 +212,7 @@ WebInspector.ProfileDataGridNode.prototype = {
         this._sharedPopulate();
 
         if (this._parent) {
-            var currentComparator = this._parent.lastComparator;
+            let currentComparator = this._parent.lastComparator;
 
             if (currentComparator)
                 this.sort(currentComparator, true);
@@ -249,10 +249,10 @@ WebInspector.ProfileDataGridNode.prototype = {
 
         this.removeChildren();
 
-        var children = this._savedChildren;
-        var count = children.length;
+        let children = this._savedChildren;
+        let count = children.length;
 
-        for (var index = 0; index < count; ++index) {
+        for (let index = 0; index < count; ++index) {
             children[index]._restore();
             this.appendChild(children[index]);
         }
@@ -267,13 +267,13 @@ WebInspector.ProfileDataGridNode.prototype = {
             this.numberOfCalls += child.numberOfCalls;
         }
 
-        var children = this.children.slice();
+        let children = this.children.slice();
 
         this.removeChildren();
 
-        var count = children.length;
+        let count = children.length;
 
-        for (var index = 0; index < count; ++index) {
+        for (let index = 0; index < count; ++index) {
             if (!shouldAbsorb || children[index] !== child)
                 this.appendChild(children[index]);
         }
@@ -281,8 +281,8 @@ WebInspector.ProfileDataGridNode.prototype = {
         children = child.children.slice();
         count = children.length;
 
-        for (var index = 0; index < count; ++index) {
-            var orphanedChild = children[index],
+        for (let index = 0; index < count; ++index) {
+            let orphanedChild = children[index],
                 existingChild = this.childrenByCallUID[orphanedChild.callUID];
 
             if (existingChild)
@@ -351,10 +351,10 @@ WebInspector.ProfileDataGridTree.prototype = {
         this.children = this._savedChildren;
         this.totalTime = this._savedTotalTime;
 
-        var children = this.children;
-        var count = children.length;
+        let children = this.children;
+        let count = children.length;
 
-        for (var index = 0; index < count; ++index)
+        for (let index = 0; index < count; ++index)
             children[index]._restore();
 
         this._savedChildren = null;
@@ -365,7 +365,7 @@ WebInspector.ProfileDataGridTree.propertyComparators = [{}, {}];
 
 WebInspector.ProfileDataGridTree.propertyComparator = function(/*String*/ property, /*Boolean*/ isAscending)
 {
-    var comparator = this.propertyComparators[(isAscending ? 1 : 0)][property];
+    let comparator = this.propertyComparators[(isAscending ? 1 : 0)][property];
 
     if (!comparator) {
         if (isAscending) {

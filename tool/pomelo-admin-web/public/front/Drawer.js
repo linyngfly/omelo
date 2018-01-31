@@ -77,7 +77,7 @@ WebInspector.Drawer.prototype = {
         if (this._view && this._view.counterElement)
             this._view.counterElement.parentNode.removeChild(this._view.counterElement);
 
-        var drawerWasVisible = this.visible;
+        let drawerWasVisible = this.visible;
 
         if (this._view) {
             this._view.detach();
@@ -86,9 +86,9 @@ WebInspector.Drawer.prototype = {
 
         this._view = view;
 
-        var statusBarItems = this._view.statusBarItems || [];
+        let statusBarItems = this._view.statusBarItems || [];
         this._viewStatusBar.removeChildren();
-        for (var i = 0; i < statusBarItems.length; ++i)
+        for (let i = 0; i < statusBarItems.length; ++i)
             this._viewStatusBar.appendChild(statusBarItems[i]);
 
         if (this._view.counterElement)
@@ -101,9 +101,9 @@ WebInspector.Drawer.prototype = {
         if (drawerWasVisible)
             return;
         
-        var anchoredItems = document.getElementById("anchored-status-bar-items");
-        var height = this._constrainHeight(this._savedHeight || this.element.offsetHeight);
-        var animations = [
+        let anchoredItems = document.getElementById("anchored-status-bar-items");
+        let height = this._constrainHeight(this._savedHeight || this.element.offsetHeight);
+        let animations = [
             {element: this.element, end: {height: height}},
             {element: this._mainElement, end: {bottom: height}},
             {element: this._mainStatusBar, start: {"padding-left": anchoredItems.offsetWidth - 1}, end: {"padding-left": 0}},
@@ -113,9 +113,9 @@ WebInspector.Drawer.prototype = {
         this._drawerStatusBar.insertBefore(anchoredItems, this._drawerStatusBar.firstChild);
 
         if (this._currentPanelCounters) {
-            var oldRight = this._drawerStatusBar.clientWidth - (this._counters.offsetLeft + this._currentPanelCounters.offsetWidth);
-            var newRight = WebInspector.Panel.counterRightMargin;
-            var rightPadding = (oldRight - newRight);
+            let oldRight = this._drawerStatusBar.clientWidth - (this._counters.offsetLeft + this._currentPanelCounters.offsetWidth);
+            let newRight = WebInspector.Panel.counterRightMargin;
+            let rightPadding = (oldRight - newRight);
             animations.push({element: this._currentPanelCounters, start: {"padding-right": rightPadding}, end: {"padding-right": 0}});
             this._currentPanelCounters.parentNode.removeChild(this._currentPanelCounters);
             this._mainStatusBar.appendChild(this._currentPanelCounters);
@@ -146,7 +146,7 @@ WebInspector.Drawer.prototype = {
 
         WebInspector.restoreFocusFromElement(this.element);
 
-        var anchoredItems = document.getElementById("anchored-status-bar-items");
+        let anchoredItems = document.getElementById("anchored-status-bar-items");
 
         // Temporarily set properties and classes to mimic the post-animation values so panels
         // like Elements in their updateStatusBarItems call will size things to fit the final location.
@@ -155,16 +155,16 @@ WebInspector.Drawer.prototype = {
         WebInspector.inspectorView.currentPanel().statusBarResized();
         document.body.addStyleClass("drawer-visible");
 
-        var animations = [
+        let animations = [
             {element: this._mainElement, end: {bottom: 0}},
             {element: this._mainStatusBar, start: {"padding-left": 0}, end: {"padding-left": anchoredItems.offsetWidth - 1}},
             {element: this._viewStatusBar, start: {opacity: 1}, end: {opacity: 0}}
         ];
 
         if (this._currentPanelCounters) {
-            var newRight = this._drawerStatusBar.clientWidth - this._counters.offsetLeft;
-            var oldRight = this._mainStatusBar.clientWidth - (this._currentPanelCounters.offsetLeft + this._currentPanelCounters.offsetWidth);
-            var rightPadding = (newRight - oldRight);
+            let newRight = this._drawerStatusBar.clientWidth - this._counters.offsetLeft;
+            let oldRight = this._mainStatusBar.clientWidth - (this._currentPanelCounters.offsetLeft + this._currentPanelCounters.offsetWidth);
+            let rightPadding = (newRight - oldRight);
             animations.push({element: this._currentPanelCounters, start: {"padding-right": 0}, end: {"padding-right": rightPadding}});
         }
 
@@ -201,7 +201,7 @@ WebInspector.Drawer.prototype = {
             return;
 
         this._view.storeScrollPositions();
-        var height = this._constrainHeight(parseInt(this.element.style.height, 10));
+        let height = this._constrainHeight(parseInt(this.element.style.height, 10));
         this._mainElement.style.bottom = height + "px";
         this.element.style.height = height + "px";
         this._view.doResize();
@@ -256,7 +256,7 @@ WebInspector.Drawer.prototype = {
 
     _statusBarDragging: function(event)
     {
-        var height = window.innerHeight - event.pageY + this._statusBarDragOffset;
+        let height = window.innerHeight - event.pageY + this._statusBarDragOffset;
         height = Number.constrain(height, Preferences.minConsoleHeight, window.innerHeight - this._mainElement.totalOffsetTop() - Preferences.minConsoleHeight);
 
         this._mainElement.style.bottom = height + "px";

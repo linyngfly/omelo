@@ -1,5 +1,5 @@
-var express = require('express');
-var app = express.createServer();
+let express = require('express');
+let app = express.createServer();
 
 app.configure(function(){
   app.use(express.methodOverride());
@@ -17,7 +17,7 @@ app.configure('development', function(){
 });
 
 app.configure('production', function(){
-  var oneYear = 31557600000;
+  let oneYear = 31557600000;
   app.use(express.static(__dirname + '/public', { maxAge: oneYear }));
   app.use(express.errorHandler());
 });

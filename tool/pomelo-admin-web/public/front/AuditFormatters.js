@@ -30,9 +30,9 @@
 
 WebInspector.applyFormatters = function(value)
 {
-    var formatter;
-    var type = typeof value;
-    var args;
+    let formatter;
+    let type = typeof value;
+    let args;
 
     switch (type) {
         case "string":
@@ -67,7 +67,7 @@ WebInspector.AuditFormatters = {
 
     snippet: function(snippetText)
     {
-        var div = document.createElement("div");
+        let div = document.createElement("div");
         div.textContent = snippetText;
         div.className = "source-code";
         return div;
@@ -75,15 +75,15 @@ WebInspector.AuditFormatters = {
 
     concat: function()
     {
-        var parent = document.createElement("span");
-        for (var arg = 0; arg < arguments.length; ++arg)
+        let parent = document.createElement("span");
+        for (let arg = 0; arg < arguments.length; ++arg)
             parent.appendChild(WebInspector.applyFormatters(arguments[arg]));
         return parent;
     },
 
     url: function(url, displayText, allowExternalNavigation)
     {
-        var a = document.createElement("a");
+        let a = document.createElement("a");
         a.href = url;
         a.title = url;
         a.textContent = displayText || url;

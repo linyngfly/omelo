@@ -109,7 +109,7 @@ WebInspector.ResourceSourceFrame.prototype = {
     {
         function contentLoaded(text)
         {
-            var mimeType = WebInspector.ResourceSourceFrame.mimeTypeForResource(this.resource);
+            let mimeType = WebInspector.ResourceSourceFrame.mimeTypeForResource(this.resource);
             callback(mimeType, text);
         }
 
@@ -148,7 +148,7 @@ WebInspector.EditableResourceSourceFrame.prototype = {
     editContent: function(newText, callback)
     {
         this._clearIncrementalUpdateTimer();
-        var majorChange = true;
+        let majorChange = true;
         this._settingContent = true;
         function callbackWrapper(text)
         {
@@ -162,7 +162,7 @@ WebInspector.EditableResourceSourceFrame.prototype = {
     {
         function commitIncrementalEdit()
         {
-            var majorChange = false;
+            let majorChange = false;
             this.resource.setContent(this._textModel.text, majorChange, function() {});
         }
         const updateTimeout = 200;
@@ -205,7 +205,7 @@ WebInspector.ResourceRevisionSourceFrame.prototype = {
     {
         function contentLoaded(text)
         {
-            var mimeType = WebInspector.ResourceSourceFrame.mimeTypeForResource(this.resource);
+            let mimeType = WebInspector.ResourceSourceFrame.mimeTypeForResource(this.resource);
             callback(mimeType, text);
         }
 

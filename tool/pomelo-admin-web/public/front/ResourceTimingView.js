@@ -74,12 +74,12 @@ WebInspector.ResourceTimingView.prototype = {
 
 WebInspector.ResourceTimingView.createTimingTable = function(resource)
 {
-    var tableElement = document.createElement("table");
-    var rows = [];
+    let tableElement = document.createElement("table");
+    let rows = [];
 
     function addRow(title, className, start, end)
     {
-        var row = {};
+        let row = {};
         row.title = title;
         row.className = className;
         row.start = start;
@@ -97,7 +97,7 @@ WebInspector.ResourceTimingView.createTimingTable = function(resource)
         if (resource.connectionReused)
             addRow(WebInspector.UIString("Blocking"), "connecting", resource.timing.connectStart, resource.timing.connectEnd);
         else {
-            var connectStart = resource.timing.connectStart;
+            let connectStart = resource.timing.connectStart;
             // Connection includes DNS, subtract it here.
             if (resource.timing.dnsStart !== -1)
                 connectStart += resource.timing.dnsEnd - resource.timing.dnsStart;
@@ -108,7 +108,7 @@ WebInspector.ResourceTimingView.createTimingTable = function(resource)
     if (resource.timing.sslStart !== -1)
         addRow(WebInspector.UIString("SSL"), "ssl", resource.timing.sslStart, resource.timing.sslEnd);
 
-    var sendStart = resource.timing.sendStart;
+    let sendStart = resource.timing.sendStart;
     if (resource.timing.sslStart !== -1)
         sendStart += resource.timing.sslEnd - resource.timing.sslStart;
 
@@ -117,25 +117,25 @@ WebInspector.ResourceTimingView.createTimingTable = function(resource)
     addRow(WebInspector.UIString("Receiving"), "receiving", (resource.responseReceivedTime - resource.timing.requestTime) * 1000, (resource.endTime - resource.timing.requestTime) * 1000);
 
     const chartWidth = 200;
-    var total = (resource.endTime - resource.timing.requestTime) * 1000;
-    var scale = chartWidth / total;
+    let total = (resource.endTime - resource.timing.requestTime) * 1000;
+    let scale = chartWidth / total;
 
-    for (var i = 0; i < rows.length; ++i) {
-        var tr = document.createElement("tr");
+    for (let i = 0; i < rows.length; ++i) {
+        let tr = document.createElement("tr");
         tableElement.appendChild(tr);
 
-        var td = document.createElement("td");
+        let td = document.createElement("td");
         td.textContent = rows[i].title;
         tr.appendChild(td);
 
         td = document.createElement("td");
         td.width = chartWidth + "px";
 
-        var row = document.createElement("div");
+        let row = document.createElement("div");
         row.className = "network-timing-row";
         td.appendChild(row);
 
-        var bar = document.createElement("span");
+        let bar = document.createElement("span");
         bar.className = "network-timing-bar " + rows[i].className;
         bar.style.left = scale * rows[i].start + "px";
         bar.style.right = scale * (total - rows[i].end) + "px";
@@ -143,7 +143,7 @@ WebInspector.ResourceTimingView.createTimingTable = function(resource)
         bar.textContent = "\u200B"; // Important for 0-time items to have 0 width.
         row.appendChild(bar);
 
-        var title = document.createElement("span");
+        let title = document.createElement("span");
         title.className = "network-timing-bar-title";
         if (total - rows[i].end < rows[i].start)
             title.style.right = (scale * (total - rows[i].end) + 3) + "px";

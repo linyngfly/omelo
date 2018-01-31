@@ -134,8 +134,8 @@ WebInspector.CounterUI = function(memoryCountersPane, title, currentValueLabel, 
 {
     this._memoryCountersPane = memoryCountersPane;
     this.valueGetter = valueGetter;
-    var container = memoryCountersPane._memorySplitView.sidebarElement.createChild("div", "memory-counter-sidebar-info");
-    var swatchColor = "rgb(" + rgb.join(",") + ")";
+    let container = memoryCountersPane._memorySplitView.sidebarElement.createChild("div", "memory-counter-sidebar-info");
+    let swatchColor = "rgb(" + rgb.join(",") + ")";
     this._swatch = new WebInspector.SwatchCheckbox(WebInspector.UIString(title), swatchColor);
     this._swatch.addEventListener(WebInspector.SwatchCheckbox.Events.Changed, this._toggleCounterGraph.bind(this));
     container.appendChild(this._swatch.element);
@@ -183,7 +183,7 @@ WebInspector.CounterUI.prototype = {
     saveImageUnderMarker: function(ctx, x, y, radius)
     {
         const w = radius + 1;
-        var imageData = ctx.getImageData(x - w, y - w, 2 * w, 2 * w);
+        let imageData = ctx.getImageData(x - w, y - w, 2 * w, 2 * w);
         this._imageUnderMarker = {
             x: x - w,
             y: y - w,
@@ -243,17 +243,17 @@ WebInspector.MemoryStatistics.prototype = {
 
     _updateSize: function()
     {
-        var width = this._mainTimelineGrid.dividersElement.offsetWidth + 1;
+        let width = this._mainTimelineGrid.dividersElement.offsetWidth + 1;
         this._canvasContainer.style.width = width + "px";
 
-        var height = this._canvasContainer.offsetHeight - this._currentValuesBar.offsetHeight;
+        let height = this._canvasContainer.offsetHeight - this._currentValuesBar.offsetHeight;
         this._canvas.width = width;
         this._canvas.height = height;
     },
 
     addTimlineEvent: function(event)
     {
-        var counters = event.data["counters"];
+        let counters = event.data["counters"];
         this._counters.push({
             time: event.data.endTime || event.data.startTime,
             documentCount: counters["documents"],
@@ -269,19 +269,19 @@ WebInspector.MemoryStatistics.prototype = {
         this._clear();
 
         this._setVerticalClip(10, this._canvas.height - 20);
-        for (var i = 0; i < this._counterUI.length; i++)
+        for (let i = 0; i < this._counterUI.length; i++)
             this._drawGraph(this._counterUI[i]);
     },
 
     _calculateVisibleIndexes: function()
     {
-        var calculator = this._timelinePanel.calculator;
-        var start = calculator.minimumBoundary * 1000;
-        var end = calculator.maximumBoundary * 1000;
-        var firstIndex = 0;
-        var lastIndex = this._counters.length - 1;
-        for (var i = 0; i < this._counters.length; i++) {
-            var time = this._counters[i].time;
+        let calculator = this._timelinePanel.calculator;
+        let start = calculator.minimumBoundary * 1000;
+        let end = calculator.maximumBoundary * 1000;
+        let firstIndex = 0;
+        let lastIndex = this._counters.length - 1;
+        for (let i = 0; i < this._counters.length; i++) {
+            let time = this._counters[i].time;
             if (time <= start) {
                 firstIndex = i;
             } else {
@@ -303,9 +303,9 @@ WebInspector.MemoryStatistics.prototype = {
 
     _onClick: function(event)
     {
-        var x = event.x - event.target.offsetParent.offsetLeft
-        var i = this._recordIndexAt(x);
-        var counter = this._counters[i];
+        let x = event.x - event.target.offsetParent.offsetLeft
+        let i = this._recordIndexAt(x);
+        let counter = this._counters[i];
         this._timelinePanel.revealRecordAt(counter.time / 1000);
     },
 
@@ -313,8 +313,8 @@ WebInspector.MemoryStatistics.prototype = {
     {
         delete this._markerXPosition;
 
-        var ctx = this._canvas.getContext("2d");
-        for (var i = 0; i < this._counterUI.length; i++)
+        let ctx = this._canvas.getContext("2d");
+        for (let i = 0; i < this._counterUI.length; i++)
             this._counterUI[i].clearCurrentValueAndMarker(ctx);
     },
 
@@ -325,7 +325,7 @@ WebInspector.MemoryStatistics.prototype = {
 
     _onMouseMove: function(event)
     {
-        var x = event.x - event.target.offsetParent.offsetLeft
+        let x = event.x - event.target.offsetParent.offsetLeft
         this._markerXPosition = x;
         this._refreshCurrentValues();
     },
@@ -336,9 +336,9 @@ WebInspector.MemoryStatistics.prototype = {
             return;
         if (this._markerXPosition === undefined)
             return;
-        var i = this._recordIndexAt(this._markerXPosition);
+        let i = this._recordIndexAt(this._markerXPosition);
 
-        for (var j = 0; j < this._counterUI.length; j++)
+        for (let j = 0; j < this._counterUI.length; j++)
             this._counterUI[j].updateCurrentValue(this._counters[i]);
 
         this._highlightCurrentPositionOnGraphs(this._markerXPosition, i);
@@ -346,9 +346,9 @@ WebInspector.MemoryStatistics.prototype = {
 
     _recordIndexAt: function(x)
     {
-        var i;
+        let i;
         for (i = this._minimumIndex + 1; i <= this._maximumIndex; i++) {
-            var statX = this._counters[i].x;
+            let statX = this._counters[i].x;
             if (x < statX)
                 break;
         }
@@ -358,28 +358,28 @@ WebInspector.MemoryStatistics.prototype = {
 
     _highlightCurrentPositionOnGraphs: function(x, index)
     {
-        var ctx = this._canvas.getContext("2d");
-        for (var i = 0; i < this._counterUI.length; i++) {
-            var counterUI = this._counterUI[i];
+        let ctx = this._canvas.getContext("2d");
+        for (let i = 0; i < this._counterUI.length; i++) {
+            let counterUI = this._counterUI[i];
             if (!counterUI.visible)
                 continue;
             counterUI.restoreImageUnderMarker(ctx);
         }
 
         const radius = 2;
-        for (var i = 0; i < this._counterUI.length; i++) {
-            var counterUI = this._counterUI[i];
+        for (let i = 0; i < this._counterUI.length; i++) {
+            let counterUI = this._counterUI[i];
             if (!counterUI.visible)
                 continue;
-            var y = counterUI.graphYValues[index];
+            let y = counterUI.graphYValues[index];
             counterUI.saveImageUnderMarker(ctx, x, y, radius);
         }
 
-        for (var i = 0; i < this._counterUI.length; i++) {
-            var counterUI = this._counterUI[i];
+        for (let i = 0; i < this._counterUI.length; i++) {
+            let counterUI = this._counterUI[i];
             if (!counterUI.visible)
                 continue;
-            var y = counterUI.graphYValues[index];
+            let y = counterUI.graphYValues[index];
             ctx.beginPath();
             ctx.arc(x, y, radius, 0, Math.PI*2, true);
             ctx.lineWidth = 1;
@@ -398,7 +398,7 @@ WebInspector.MemoryStatistics.prototype = {
 
     show: function()
     {
-        var anchor = /** @type {Element|null} */ this._containerAnchor.nextSibling;
+        let anchor = /** @type {Element|null} */ this._containerAnchor.nextSibling;
         this._memorySplitView.show(this._timelinePanel.element, anchor);
         this._updateSize();
         this._refreshDividers();
@@ -434,31 +434,31 @@ WebInspector.MemoryStatistics.prototype = {
         if (!this._counters.length)
             return;
 
-        var width = this._canvas.width;
-        var xFactor = width / (this._maxTime - this._minTime);
+        let width = this._canvas.width;
+        let xFactor = width / (this._maxTime - this._minTime);
 
         this._counters[this._minimumIndex].x = 0;
-        for (var i = this._minimumIndex + 1; i < this._maximumIndex; i++)
+        for (let i = this._minimumIndex + 1; i < this._maximumIndex; i++)
              this._counters[i].x = xFactor * (this._counters[i].time - this._minTime);
         this._counters[this._maximumIndex].x = width;
     },
 
     _drawGraph: function(counterUI)
     {
-        var canvas = this._canvas;
-        var ctx = canvas.getContext("2d");
-        var width = canvas.width;
-        var height = this._clippedHeight;
-        var originY = this._originY;
-        var valueGetter = counterUI.valueGetter;
+        let canvas = this._canvas;
+        let ctx = canvas.getContext("2d");
+        let width = canvas.width;
+        let height = this._clippedHeight;
+        let originY = this._originY;
+        let valueGetter = counterUI.valueGetter;
 
         if (!this._counters.length)
             return;
 
-        var maxValue;
-        var minValue;
-        for (var i = this._minimumIndex; i <= this._maximumIndex; i++) {
-            var value = valueGetter(this._counters[i]);
+        let maxValue;
+        let minValue;
+        for (let i = this._minimumIndex; i <= this._maximumIndex; i++) {
+            let value = valueGetter(this._counters[i]);
             if (minValue === undefined || value < minValue)
                 minValue = value;
             if (maxValue === undefined || value > maxValue)
@@ -470,17 +470,17 @@ WebInspector.MemoryStatistics.prototype = {
         if (!counterUI.visible)
             return;
 
-        var yValues = counterUI.graphYValues;
+        let yValues = counterUI.graphYValues;
         yValues.length = this._counters.length;
 
-        var maxYRange = maxValue - minValue;
-        var yFactor = maxYRange ? height / (maxYRange) : 1;
+        let maxYRange = maxValue - minValue;
+        let yFactor = maxYRange ? height / (maxYRange) : 1;
 
         ctx.beginPath();
-        var currentY = originY + (height - (valueGetter(this._counters[this._minimumIndex])- minValue) * yFactor);
+        let currentY = originY + (height - (valueGetter(this._counters[this._minimumIndex])- minValue) * yFactor);
         ctx.moveTo(0, currentY);
-        for (var i = this._minimumIndex; i <= this._maximumIndex; i++) {
-             var x = this._counters[i].x;
+        for (let i = this._minimumIndex; i <= this._maximumIndex; i++) {
+             let x = this._counters[i].x;
              ctx.lineTo(x, currentY);
              currentY = originY + (height - (valueGetter(this._counters[i])- minValue) * yFactor);
              ctx.lineTo(x, currentY);
@@ -495,9 +495,9 @@ WebInspector.MemoryStatistics.prototype = {
     },
 
     _clear: function() {
-        var ctx = this._canvas.getContext("2d");
+        let ctx = this._canvas.getContext("2d");
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        for (var i = 0; i < this._counterUI.length; i++)
+        for (let i = 0; i < this._counterUI.length; i++)
             this._counterUI[i].discardImageUnderMarker();
     }
 }

@@ -6,7 +6,7 @@
 
 (function(window){
 
-	var Client = function(){
+	let Client = function(){
 		this.reqId = 1;
 		this.callbacks = {};
 		this.listeners = {};
@@ -16,7 +16,7 @@
 	Client.prototype = {
 		connect: function(id, host, port, cb){
 			this.id = id;
-			var self = this;
+			let self = this;
 			this.socket = io.connect('http://' + host + ':' + port);
 
 			this.socket.on('connect', function(){
@@ -38,7 +38,7 @@
 				msg = protocol.parse(msg);
 				if(msg.respId) {
 					// response for request
-					var cb = self.callbacks[msg.respId];
+					let cb = self.callbacks[msg.respId];
 					delete self.callbacks[msg.respId];
 					if(cb && typeof cb === 'function') {
 						cb(msg.error, msg.body);
@@ -59,8 +59,8 @@
 		},
 
 		request: function(moduleId, msg, cb){
-			var id = this.reqId++;
-			var req = protocol.composeRequest(id, moduleId, msg);
+			let id = this.reqId++;
+			let req = protocol.composeRequest(id, moduleId, msg);
 			this.callbacks[id] = cb;
 			this.socket.emit('client', req);
 		}, 
@@ -68,7 +68,7 @@
 		notify: function(moduleId, msg) {
 			// something dirty: attach current client id into msg
 			msg.clientId = this.id;
-			var req = protocol.composeRequest(null, moduleId, msg);
+			let req = protocol.composeRequest(null, moduleId, msg);
 			this.socket.emit('client', req);
 		}, 
 
@@ -78,14 +78,14 @@
 		}, 
 
 		emit: function(event) {
-			var listeners = this.listeners[event];
+			let listeners = this.listeners[event];
 			if(!listeners || !listeners.length) {
 				return;
 			}
 
-			var args = Array.prototype.slice.call(arguments, 1);
-			var listener;
-			for(var i=0, l=listeners.length; i<l; i++) {
+			let args = Array.prototype.slice.call(arguments, 1);
+			let listener;
+			for(let i=0, l=listeners.length; i<l; i++) {
 				listener = listeners[i];
 				if(typeof listener === 'function') {
 					listener.apply(null, args);

@@ -10,15 +10,15 @@
 'use strict';
 
 // External lib.
-var nopt = require('nopt');
-var gruntOptions = require('grunt-known-options');
+let nopt = require('nopt');
+let gruntOptions = require('grunt-known-options');
 
 // Parse `gruntOptions` into a form that nopt can handle.
 exports.aliases = {};
 exports.known = {};
 
 Object.keys(gruntOptions).forEach(function(key) {
-  var short = gruntOptions[key].short;
+  let short = gruntOptions[key].short;
   if (short) {
     exports.aliases[short] = '--' + key;
   }

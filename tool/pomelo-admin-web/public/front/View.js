@@ -66,7 +66,7 @@ WebInspector.View.prototype = {
 
     _callOnVisibleChildren: function(method)
     {
-        for (var i = 0; i < this._children.length; ++i)
+        for (let i = 0; i < this._children.length; ++i)
             if (this._children[i]._visible)
                 method.call(this._children[i]);
     },
@@ -135,7 +135,7 @@ WebInspector.View.prototype = {
 
         // Update view hierarchy
         if (this.element.parentElement !== parentElement) {
-            var currentParent = parentElement;
+            let currentParent = parentElement;
             while (currentParent && !currentParent.__view)
                 currentParent = currentParent.parentElement;
 
@@ -172,7 +172,7 @@ WebInspector.View.prototype = {
      */
     detach: function(overrideHideOnDetach)
     {
-        var parentElement = this.element.parentElement;
+        let parentElement = this.element.parentElement;
         if (!parentElement)
             return;
 
@@ -197,7 +197,7 @@ WebInspector.View.prototype = {
 
         // Update view hierarchy
         if (this._parentView) {
-            var childIndex = this._parentView._children.indexOf(this);
+            let childIndex = this._parentView._children.indexOf(this);
             WebInspector.View._assert(childIndex >= 0, "Attempt to remove non-child view");
             this._parentView._children.splice(childIndex, 1);
             this._parentView = null;
@@ -207,8 +207,8 @@ WebInspector.View.prototype = {
 
     detachChildViews: function()
     {
-        var children = this._children.slice();
-        for (var i = 0; i < children.length; ++i)
+        let children = this._children.slice();
+        for (let i = 0; i < children.length; ++i)
             children[i].detach();
     },
 
@@ -219,9 +219,9 @@ WebInspector.View.prototype = {
 
     storeScrollPositions: function()
     {
-        var elements = this.elementsToRestoreScrollPositionsFor();
-        for (var i = 0; i < elements.length; ++i) {
-            var container = elements[i];
+        let elements = this.elementsToRestoreScrollPositionsFor();
+        for (let i = 0; i < elements.length; ++i) {
+            let container = elements[i];
             container._scrollTop = container.scrollTop;
             container._scrollLeft = container.scrollLeft;
         }
@@ -229,9 +229,9 @@ WebInspector.View.prototype = {
 
     restoreScrollPositions: function()
     {
-        var elements = this.elementsToRestoreScrollPositionsFor();
-        for (var i = 0; i < elements.length; ++i) {
-            var container = elements[i];
+        let elements = this.elementsToRestoreScrollPositionsFor();
+        for (let i = 0; i < elements.length; ++i) {
+            let container = elements[i];
             if (container._scrollTop)
                 container.scrollTop = container._scrollTop;
             if (container._scrollLeft)
@@ -260,10 +260,10 @@ WebInspector.View.prototype = {
 
     _loadCSSIfNeeded: function()
     {
-        for (var i = 0; i < this._cssFiles.length; ++i) {
-            var cssFile = this._cssFiles[i];
+        for (let i = 0; i < this._cssFiles.length; ++i) {
+            let cssFile = this._cssFiles[i];
 
-            var viewsWithCSSFile = WebInspector.View._cssFileToVisibleViewCount[cssFile];
+            let viewsWithCSSFile = WebInspector.View._cssFileToVisibleViewCount[cssFile];
             WebInspector.View._cssFileToVisibleViewCount[cssFile] = (viewsWithCSSFile || 0) + 1;
             if (!viewsWithCSSFile)
                 this._doLoadCSS(cssFile);
@@ -272,7 +272,7 @@ WebInspector.View.prototype = {
 
     _doLoadCSS: function(cssFile)
     {
-        var styleElement = WebInspector.View._cssFileToStyleElement[cssFile];
+        let styleElement = WebInspector.View._cssFileToStyleElement[cssFile];
         if (styleElement) {
             styleElement.disabled = false;
             return;
@@ -284,7 +284,7 @@ WebInspector.View.prototype = {
             styleElement.type = "text/css";
             styleElement.href = cssFile;
         } else {
-            var xhr = new XMLHttpRequest();
+            let xhr = new XMLHttpRequest();
             xhr.open("GET", cssFile, false);
             xhr.send(null);
 
@@ -299,10 +299,10 @@ WebInspector.View.prototype = {
 
     _disableCSSIfNeeded: function()
     {
-        for (var i = 0; i < this._cssFiles.length; ++i) {
-            var cssFile = this._cssFiles[i];
+        for (let i = 0; i < this._cssFiles.length; ++i) {
+            let cssFile = this._cssFiles[i];
 
-            var viewsWithCSSFile = WebInspector.View._cssFileToVisibleViewCount[cssFile];
+            let viewsWithCSSFile = WebInspector.View._cssFileToVisibleViewCount[cssFile];
             viewsWithCSSFile--;
             WebInspector.View._cssFileToVisibleViewCount[cssFile] = viewsWithCSSFile;
 
@@ -313,13 +313,13 @@ WebInspector.View.prototype = {
 
     _doUnloadCSS: function(cssFile)
     {
-        var styleElement = WebInspector.View._cssFileToStyleElement[cssFile];
+        let styleElement = WebInspector.View._cssFileToStyleElement[cssFile];
         styleElement.disabled = true;
     },
 
     printViewHierarchy: function()
     {
-        var lines = [];
+        let lines = [];
         this._collectViewHierarchy("", lines);
         console.log(lines.join("\n"));
     },
@@ -328,7 +328,7 @@ WebInspector.View.prototype = {
     {
         lines.push(prefix + "[" + this.element.className + "]" + (this._children.length ? " {" : ""));
 
-        for (var i = 0; i < this._children.length; ++i)
+        for (let i = 0; i < this._children.length; ++i)
             this._children[i]._collectViewHierarchy(prefix + "    ", lines);
 
         if (this._children.length)
@@ -345,7 +345,7 @@ WebInspector.View._originalRemoveChildren = Element.prototype.removeChildren;
 
 WebInspector.View._incrementViewCounter = function(parentElement, childElement)
 {
-    var count = (childElement.__viewCounter || 0) + (childElement.__view ? 1 : 0);
+    let count = (childElement.__viewCounter || 0) + (childElement.__view ? 1 : 0);
     if (!count)
         return;
 
@@ -357,7 +357,7 @@ WebInspector.View._incrementViewCounter = function(parentElement, childElement)
 
 WebInspector.View._decrementViewCounter = function(parentElement, childElement)
 {
-    var count = (childElement.__viewCounter || 0) + (childElement.__view ? 1 : 0);
+    let count = (childElement.__viewCounter || 0) + (childElement.__view ? 1 : 0);
     if (!count)
         return;
 

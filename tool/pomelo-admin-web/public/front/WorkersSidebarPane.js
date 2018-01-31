@@ -59,10 +59,10 @@ WebInspector.WorkersSidebarPane.prototype = {
     {
         if (id in this._workers)
             return;
-        var worker = new WebInspector.Worker(id, url, isShared);
+        let worker = new WebInspector.Worker(id, url, isShared);
         this._workers[id] = worker;
 
-        var title = WebInspector.linkifyURLAsNode(url, WebInspector.displayNameForURL(url), "worker-item", true, url);
+        let title = WebInspector.linkifyURLAsNode(url, WebInspector.displayNameForURL(url), "worker-item", true, url);
         this._treeOutline.appendChild(new TreeElement(title, worker, false));
     },
 
@@ -136,13 +136,13 @@ WebInspector.WorkerListSidebarPane = function(workerManager)
     this._enableWorkersCheckbox.checked = false;
 
     if (Preferences.sharedWorkersDebugNote) {
-        var note = this.bodyElement.createChild("div");
+        let note = this.bodyElement.createChild("div");
         note.id = "shared-workers-list";
         note.addStyleClass("sidebar-label")
         note.textContent = Preferences.sharedWorkersDebugNote;
     }
 
-    var separator = this.bodyElement.createChild("div", "sidebar-separator");
+    let separator = this.bodyElement.createChild("div", "sidebar-separator");
     separator.textContent = WebInspector.UIString("Dedicated worker inspectors");
 
     this._workerListElement = document.createElement("ol");
@@ -167,7 +167,7 @@ WebInspector.WorkerListSidebarPane.prototype = {
 
     _workerRemoved: function(event)
     {
-        var workerItem = this._idToWorkerItem[event.data];
+        let workerItem = this._idToWorkerItem[event.data];
         delete this._idToWorkerItem[event.data];
         workerItem.parentElement.removeChild(workerItem);
     },
@@ -180,8 +180,8 @@ WebInspector.WorkerListSidebarPane.prototype = {
 
     _addWorker: function(workerId, url, inspectorConnected)
     {
-        var item = this._workerListElement.createChild("div", "dedicated-worker-item");
-        var link = item.createChild("a");
+        let item = this._workerListElement.createChild("div", "dedicated-worker-item");
+        let link = item.createChild("a");
         link.textContent = url;
         link.href = "#";
         link.target = "_blank";

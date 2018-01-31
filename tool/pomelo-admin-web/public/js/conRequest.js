@@ -3,7 +3,7 @@ Ext.onReady(function(){
 
 	Ext.BLANK_IMAGE_URL ='../ext-4.0.7-gpl/resources/themes/images/default/tree/s.gif'; 
 	
-   var conStore = Ext.create('Ext.data.Store', {
+   let conStore = Ext.create('Ext.data.Store', {
 	id:'reqStoreId',
 	autoLoad:false,
 	pageSize:5,
@@ -16,11 +16,11 @@ Ext.onReady(function(){
         }
     }
 });
-   var serverStore = Ext.create('Ext.data.Store', {
+   let serverStore = Ext.create('Ext.data.Store', {
 		fields: ['name', 'serverID']
 	});
 
-    var serverCom = Ext.create('Ext.form.ComboBox', {
+    let serverCom = Ext.create('Ext.form.ComboBox', {
 		id:'serverComId', 
 		fieldLabel: 'Server',
 		labelWidth: 60,
@@ -34,7 +34,7 @@ Ext.onReady(function(){
 /**
  * gridPanel,detail message
  */
-var conGrid=Ext.create('Ext.grid.Panel', {
+let conGrid=Ext.create('Ext.grid.Panel', {
 	id:'conGridId',
 	region:'center',
     store: conStore,
@@ -66,7 +66,7 @@ var conGrid=Ext.create('Ext.grid.Panel', {
 		 serverCom
 		]
 });
-var countStore=Ext.create('Ext.data.Store',{
+let countStore=Ext.create('Ext.data.Store',{
 	id:'countStoreId',
 	autoLoad:false,
 	pageSize:5,
@@ -79,7 +79,7 @@ var countStore=Ext.create('Ext.data.Store',{
 		}
 	}
 });
-var countGrid=Ext.create('Ext.grid.Panel',{
+let countGrid=Ext.create('Ext.grid.Panel',{
 	id:'countGridId',
 	region:'south',
 	store:countStore,
@@ -93,14 +93,14 @@ var countGrid=Ext.create('Ext.grid.Panel',{
 		{text:'avgTime',dataIndex:'avgTime',width:200}
 	]
 });
-var viewport=new Ext.Viewport({
+let viewport=new Ext.Viewport({
 	    layout:'border',
 	    items:[conGrid,countGrid]
 	});
 
 conGrid.addListener('itemdblclick', function(conGrid, rowindex, e){
-	var theGrid=Ext.getCmp('conGridId');
-	var record=conGrid.getSelectionModel().getSelection();
+	let theGrid=Ext.getCmp('conGridId');
+	let record=conGrid.getSelectionModel().getSelection();
 	if(record.length>1){
 		alert('only one data is required!');
 		return;
@@ -108,14 +108,14 @@ conGrid.addListener('itemdblclick', function(conGrid, rowindex, e){
 	if(record.length<1){
 		alert('please choose one data!')
 	}
-	var data=record[0].data.params;
+	let data=record[0].data.params;
 	gridDetailShow(data);
 });
 	refresh();
 });
 function refresh(){
-	var number = Ext.getCmp('numberfieldId').getValue();
-	var serverId = Ext.getCmp('serverComId').getValue();
+	let number = Ext.getCmp('numberfieldId').getValue();
+	let serverId = Ext.getCmp('serverComId').getValue();
 	if(!number || !serverId){
 		list();
 		return;
@@ -128,9 +128,9 @@ function refresh(){
     }
  
     // compose display data
-    var data = [];
-    var _msg = msg.body.dataArray;
-    for(var i=0;i<_msg.length;i++){
+    let data = [];
+    let _msg = msg.body.dataArray;
+    for(let i=0;i<_msg.length;i++){
     	data.push({
     		time : _msg[i].time,
     		serverId : _msg[i].serverId,
@@ -139,18 +139,18 @@ function refresh(){
     		params : _msg[i].params
     	});
     }
-    var store = Ext.getCmp('conGridId').getStore();
+    let store = Ext.getCmp('conGridId').getStore();
     store.loadData(data);
   });
 }	
 
-var list = function() {
+let list = function() {
 	window.parent.client.request('scripts', {command: 'list'}, function(err, msg) {
 		if(err) {
 			alert(err);
 			return;
 		}
-		var servers = [], scripts = [], i, l, item;
+		let servers = [], scripts = [], i, l, item;
 		for(i=0, l=msg.servers.length; i<l; i++) {
 			item = msg.servers[i];
 			servers.push({name: item, serverID: item});

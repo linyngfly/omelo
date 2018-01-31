@@ -44,8 +44,8 @@ WebInspector.CSSStyleModel = function()
 
 WebInspector.CSSStyleModel.parseRuleArrayPayload = function(ruleArray)
 {
-    var result = [];
-    for (var i = 0; i < ruleArray.length; ++i)
+    let result = [];
+    for (let i = 0; i < ruleArray.length; ++i)
         result.push(WebInspector.CSSRule.parsePayload(ruleArray[i]));
     return result;
 }
@@ -80,23 +80,23 @@ WebInspector.CSSStyleModel.prototype = {
                 return;
             }
 
-            var result = {};
+            let result = {};
             if (matchedPayload)
                 result.matchedCSSRules = WebInspector.CSSStyleModel.parseRuleArrayPayload(matchedPayload);
 
             if (pseudoPayload) {
                 result.pseudoElements = [];
-                for (var i = 0; i < pseudoPayload.length; ++i) {
-                    var entryPayload = pseudoPayload[i];
+                for (let i = 0; i < pseudoPayload.length; ++i) {
+                    let entryPayload = pseudoPayload[i];
                     result.pseudoElements.push({ pseudoId: entryPayload.pseudoId, rules: WebInspector.CSSStyleModel.parseRuleArrayPayload(entryPayload.rules) });
                 }
             }
 
             if (inheritedPayload) {
                 result.inherited = [];
-                for (var i = 0; i < inheritedPayload.length; ++i) {
-                    var entryPayload = inheritedPayload[i];
-                    var entry = {};
+                for (let i = 0; i < inheritedPayload.length; ++i) {
+                    let entryPayload = inheritedPayload[i];
+                    let entry = {};
                     if (entryPayload.inlineStyle)
                         entry.inlineStyle = WebInspector.CSSStyleDeclaration.parsePayload(entryPayload.inlineStyle);
                     if (entryPayload.matchedCSSRules)
@@ -172,8 +172,8 @@ WebInspector.CSSStyleModel.prototype = {
         {
             if (!selectedNodeIds)
                 return;
-            var doesAffectSelectedNode = (selectedNodeIds.indexOf(nodeId) >= 0);
-            var rule = WebInspector.CSSRule.parsePayload(rulePayload);
+            let doesAffectSelectedNode = (selectedNodeIds.indexOf(nodeId) >= 0);
+            let rule = WebInspector.CSSRule.parsePayload(rulePayload);
             successCallback(rule, doesAffectSelectedNode);
         }
 
@@ -192,7 +192,7 @@ WebInspector.CSSStyleModel.prototype = {
                 failureCallback();
             else {
                 WebInspector.domAgent.markUndoableState();
-                var ownerDocumentId = this._ownerDocumentId(nodeId);
+                let ownerDocumentId = this._ownerDocumentId(nodeId);
                 if (ownerDocumentId)
                     WebInspector.domAgent.querySelectorAll(ownerDocumentId, newSelector, checkAffectsCallback.bind(this, nodeId, successCallback, rulePayload));
                 else
@@ -217,8 +217,8 @@ WebInspector.CSSStyleModel.prototype = {
             if (!selectedNodeIds)
                 return;
 
-            var doesAffectSelectedNode = (selectedNodeIds.indexOf(nodeId) >= 0);
-            var rule = WebInspector.CSSRule.parsePayload(rulePayload);
+            let doesAffectSelectedNode = (selectedNodeIds.indexOf(nodeId) >= 0);
+            let rule = WebInspector.CSSRule.parsePayload(rulePayload);
             successCallback(rule, doesAffectSelectedNode);
         }
 
@@ -237,7 +237,7 @@ WebInspector.CSSStyleModel.prototype = {
                 failureCallback();
             } else {
                 WebInspector.domAgent.markUndoableState();
-                var ownerDocumentId = this._ownerDocumentId(nodeId);
+                let ownerDocumentId = this._ownerDocumentId(nodeId);
                 if (ownerDocumentId)
                     WebInspector.domAgent.querySelectorAll(ownerDocumentId, selector, checkAffectsCallback.bind(this, nodeId, successCallback, rulePayload));
                 else
@@ -256,7 +256,7 @@ WebInspector.CSSStyleModel.prototype = {
 
     _ownerDocumentId: function(nodeId)
     {
-        var node = WebInspector.domAgent.nodeForId(nodeId);
+        let node = WebInspector.domAgent.nodeForId(nodeId);
         if (!node)
             return null;
         return node.ownerDocument ? node.ownerDocument.id : null;
@@ -267,7 +267,7 @@ WebInspector.CSSStyleModel.prototype = {
         if (!this._pendingCommandsMajorState.length)
             return;
 
-        var majorChange = this._pendingCommandsMajorState[this._pendingCommandsMajorState.length - 1];
+        let majorChange = this._pendingCommandsMajorState[this._pendingCommandsMajorState.length - 1];
 
         if (!majorChange || !styleSheetId || !this.hasEventListeners(WebInspector.CSSStyleModel.Events.StyleSheetChanged))
             return;
@@ -318,23 +318,23 @@ WebInspector.CSSStyleDeclaration = function(payload)
     this._allProperties = []; // ALL properties: [ CSSProperty ]
     this._longhandProperties = {}; // shorthandName -> [ CSSProperty ]
     this.__disabledProperties = {}; // DISABLED properties: { index -> CSSProperty }
-    var payloadPropertyCount = payload.cssProperties.length;
+    let payloadPropertyCount = payload.cssProperties.length;
 
-    var propertyIndex = 0;
-    for (var i = 0; i < payloadPropertyCount; ++i) {
-        var property = WebInspector.CSSProperty.parsePayload(this, i, payload.cssProperties[i]);
+    let propertyIndex = 0;
+    for (let i = 0; i < payloadPropertyCount; ++i) {
+        let property = WebInspector.CSSProperty.parsePayload(this, i, payload.cssProperties[i]);
         this._allProperties.push(property);
         if (property.disabled)
             this.__disabledProperties[i] = property;
         if (!property.active && !property.styleBased)
             continue;
-        var name = property.name;
+        let name = property.name;
         this[propertyIndex] = name;
         this._livePropertyMap[name] = property;
 
         // Index longhand properties.
         if (property.shorthand) { // only for parsed
-            var longhands = this._longhandProperties[property.shorthand];
+            let longhands = this._longhandProperties[property.shorthand];
             if (!longhands) {
                 longhands = [];
                 this._longhandProperties[property.shorthand] = longhands;
@@ -350,8 +350,8 @@ WebInspector.CSSStyleDeclaration = function(payload)
 
 WebInspector.CSSStyleDeclaration.buildShorthandValueMap = function(shorthandEntries)
 {
-    var result = {};
-    for (var i = 0; i < shorthandEntries.length; ++i)
+    let result = {};
+    for (let i = 0; i < shorthandEntries.length; ++i)
         result[shorthandEntries[i].name] = shorthandEntries[i].value;
     return result;
 }
@@ -363,7 +363,7 @@ WebInspector.CSSStyleDeclaration.parsePayload = function(payload)
 
 WebInspector.CSSStyleDeclaration.parseComputedStylePayload = function(payload)
 {
-    var newPayload = { cssProperties: [], shorthandEntries: [], width: "", height: "" };
+    let newPayload = { cssProperties: [], shorthandEntries: [], width: "", height: "" };
     if (payload)
         newPayload.cssProperties = payload;
 
@@ -383,46 +383,46 @@ WebInspector.CSSStyleDeclaration.prototype = {
 
     getPropertyValue: function(name)
     {
-        var property = this._livePropertyMap[name];
+        let property = this._livePropertyMap[name];
         return property ? property.value : "";
     },
 
     getPropertyPriority: function(name)
     {
-        var property = this._livePropertyMap[name];
+        let property = this._livePropertyMap[name];
         return property ? property.priority : "";
     },
 
     getPropertyShorthand: function(name)
     {
-        var property = this._livePropertyMap[name];
+        let property = this._livePropertyMap[name];
         return property ? property.shorthand : "";
     },
 
     isPropertyImplicit: function(name)
     {
-        var property = this._livePropertyMap[name];
+        let property = this._livePropertyMap[name];
         return property ? property.implicit : "";
     },
 
     styleTextWithShorthands: function()
     {
-        var cssText = "";
-        var foundProperties = {};
-        for (var i = 0; i < this.length; ++i) {
-            var individualProperty = this[i];
-            var shorthandProperty = this.getPropertyShorthand(individualProperty);
-            var propertyName = (shorthandProperty || individualProperty);
+        let cssText = "";
+        let foundProperties = {};
+        for (let i = 0; i < this.length; ++i) {
+            let individualProperty = this[i];
+            let shorthandProperty = this.getPropertyShorthand(individualProperty);
+            let propertyName = (shorthandProperty || individualProperty);
 
             if (propertyName in foundProperties)
                 continue;
 
             if (shorthandProperty) {
-                var value = this.getShorthandValue(shorthandProperty);
-                var priority = this.getShorthandPriority(shorthandProperty);
+                let value = this.getShorthandValue(shorthandProperty);
+                let priority = this.getShorthandPriority(shorthandProperty);
             } else {
-                var value = this.getPropertyValue(individualProperty);
-                var priority = this.getPropertyPriority(individualProperty);
+                let value = this.getPropertyValue(individualProperty);
+                let priority = this.getPropertyPriority(individualProperty);
             }
 
             foundProperties[propertyName] = true;
@@ -443,17 +443,17 @@ WebInspector.CSSStyleDeclaration.prototype = {
 
     getShorthandValue: function(shorthandProperty)
     {
-        var property = this.getLiveProperty(shorthandProperty);
+        let property = this.getLiveProperty(shorthandProperty);
         return property ? property.value : this._shorthandValues[shorthandProperty];
     },
 
     getShorthandPriority: function(shorthandProperty)
     {
-        var priority = this.getPropertyPriority(shorthandProperty);
+        let priority = this.getPropertyPriority(shorthandProperty);
         if (priority)
             return priority;
 
-        var longhands = this._longhandProperties[shorthandProperty];
+        let longhands = this._longhandProperties[shorthandProperty];
         return longhands ? this.getPropertyPriority(longhands[0]) : null;
     },
 
@@ -464,8 +464,8 @@ WebInspector.CSSStyleDeclaration.prototype = {
 
     pastLastSourcePropertyIndex: function()
     {
-        for (var i = this.allProperties.length - 1; i >= 0; --i) {
-            var property = this.allProperties[i];
+        for (let i = this.allProperties.length - 1; i >= 0; --i) {
+            let property = this.allProperties[i];
             if (property.active || property.disabled)
                 return i + 1;
         }
@@ -576,7 +576,7 @@ WebInspector.CSSProperty.parsePayload = function(ownerStyle, index, payload)
     // implicit: false
     // status: "style"
     // shorthandName: ""
-    var result = new WebInspector.CSSProperty(
+    let result = new WebInspector.CSSProperty(
         ownerStyle, index, payload.name, payload.value, payload.priority || "", payload.status || "style", ("parsedOk" in payload) ? payload.parsedOk : true, !!payload.implicit, payload.shorthandName || "", payload.text);
     return result;
 }
@@ -640,8 +640,8 @@ WebInspector.CSSProperty.prototype = {
                 if (majorChange)
                     WebInspector.domAgent.markUndoableState();
                 this.text = propertyText;
-                var style = WebInspector.CSSStyleDeclaration.parsePayload(stylePayload);
-                var newProperty = style.allProperties[this.index];
+                let style = WebInspector.CSSStyleDeclaration.parsePayload(stylePayload);
+                let newProperty = style.allProperties[this.index];
 
                 if (newProperty && this.disabled && !propertyText.match(/^\s*$/)) {
                     newProperty.setDisabled(false, enabledCallback);
@@ -672,7 +672,7 @@ WebInspector.CSSProperty.prototype = {
      */
     setValue: function(newValue, majorChange, overwrite, userCallback)
     {
-        var text = this.name + ": " + newValue + (this.priority ? " !" + this.priority : "") + ";"
+        let text = this.name + ": " + newValue + (this.priority ? " !" + this.priority : "") + ";"
         this.setText(text, majorChange, overwrite, userCallback);
     },
 
@@ -693,7 +693,7 @@ WebInspector.CSSProperty.prototype = {
             }
             WebInspector.domAgent.markUndoableState();
             if (userCallback) {
-                var style = WebInspector.CSSStyleDeclaration.parsePayload(stylePayload);
+                let style = WebInspector.CSSStyleDeclaration.parsePayload(stylePayload);
                 userCallback(style);
             }
         }
@@ -729,8 +729,8 @@ WebInspector.CSSMedia.parsePayload = function(payload)
 
 WebInspector.CSSMedia.parseMediaArrayPayload = function(payload)
 {
-    var result = [];
-    for (var i = 0; i < payload.length; ++i)
+    let result = [];
+    for (let i = 0; i < payload.length; ++i)
         result.push(WebInspector.CSSMedia.parsePayload(payload[i]));
     return result;
 }
@@ -743,8 +743,8 @@ WebInspector.CSSStyleSheet = function(payload)
     this.id = payload.styleSheetId;
     this.rules = [];
     this.styles = {};
-    for (var i = 0; i < payload.rules.length; ++i) {
-        var rule = WebInspector.CSSRule.parsePayload(payload.rules[i]);
+    for (let i = 0; i < payload.rules.length; ++i) {
+        let rule = WebInspector.CSSRule.parsePayload(payload.rules[i]);
         this.rules.push(rule);
         if (rule.style)
             this.styles[rule.style.id] = rule.style;
@@ -834,7 +834,7 @@ WebInspector.CSSStyleModelResourceBinding.prototype = {
             return;
         }
 
-        var styleSheetId = this._urlToStyleSheetId[url];
+        let styleSheetId = this._urlToStyleSheetId[url];
         if (!styleSheetId) {
             if (userCallback)
                 userCallback("No stylesheet found: " + url);
@@ -860,8 +860,8 @@ WebInspector.CSSStyleModelResourceBinding.prototype = {
                 return;
             }
 
-            for (var i = 0; i < infos.length; ++i) {
-                var info = infos[i];
+            for (let i = 0; i < infos.length; ++i) {
+                let info = infos[i];
                 this._urlToStyleSheetId[info.sourceURL] = info.styleSheetId;
                 this._styleSheetIdToURL[info.styleSheetId] = info.sourceURL;
             }
@@ -890,11 +890,11 @@ WebInspector.CSSStyleModelResourceBinding.prototype = {
     {
         function setContent()
         {
-            var url = this._styleSheetIdToURL[styleSheetId];
+            let url = this._styleSheetIdToURL[styleSheetId];
             if (!url)
                 return;
 
-            var resource = WebInspector.resourceForURL(url);
+            let resource = WebInspector.resourceForURL(url);
             if (resource && resource.type === WebInspector.Resource.Type.Stylesheet)
                 resource.addRevision(content);
         }

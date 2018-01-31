@@ -53,12 +53,12 @@ WebInspector.WatchExpressionsSidebarPane.prototype = {
         this.section = new WebInspector.WatchExpressionsSection();
         this.bodyElement.appendChild(this.section.element);
     
-        var refreshButton = document.createElement("button");
+        let refreshButton = document.createElement("button");
         refreshButton.className = "pane-title-button refresh";
         refreshButton.addEventListener("click", this._refreshButtonClicked.bind(this), false);
         this.titleElement.appendChild(refreshButton);
     
-        var addButton = document.createElement("button");
+        let addButton = document.createElement("button");
         addButton.className = "pane-title-button add";
         addButton.addEventListener("click", this._addButtonClicked.bind(this), false);
         this.titleElement.appendChild(addButton);
@@ -153,7 +153,7 @@ WebInspector.WatchExpressionsSection.prototype = {
             if (!result)
                 return;
 
-            var property = new WebInspector.RemoteObjectProperty(expression, result);
+            let property = new WebInspector.RemoteObjectProperty(expression, result);
             property.watchIndex = watchIndex;
             property.wasThrown = wasThrown;
 
@@ -174,7 +174,7 @@ WebInspector.WatchExpressionsSection.prototype = {
                 if (this._newExpressionAdded) {
                     delete this._newExpressionAdded;
 
-                    var treeElement = this.findAddedTreeElement();
+                    let treeElement = this.findAddedTreeElement();
                     if (treeElement)
                         treeElement.startEditing();
                 }
@@ -187,12 +187,12 @@ WebInspector.WatchExpressionsSection.prototype = {
 
         // TODO: pass exact injected script id.
         RuntimeAgent.releaseObjectGroup(this._watchObjectGroupId)
-        var properties = [];
+        let properties = [];
 
         // Count the properties, so we known when to call this.updateProperties()
         // in appendResult()
-        var propertyCount = 0;
-        for (var i = 0; i < this.watchExpressions.length; ++i) {
+        let propertyCount = 0;
+        for (let i = 0; i < this.watchExpressions.length; ++i) {
             if (!this.watchExpressions[i])
                 continue;
             ++propertyCount;
@@ -200,8 +200,8 @@ WebInspector.WatchExpressionsSection.prototype = {
 
         // Now process all the expressions, since we have the actual count,
         // which is checked in the appendResult inner function.
-        for (var i = 0; i < this.watchExpressions.length; ++i) {
-            var expression = this.watchExpressions[i];
+        for (let i = 0; i < this.watchExpressions.length; ++i) {
+            let expression = this.watchExpressions[i];
             if (!expression)
                 continue;
 
@@ -245,16 +245,16 @@ WebInspector.WatchExpressionsSection.prototype = {
 
     findAddedTreeElement: function()
     {
-        var children = this.propertiesTreeOutline.children;
-        for (var i = 0; i < children.length; ++i)
+        let children = this.propertiesTreeOutline.children;
+        for (let i = 0; i < children.length; ++i)
             if (children[i].property.name === WebInspector.WatchExpressionsSection.NewWatchExpression)
                 return children[i];
     },
 
     saveExpressions: function()
     {
-        var toSave = [];
-        for (var i = 0; i < this.watchExpressions.length; i++)
+        let toSave = [];
+        for (let i = 0; i < this.watchExpressions.length; i++)
             if (this.watchExpressions[i])
                 toSave.push(this.watchExpressions[i]);
 
@@ -279,9 +279,9 @@ WebInspector.WatchExpressionsSection.prototype = {
 
     _updateHoveredElement: function(pageY)
     {
-        var candidateElement = this.propertiesElement.firstChild;
+        let candidateElement = this.propertiesElement.firstChild;
         while (true) {
-            var next = candidateElement.nextSibling;
+            let next = candidateElement.nextSibling;
             while (next && !next.clientHeight)
                 next = next.nextSibling;
             if (!next || next.totalOffsetTop() > pageY)
@@ -330,7 +330,7 @@ WebInspector.WatchExpressionTreeElement.prototype = {
         if (this.property.wasThrown)
             this.valueElement.addStyleClass("watch-expressions-error-level");
 
-        var deleteButton = document.createElement("input");
+        let deleteButton = document.createElement("input");
         deleteButton.type = "button";
         deleteButton.title = WebInspector.UIString("Delete watch expression.");
         deleteButton.addStyleClass("enabled-button");

@@ -2,7 +2,7 @@ Ext.onReady(function(){
 
 	Ext.BLANK_IMAGE_URL ='../ext-4.0.7-gpl/resources/themes/images/default/tree/s.gif'; 
 
-	var nodeStore=Ext.create('Ext.data.Store',{
+	let nodeStore=Ext.create('Ext.data.Store',{
        id:'nodeStore',
        autoLoad:false,
        pageSize:5,
@@ -16,7 +16,7 @@ Ext.onReady(function(){
        }
 	});
 	//nodes' detailed information
-	var nodesPanel=Ext.create('Ext.grid.Panel',{
+	let nodesPanel=Ext.create('Ext.grid.Panel',{
         id:'nodesPanel',
         // title:'nodesInformation',
         region:'north',
@@ -49,13 +49,13 @@ Ext.onReady(function(){
 	});
 
 	//chart of nodes' detailed
-	var chartPanel=Ext.create('Ext.panel.Panel',{
+	let chartPanel=Ext.create('Ext.panel.Panel',{
 		id:'chartPanel',
 		title:'realtimeInfo',
 		region:'center'
 
 	})
-	var viewport=new Ext.Viewport({
+	let viewport=new Ext.Viewport({
 		layout:'border',
 		items:[nodesPanel,chartPanel]
 	});
@@ -68,7 +68,7 @@ socket.on('connect',function(){
      socket.emit('webMessage',{method:'getProcessInfo'});
      // socket.emit('processInfo',{method:'getProcess'});
      socket.on('getProcessInfo',function(msg){
-    var store=Ext.getCmp('nodesPanel').getStore();
+    let store=Ext.getCmp('nodesPanel').getStore();
     store.loadData(msg.data);
      });
 });
@@ -82,11 +82,11 @@ function refresh(){
     }
 
     // compose display data
-    var data = [];
-    for(var id in msg) {
+    let data = [];
+    for(let id in msg) {
       data.push(msg[id]);
     }
-    var store = Ext.getCmp('nodesPanel').getStore();
+    let store = Ext.getCmp('nodesPanel').getStore();
     store.loadData(data);
   });
 }

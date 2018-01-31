@@ -40,7 +40,7 @@ WebInspector.DOMSyntaxHighlighter = function(mimeType, stripExtraWhitespace)
 WebInspector.DOMSyntaxHighlighter.prototype = {
     createSpan: function(content, className)
     {
-        var span = document.createElement("span");
+        let span = document.createElement("span");
         span.className = "webkit-" + className;
         if (this._stripExtraWhitespace)
             content = content.replace(/^[\n\r]*/, "").replace(/\s*$/, "");
@@ -51,23 +51,23 @@ WebInspector.DOMSyntaxHighlighter.prototype = {
     syntaxHighlightNode: function(node)
     {
         this._tokenizer.condition = this._tokenizer.createInitialCondition();
-        var lines = node.textContent.split("\n");
+        let lines = node.textContent.split("\n");
         node.removeChildren();
 
-        for (var i = lines[0].length ? 0 : 1; i < lines.length; ++i) {
-            var line = lines[i];
-            var plainTextStart = 0;
+        for (let i = lines[0].length ? 0 : 1; i < lines.length; ++i) {
+            let line = lines[i];
+            let plainTextStart = 0;
             this._tokenizer.line = line;
-            var column = 0;
+            let column = 0;
             do {
-                var newColumn = this._tokenizer.nextToken(column);
-                var tokenType = this._tokenizer.tokenType;
+                let newColumn = this._tokenizer.nextToken(column);
+                let tokenType = this._tokenizer.tokenType;
                 if (tokenType) {
                     if (column > plainTextStart) {
-                        var plainText = line.substring(plainTextStart, column);
+                        let plainText = line.substring(plainTextStart, column);
                         node.appendChild(document.createTextNode(plainText));
                     }
-                    var token = line.substring(column, newColumn);
+                    let token = line.substring(column, newColumn);
                     node.appendChild(this.createSpan(token, tokenType));
                     plainTextStart = newColumn;
                 }
@@ -75,7 +75,7 @@ WebInspector.DOMSyntaxHighlighter.prototype = {
            } while (column < line.length)
 
            if (plainTextStart < line.length) {
-               var plainText = line.substring(plainTextStart, line.length);
+               let plainText = line.substring(plainTextStart, line.length);
                node.appendChild(document.createTextNode(plainText));
            }
            if (i < lines.length - 1)

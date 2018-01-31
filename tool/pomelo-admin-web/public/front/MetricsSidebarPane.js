@@ -59,7 +59,7 @@ WebInspector.MetricsSidebarPane.prototype = {
             return;
 
         // FIXME: avoid updates of a collapsed pane.
-        var node = this.node;
+        let node = this.node;
 
         if (!node || node.nodeType() !== Node.ELEMENT_NODE) {
             this.bodyElement.removeChildren();
@@ -103,18 +103,18 @@ WebInspector.MetricsSidebarPane.prototype = {
 
     _getBox: function(computedStyle, componentName)
     {
-        var suffix = componentName === "border" ? "-width" : "";
-        var left = this._getPropertyValueAsPx(computedStyle, componentName + "-left" + suffix);
-        var top = this._getPropertyValueAsPx(computedStyle, componentName + "-top" + suffix);
-        var right = this._getPropertyValueAsPx(computedStyle, componentName + "-right" + suffix);
-        var bottom = this._getPropertyValueAsPx(computedStyle, componentName + "-bottom" + suffix);
+        let suffix = componentName === "border" ? "-width" : "";
+        let left = this._getPropertyValueAsPx(computedStyle, componentName + "-left" + suffix);
+        let top = this._getPropertyValueAsPx(computedStyle, componentName + "-top" + suffix);
+        let right = this._getPropertyValueAsPx(computedStyle, componentName + "-right" + suffix);
+        let bottom = this._getPropertyValueAsPx(computedStyle, componentName + "-bottom" + suffix);
         return { left: left, top: top, right: right, bottom: bottom };
     },
 
     _highlightDOMNode: function(showHighlight, mode, event)
     {
         event.consume();
-        var nodeId = showHighlight && this.node ? this.node.id : 0;
+        let nodeId = showHighlight && this.node ? this.node.id : 0;
         if (nodeId) {
             if (this._highlightMode === mode)
                 return;
@@ -125,8 +125,8 @@ WebInspector.MetricsSidebarPane.prototype = {
             WebInspector.domAgent.hideDOMNodeHighlight();
         }
 
-        for (var i = 0; this._boxElements && i < this._boxElements.length; ++i) {
-            var element = this._boxElements[i];
+        for (let i = 0; this._boxElements && i < this._boxElements.length; ++i) {
+            let element = this._boxElements[i];
             if (!nodeId || mode === "all" || element._name === mode)
                 element.style.backgroundColor = element._backgroundColor;
             else
@@ -137,21 +137,21 @@ WebInspector.MetricsSidebarPane.prototype = {
     _updateMetrics: function(style)
     {
         // Updating with computed style.
-        var metricsElement = document.createElement("div");
+        let metricsElement = document.createElement("div");
         metricsElement.className = "metrics";
-        var self = this;
+        let self = this;
 
         function createBoxPartElement(style, name, side, suffix)
         {
-            var propertyName = (name !== "position" ? name + "-" : "") + side + suffix;
-            var value = style.getPropertyValue(propertyName);
+            let propertyName = (name !== "position" ? name + "-" : "") + side + suffix;
+            let value = style.getPropertyValue(propertyName);
             if (value === "" || (name !== "position" && value === "0px"))
                 value = "\u2012";
             else if (name === "position" && value === "auto")
                 value = "\u2012";
             value = value.replace(/px$/, "");
 
-            var element = document.createElement("div");
+            let element = document.createElement("div");
             element.className = side;
             element.textContent = value;
             element.addEventListener("dblclick", this.startEditing.bind(this, element, name, propertyName, style), false);
@@ -160,10 +160,10 @@ WebInspector.MetricsSidebarPane.prototype = {
 
         function getContentAreaWidthPx(style)
         {
-            var width = style.getPropertyValue("width").replace(/px$/, "");
+            let width = style.getPropertyValue("width").replace(/px$/, "");
             if (style.getPropertyValue("box-sizing") === "border-box") {
-                var borderBox = self._getBox(style, "border");
-                var paddingBox = self._getBox(style, "padding");
+                let borderBox = self._getBox(style, "border");
+                let paddingBox = self._getBox(style, "padding");
 
                 width = width - borderBox.left - borderBox.right - paddingBox.left - paddingBox.right;
             }
@@ -173,10 +173,10 @@ WebInspector.MetricsSidebarPane.prototype = {
 
         function getContentAreaHeightPx(style)
         {
-            var height = style.getPropertyValue("height").replace(/px$/, "");
+            let height = style.getPropertyValue("height").replace(/px$/, "");
             if (style.getPropertyValue("box-sizing") === "border-box") {
-                var borderBox = self._getBox(style, "border");
-                var paddingBox = self._getBox(style, "padding");
+                let borderBox = self._getBox(style, "border");
+                let paddingBox = self._getBox(style, "padding");
 
                 height = height - borderBox.top - borderBox.bottom - paddingBox.top - paddingBox.bottom;
             }
@@ -185,7 +185,7 @@ WebInspector.MetricsSidebarPane.prototype = {
         }
 
         // Display types for which margin is ignored.
-        var noMarginDisplayType = {
+        let noMarginDisplayType = {
             "table-cell": true,
             "table-column": true,
             "table-column-group": true,
@@ -196,7 +196,7 @@ WebInspector.MetricsSidebarPane.prototype = {
         };
 
         // Display types for which padding is ignored.
-        var noPaddingDisplayType = {
+        let noPaddingDisplayType = {
             "table-column": true,
             "table-column-group": true,
             "table-footer-group": true,
@@ -206,23 +206,23 @@ WebInspector.MetricsSidebarPane.prototype = {
         };
 
         // Position types for which top, left, bottom and right are ignored.
-        var noPositionType = {
+        let noPositionType = {
             "static": true
         };
 
-        var boxes = ["content", "padding", "border", "margin", "position"];
-        var boxColors = [
+        let boxes = ["content", "padding", "border", "margin", "position"];
+        let boxColors = [
             WebInspector.Color.PageHighlight.Content,
             WebInspector.Color.PageHighlight.Padding,
             WebInspector.Color.PageHighlight.Border,
             WebInspector.Color.PageHighlight.Margin,
             WebInspector.Color.fromRGBA(0, 0, 0, 0)
         ];
-        var boxLabels = [WebInspector.UIString("content"), WebInspector.UIString("padding"), WebInspector.UIString("border"), WebInspector.UIString("margin"), WebInspector.UIString("position")];
-        var previousBox = null;
+        let boxLabels = [WebInspector.UIString("content"), WebInspector.UIString("padding"), WebInspector.UIString("border"), WebInspector.UIString("margin"), WebInspector.UIString("position")];
+        let previousBox = null;
         this._boxElements = [];
-        for (var i = 0; i < boxes.length; ++i) {
-            var name = boxes[i];
+        for (let i = 0; i < boxes.length; ++i) {
+            let name = boxes[i];
 
             if (name === "margin" && noMarginDisplayType[style.getPropertyValue("display")])
                 continue;
@@ -231,7 +231,7 @@ WebInspector.MetricsSidebarPane.prototype = {
             if (name === "position" && noPositionType[style.getPropertyValue("position")])
                 continue;
 
-            var boxElement = document.createElement("div");
+            let boxElement = document.createElement("div");
             boxElement.className = name;
             boxElement._backgroundColor = boxColors[i].toString("original");
             boxElement._name = name;
@@ -240,11 +240,11 @@ WebInspector.MetricsSidebarPane.prototype = {
             this._boxElements.push(boxElement);
 
             if (name === "content") {
-                var widthElement = document.createElement("span");
+                let widthElement = document.createElement("span");
                 widthElement.textContent = getContentAreaWidthPx(style);
                 widthElement.addEventListener("dblclick", this.startEditing.bind(this, widthElement, "width", "width", style), false);
 
-                var heightElement = document.createElement("span");
+                let heightElement = document.createElement("span");
                 heightElement.textContent = getContentAreaHeightPx(style);
                 heightElement.addEventListener("dblclick", this.startEditing.bind(this, heightElement, "height", "height", style), false);
 
@@ -252,9 +252,9 @@ WebInspector.MetricsSidebarPane.prototype = {
                 boxElement.appendChild(document.createTextNode(" \u00D7 "));
                 boxElement.appendChild(heightElement);
             } else {
-                var suffix = (name === "border" ? "-width" : "");
+                let suffix = (name === "border" ? "-width" : "");
 
-                var labelElement = document.createElement("div");
+                let labelElement = document.createElement("div");
                 labelElement.className = "label";
                 labelElement.textContent = boxLabels[i];
                 boxElement.appendChild(labelElement);
@@ -285,14 +285,14 @@ WebInspector.MetricsSidebarPane.prototype = {
         if (WebInspector.isBeingEdited(targetElement))
             return;
 
-        var context = { box: box, styleProperty: styleProperty, computedStyle: computedStyle };
-        var boundKeyDown = this._handleKeyDown.bind(this, context, styleProperty);
+        let context = { box: box, styleProperty: styleProperty, computedStyle: computedStyle };
+        let boundKeyDown = this._handleKeyDown.bind(this, context, styleProperty);
         context.keyDownHandler = boundKeyDown;
         targetElement.addEventListener("keydown", boundKeyDown, false);
 
         this._isEditingMetrics = true;
 
-        var config = new WebInspector.EditingConfig(this.editingCommitted.bind(this), this.editingCancelled.bind(this), context);
+        let config = new WebInspector.EditingConfig(this.editingCommitted.bind(this), this.editingCancelled.bind(this), context);
         WebInspector.startEditing(targetElement, config);
 
         window.getSelection().setBaseAndExtent(targetElement, 0, targetElement, 1);
@@ -302,26 +302,26 @@ WebInspector.MetricsSidebarPane.prototype = {
     {
         if (!/^(?:Page)?(?:Up|Down)$/.test(event.keyIdentifier))
             return;
-        var element = event.currentTarget;
+        let element = event.currentTarget;
 
-        var selection = window.getSelection();
+        let selection = window.getSelection();
         if (!selection.rangeCount)
             return;
 
-        var selectionRange = selection.getRangeAt(0);
+        let selectionRange = selection.getRangeAt(0);
         if (!selectionRange.commonAncestorContainer.isSelfOrDescendant(element))
             return;
 
-        var originalValue = element.textContent;
-        var wordRange = selectionRange.startContainer.rangeOfWord(selectionRange.startOffset, WebInspector.StylesSidebarPane.StyleValueDelimiters, element);
-        var wordString = wordRange.toString();
+        let originalValue = element.textContent;
+        let wordRange = selectionRange.startContainer.rangeOfWord(selectionRange.startOffset, WebInspector.StylesSidebarPane.StyleValueDelimiters, element);
+        let wordString = wordRange.toString();
 
-        var matches = /(.*?)(-?(?:\d+(?:\.\d+)?|\.\d+))(.*)/.exec(wordString);
-        var replacementString;
+        let matches = /(.*?)(-?(?:\d+(?:\.\d+)?|\.\d+))(.*)/.exec(wordString);
+        let replacementString;
         if (matches && matches.length) {
-            var prefix = matches[1];
-            var suffix = matches[3];
-            var number = WebInspector.StylesSidebarPane.alteredFloatNumber(parseFloat(matches[2]), event);
+            let prefix = matches[1];
+            let suffix = matches[3];
+            let number = WebInspector.StylesSidebarPane.alteredFloatNumber(parseFloat(matches[2]), event);
             if (number === null) {
                 // Need to check for null explicitly.
                 return;
@@ -335,12 +335,12 @@ WebInspector.MetricsSidebarPane.prototype = {
         if (!replacementString)
             return;
 
-        var replacementTextNode = document.createTextNode(replacementString);
+        let replacementTextNode = document.createTextNode(replacementString);
 
         wordRange.deleteContents();
         wordRange.insertNode(replacementTextNode);
 
-        var finalSelectionRange = document.createRange();
+        let finalSelectionRange = document.createRange();
         finalSelectionRange.setStart(replacementTextNode, 0);
         finalSelectionRange.setEnd(replacementTextNode, replacementString.length);
 
@@ -365,7 +365,7 @@ WebInspector.MetricsSidebarPane.prototype = {
         if ("originalPropertyData" in this && this.inlineStyle) {
             if (!this.originalPropertyData) {
                 // An added property, remove the last property in the style.
-                var pastLastSourcePropertyIndex = this.inlineStyle.pastLastSourcePropertyIndex();
+                let pastLastSourcePropertyIndex = this.inlineStyle.pastLastSourcePropertyIndex();
                 if (pastLastSourcePropertyIndex)
                     this.inlineStyle.allProperties[pastLastSourcePropertyIndex - 1].setText("", false);
             } else
@@ -395,8 +395,8 @@ WebInspector.MetricsSidebarPane.prototype = {
         if (/^\d+$/.test(userInput))
             userInput += "px";
 
-        var styleProperty = context.styleProperty;
-        var computedStyle = context.computedStyle;
+        let styleProperty = context.styleProperty;
+        let computedStyle = context.computedStyle;
 
         if (computedStyle.getPropertyValue("box-sizing") === "border-box" && (styleProperty === "width" || styleProperty === "height")) {
             if (!userInput.match(/px$/)) {
@@ -404,9 +404,9 @@ WebInspector.MetricsSidebarPane.prototype = {
                 return;
             }
 
-            var borderBox = this._getBox(computedStyle, "border");
-            var paddingBox = this._getBox(computedStyle, "padding");
-            var userValuePx = Number(userInput.replace(/px$/, ""));
+            let borderBox = this._getBox(computedStyle, "border");
+            let paddingBox = this._getBox(computedStyle, "padding");
+            let userValuePx = Number(userInput.replace(/px$/, ""));
             if (isNaN(userValuePx))
                 return;
             if (styleProperty === "width")
@@ -418,8 +418,8 @@ WebInspector.MetricsSidebarPane.prototype = {
         }
 
         this.previousPropertyDataCandidate = null;
-        var self = this;
-        var callback = function(style) {
+        let self = this;
+        let callback = function(style) {
             if (!style)
                 return;
             self.inlineStyle = style;
@@ -436,9 +436,9 @@ WebInspector.MetricsSidebarPane.prototype = {
             }
         };
 
-        var allProperties = this.inlineStyle.allProperties;
-        for (var i = 0; i < allProperties.length; ++i) {
-            var property = allProperties[i];
+        let allProperties = this.inlineStyle.allProperties;
+        for (let i = 0; i < allProperties.length; ++i) {
+            let property = allProperties[i];
             if (property.name !== context.styleProperty || property.inactive)
                 continue;
 

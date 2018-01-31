@@ -1,11 +1,11 @@
-var express = require('express');
-var config = require('./config/admin');
+let express = require('express');
+let config = require('./config/admin');
 
-var app = express();
+let app = express();
 
 //--------------------configure app----------------------
-var pub = __dirname + '/public';
-var view = __dirname + '/views';
+let pub = __dirname + '/public';
+let view = __dirname + '/views';
 
 app.configure(function(){
 	app.set('view engine', 'html');
@@ -23,7 +23,7 @@ app.configure('development', function(){
 });
 
 app.configure('production', function(){
-  var oneYear = 31557600000;
+  let oneYear = 31557600000;
   app.use(express.static(pub, { maxAge: oneYear }));
   app.use(express.errorHandler());
 });

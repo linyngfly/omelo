@@ -1,9 +1,9 @@
-var EventEmitter = require('events').EventEmitter;
-var Util = require('util');
+let EventEmitter = require('events').EventEmitter;
+let Util = require('util');
 
-var mock = require('./mock');
+let mock = require('./mock');
 
-var HaClient = function() {
+let HaClient = function() {
 	EventEmitter.call(this);
 	this.init();
 }
@@ -11,7 +11,7 @@ var HaClient = function() {
 Util.inherits(HaClient, EventEmitter);
 
 HaClient.prototype.init = function() {
-	var self = this;
+	let self = this;
 	setTimeout(function() {
 		self.emit('ready');
 	}, 1000)

@@ -39,8 +39,8 @@
 // | sed 's|yych = \*\([^;]*\)|yych = this._charAt\1|' \
 // | sed 's|{ gotoCase = \([^; continue; };]*\)|{ gotoCase = \1; continue; }|' \
 // | sed 's|yych <= \(0x[0-9a-fA-f]+\)|yych <= String.fromCharCode(\1)|' \
-// | sed 's|unsigned\ int|var|' \
-// | sed 's|var\ yych|case 1: case 1: var yych|'
+// | sed 's|unsigned\ int|let|' \
+// | sed 's|let\ yych|case 1: case 1: let yych|'
 
 /**
  * @constructor
@@ -71,7 +71,7 @@ WebInspector.SourceJavaScriptTokenizer = function()
 
 WebInspector.SourceJavaScriptTokenizer.Keywords = [
         "null", "true", "false", "break", "case", "catch", "const", "default", "finally", "for",
-        "instanceof", "new", "var", "continue", "function", "return", "void", "delete", "if",
+        "instanceof", "new", "let", "continue", "function", "return", "void", "delete", "if",
         "this", "do", "while", "else", "in", "switch", "throw", "try", "typeof", "debugger",
         "class", "enum", "export", "extends", "import", "super", "get", "set", "with"
     ].keySet();
@@ -84,16 +84,16 @@ WebInspector.SourceJavaScriptTokenizer.prototype = {
 
     nextToken: function(cursor)
     {
-        var cursorOnEnter = cursor;
-        var gotoCase = 1;
-        var YYMARKER;
+        let cursorOnEnter = cursor;
+        let gotoCase = 1;
+        let YYMARKER;
         while (1) {
             switch (gotoCase)
             // Following comment is replaced with generated state machine.
 
         {
-            case 1: var yych;
-            var yyaccept = 0;
+            case 1: let yych;
+            let yyaccept = 0;
             if (this.getLexCondition() < 3) {
                 if (this.getLexCondition() < 1) {
                     { gotoCase = this.case_DIV; continue; };
@@ -256,7 +256,7 @@ case 20:
             { gotoCase = 50; continue; };
 case 21:
             {
-                    var token = this._line.substring(cursorOnEnter, cursor);
+                    let token = this._line.substring(cursorOnEnter, cursor);
                     if (WebInspector.SourceJavaScriptTokenizer.Keywords[token] === true && token !== "__proto__")
                         this.tokenType = "javascript-keyword";
                     else
@@ -1188,7 +1188,7 @@ case 141:
 case 142:
             this.setLexCondition(this._lexConditions.DIV);
             {
-                    var token = this._line.substring(cursorOnEnter, cursor);
+                    let token = this._line.substring(cursorOnEnter, cursor);
                     if (WebInspector.SourceJavaScriptTokenizer.Keywords[token] === true && token !== "__proto__")
                         this.tokenType = "javascript-keyword";
                     else

@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 
-var Logger = require('pomelo-logger');
-var logger = Logger.getLogger('bearcat-ha', 'CommandLine');
-var Cluster = require('../lib/watcher/watcherCluster');
-var Version = require('../package.json').version;
-var JSONC = require('json-comments');
-var program = require('commander');
-var fs = require('fs');
+let Logger = require('pomelo-logger');
+let logger = Logger.getLogger('bearcat-ha', 'CommandLine');
+let Cluster = require('../lib/watcher/watcherCluster');
+let Version = require('../package.json').version;
+let JSONC = require('json-comments');
+let program = require('commander');
+let fs = require('fs');
 
 function loadConfig(filename) {
-  var content = fs.readFileSync(filename, 'utf8');
-  var config = JSONC.parse(content);
+  let content = fs.readFileSync(filename, 'utf8');
+  let config = JSONC.parse(content);
 
   if (!config.zooKeeper) {
     throw new Error('zooKeeper can not be empty!');
@@ -34,15 +34,15 @@ if (!program.config) {
   throw new Error('command error: No config file!');
 }
 
-var config = loadConfig(program.config);
+let config = loadConfig(program.config);
 
-var type = "ha";
+let type = "ha";
 if (config.type) {
   type = config.type;
 }
 
-var log4js = null;
-var log4jsPath = 'log4js.json';
+let log4js = null;
+let log4jsPath = 'log4js.json';
 
 if (fs.existsSync(log4jsPath)) {
   log4js = fs.readFileSync(log4jsPath, 'utf8');
@@ -51,7 +51,7 @@ if (fs.existsSync(log4jsPath)) {
 
 if (config.log) {
   // if log is a dir path
-  var logfile = config.log;
+  let logfile = config.log;
   if (logfile.match(/\/$/)) {
     logfile = logfile + type + '-cluster-' + process.pid + '.log';
   }

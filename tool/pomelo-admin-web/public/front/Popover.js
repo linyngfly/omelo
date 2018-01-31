@@ -123,12 +123,12 @@ WebInspector.Popover.prototype = {
         const totalWidth = window.innerWidth;
         const totalHeight = window.innerHeight;
 
-        var anchorBox = anchorElement.boxInWindow(window);
-        var newElementPosition = { x: 0, y: 0, width: preferredWidth + scrollerWidth, height: preferredHeight };
+        let anchorBox = anchorElement.boxInWindow(window);
+        let newElementPosition = { x: 0, y: 0, width: preferredWidth + scrollerWidth, height: preferredHeight };
 
-        var verticalAlignment;
-        var roomAbove = anchorBox.y;
-        var roomBelow = totalHeight - anchorBox.y - anchorBox.height;
+        let verticalAlignment;
+        let roomAbove = anchorBox.y;
+        let roomBelow = totalHeight - anchorBox.y - anchorBox.height;
 
         if (roomAbove > roomBelow) {
             // Positioning above the anchor.
@@ -157,7 +157,7 @@ WebInspector.Popover.prototype = {
             verticalAlignment = "top";
         }
 
-        var horizontalAlignment;
+        let horizontalAlignment;
         if (anchorBox.x + newElementPosition.width < totalWidth) {
             newElementPosition.x = Math.max(borderRadius, anchorBox.x - borderRadius - arrowOffset);
             horizontalAlignment = "left";
@@ -165,7 +165,7 @@ WebInspector.Popover.prototype = {
             newElementPosition.x = totalWidth - newElementPosition.width - borderRadius;
             horizontalAlignment = "right";
             // Position arrow accurately.
-            var arrowRightPosition = Math.max(0, totalWidth - anchorBox.x - anchorBox.width - borderRadius - arrowOffset);
+            let arrowRightPosition = Math.max(0, totalWidth - anchorBox.x - anchorBox.width - borderRadius - arrowOffset);
             arrowRightPosition += anchorBox.width / 2;
             arrowRightPosition = Math.min(arrowRightPosition, newElementPosition.width - borderRadius - arrowOffset);
             this._popupArrowElement.style.right = arrowRightPosition + "px";
@@ -232,7 +232,7 @@ WebInspector.PopoverHelper.prototype = {
 
         // User has 500ms (this._timeout / 2) to reach the popup.
         if (this._popover && !this._hidePopoverTimer) {
-            var self = this;
+            let self = this;
             function doHide()
             {
                 self._hidePopover();

@@ -68,8 +68,8 @@ WebInspector.TimelineGrid.prototype = {
      */
     updateDividers: function(force, calculator, paddingLeft)
     {
-        var dividerCount = Math.round(this._dividersElement.offsetWidth / 64);
-        var slice = calculator.boundarySpan / dividerCount;
+        let dividerCount = Math.round(this._dividersElement.offsetWidth / 64);
+        let slice = calculator.boundarySpan / dividerCount;
         if (!force && this._currentDividerSlice === slice)
             return false;
 
@@ -78,12 +78,12 @@ WebInspector.TimelineGrid.prototype = {
         this._currentDividerSlice = slice;
 
         // Reuse divider elements and labels.
-        var divider = this._dividersElement.firstChild;
-        var dividerLabelBar = this._dividersLabelBarElement.firstChild;
+        let divider = this._dividersElement.firstChild;
+        let dividerLabelBar = this._dividersLabelBarElement.firstChild;
 
-        var dividersElementClientWidth = this._dividersElement.clientWidth;
-        var clientWidth = dividersElementClientWidth - paddingLeft;
-        for (var i = paddingLeft ? 0 : 1; i <= dividerCount; ++i) {
+        let dividersElementClientWidth = this._dividersElement.clientWidth;
+        let clientWidth = dividersElementClientWidth - paddingLeft;
+        for (let i = paddingLeft ? 0 : 1; i <= dividerCount; ++i) {
             if (!divider) {
                 divider = document.createElement("div");
                 divider.className = "resources-divider";
@@ -91,7 +91,7 @@ WebInspector.TimelineGrid.prototype = {
 
                 dividerLabelBar = document.createElement("div");
                 dividerLabelBar.className = "resources-divider";
-                var label = document.createElement("div");
+                let label = document.createElement("div");
                 label.className = "resources-divider-label";
                 dividerLabelBar._labelElement = label;
                 dividerLabelBar.appendChild(label);
@@ -114,8 +114,8 @@ WebInspector.TimelineGrid.prototype = {
                 dividerLabelBar.removeStyleClass("last");
             }
 
-            var left = paddingLeft + clientWidth * (i / dividerCount);
-            var percentLeft = 100 * left / dividersElementClientWidth;
+            let left = paddingLeft + clientWidth * (i / dividerCount);
+            let percentLeft = 100 * left / dividersElementClientWidth;
             this._setDividerAndBarLeft(divider, dividerLabelBar, percentLeft);
 
             if (!isNaN(slice))
@@ -129,12 +129,12 @@ WebInspector.TimelineGrid.prototype = {
 
         // Remove extras.
         while (divider) {
-            var nextDivider = divider.nextSibling;
+            let nextDivider = divider.nextSibling;
             this._dividersElement.removeChild(divider);
             divider = nextDivider;
         }
         while (dividerLabelBar) {
-            var nextDivider = dividerLabelBar.nextSibling;
+            let nextDivider = dividerLabelBar.nextSibling;
             this._dividersLabelBarElement.removeChild(dividerLabelBar);
             dividerLabelBar = nextDivider;
         }
@@ -143,7 +143,7 @@ WebInspector.TimelineGrid.prototype = {
 
     _setDividerAndBarLeft: function(divider, dividerLabelBar, percentLeft)
     {
-        var percentStyleLeft = parseFloat(divider.style.left);
+        let percentStyleLeft = parseFloat(divider.style.left);
         if (!isNaN(percentStyleLeft) && Math.abs(percentStyleLeft - percentLeft) < 0.1)
             return;
         divider.style.left = percentLeft + "%";
@@ -158,7 +158,7 @@ WebInspector.TimelineGrid.prototype = {
     addEventDividers: function(dividers)
     {
         this.element.removeChild(this._eventDividersElement);
-        for (var i = 0; i < dividers.length; ++i)
+        for (let i = 0; i < dividers.length; ++i)
             if (dividers[i])
                 this._eventDividersElement.appendChild(dividers[i]);
         this.element.appendChild(this._eventDividersElement);

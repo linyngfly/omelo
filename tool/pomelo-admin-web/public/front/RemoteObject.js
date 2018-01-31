@@ -116,7 +116,7 @@ WebInspector.RemoteObject.type = function(remoteObject)
     if (remoteObject === null)
         return "null";
 
-    var type = typeof remoteObject;
+    let type = typeof remoteObject;
     if (type !== "object" && type !== "function")
         return type;
 
@@ -191,9 +191,9 @@ WebInspector.RemoteObject.prototype = {
                 callback(null);
                 return;
             }
-            var result = [];
-            for (var i = 0; properties && i < properties.length; ++i) {
-                var property = properties[i];
+            let result = [];
+            for (let i = 0; properties && i < properties.length; ++i) {
+                let property = properties[i];
                 if (property.get || property.set) {
                     if (property.get)
                         result.push(new WebInspector.RemoteObjectProperty("get " + property.name, WebInspector.RemoteObject.fromPayload(property.get), property));
@@ -313,7 +313,7 @@ WebInspector.RemoteObject.prototype = {
         if (this.subtype !== "array")
             return 0;
 
-        var matches = this._description.match(/\[([0-9]+)\]/);
+        let matches = this._description.match(/\[([0-9]+)\]/);
         if (!matches)
             return 0;
         return parseInt(matches[1], 10);
@@ -408,10 +408,10 @@ WebInspector.LocalJSONObject.prototype = {
     {
         const previewChars = 100;
 
-        var buffer = prefix;
-        var children = this._children();
-        for (var i = 0; i < children.length; ++i) {
-            var itemDescription = formatProperty(children[i]);
+        let buffer = prefix;
+        let children = this._children();
+        for (let i = 0; i < children.length; ++i) {
+            let itemDescription = formatProperty(children[i]);
             if (buffer.length + itemDescription.length > previewChars) {
                 buffer += ",\u2026";
                 break;

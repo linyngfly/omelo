@@ -1,10 +1,10 @@
-var fs = require('fs');
-var pomelo = require('pomelo');
+let fs = require('fs');
+let pomelo = require('pomelo');
 
 /**
  * Init app for client.
  */
-var app = pomelo.createApp();
+let app = pomelo.createApp();
 app.set('name', '$');
 
 // app configuration

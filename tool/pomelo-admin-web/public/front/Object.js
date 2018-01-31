@@ -57,8 +57,8 @@ WebInspector.Object.prototype = {
 
         if (!this._listeners || !this._listeners[eventType])
             return;
-        var listeners = this._listeners[eventType];
-        for (var i = 0; i < listeners.length; ++i) {
+        let listeners = this._listeners[eventType];
+        for (let i = 0; i < listeners.length; ++i) {
             if (listener && listeners[i].listener === listener && listeners[i].thisObject === thisObject)
                 listeners.splice(i, 1);
             else if (!listener && thisObject && listeners[i].thisObject === thisObject)
@@ -95,9 +95,9 @@ WebInspector.Object.prototype = {
         if (!this._listeners || !this._listeners[eventType])
             return false;
 
-        var event = new WebInspector.Event(this, eventType, eventData);
-        var listeners = this._listeners[eventType].slice(0);
-        for (var i = 0; i < listeners.length; ++i) {
+        let event = new WebInspector.Event(this, eventType, eventData);
+        let listeners = this._listeners[eventType].slice(0);
+        for (let i = 0; i < listeners.length; ++i) {
             listeners[i].listener.call(listeners[i].thisObject, event);
             if (event._stoppedPropagation)
                 break;

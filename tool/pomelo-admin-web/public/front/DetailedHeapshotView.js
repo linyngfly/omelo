@@ -37,7 +37,7 @@ WebInspector.HeapSnapshotSortableDataGrid = function(columns)
 WebInspector.HeapSnapshotSortableDataGrid.prototype = {
     dispose: function()
     {
-        for (var i = 0, l = this.children.length; i < l; ++i)
+        for (let i = 0, l = this.children.length; i < l; ++i)
             this.children[i].dispose();
     },
 
@@ -49,19 +49,19 @@ WebInspector.HeapSnapshotSortableDataGrid.prototype = {
 
     sortingChanged: function()
     {
-        var sortAscending = this.sortOrder === "ascending";
-        var sortColumnIdentifier = this.sortColumnIdentifier;
+        let sortAscending = this.sortOrder === "ascending";
+        let sortColumnIdentifier = this.sortColumnIdentifier;
         if (this._lastSortColumnIdentifier === sortColumnIdentifier && this._lastSortAscending === sortAscending)
             return;
         this._lastSortColumnIdentifier = sortColumnIdentifier;
         this._lastSortAscending = sortAscending;
-        var sortFields = this._sortFields(sortColumnIdentifier, sortAscending);
+        let sortFields = this._sortFields(sortColumnIdentifier, sortAscending);
 
         function SortByTwoFields(nodeA, nodeB)
         {
-            var field1 = nodeA[sortFields[0]];
-            var field2 = nodeB[sortFields[0]];
-            var result = field1 < field2 ? -1 : (field1 > field2 ? 1 : 0);
+            let field1 = nodeA[sortFields[0]];
+            let field2 = nodeB[sortFields[0]];
+            let result = field1 < field2 ? -1 : (field1 > field2 ? 1 : 0);
             if (!sortFields[1])
                 result = -result;
             if (result !== 0)
@@ -79,12 +79,12 @@ WebInspector.HeapSnapshotSortableDataGrid.prototype = {
     _performSorting: function(sortFunction)
     {
         this.recursiveSortingEnter();
-        var children = this.children;
+        let children = this.children;
         this.removeChildren();
         children.sort(sortFunction);
-        for (var i = 0, l = children.length; i < l; ++i) {
-            var child = children[i];
-            var revealed = child.revealed;
+        for (let i = 0, l = children.length; i < l; ++i) {
+            let child = children[i];
+            let revealed = child.revealed;
             this.appendChild(child);
             child.revealed = revealed;
             if (child.expanded)
@@ -136,9 +136,9 @@ WebInspector.HeapSnapshotContainmentDataGrid.prototype = {
                 parent.select();
                 return;
             }
-            var nodeIndex = route[hopIndex];
-            for (var i = 0, l = parent.children.length; i < l; ++i) {
-                var child = parent.children[i];
+            let nodeIndex = route[hopIndex];
+            for (let i = 0, l = parent.children.length; i < l; ++i) {
+                let child = parent.children[i];
                 if (child.snapshotNodeIndex === nodeIndex) {
                     if (child.expanded)
                         nextStep(child, hopIndex + 1);
@@ -146,7 +146,7 @@ WebInspector.HeapSnapshotContainmentDataGrid.prototype = {
                         function afterExpand()
                         {
                             child.removeEventListener("populate complete", afterExpand, null);
-                            var lastChild = child.children[child.children.length - 1];
+                            let lastChild = child.children[child.children.length - 1];
                             if (!lastChild.showAll)
                                 nextStep(child, hopIndex + 1);
                             else {
@@ -185,7 +185,7 @@ WebInspector.HeapSnapshotContainmentDataGrid.prototype.__proto__ = WebInspector.
 WebInspector.HeapSnapshotRetainmentDataGrid = function()
 {
     this.showRetainingEdges = true;
-    var columns = {
+    let columns = {
         object: { title: WebInspector.UIString("Object"), disclosure: true, sortable: true },
         shallowSize: { title: WebInspector.UIString("Shallow Size"), width: "120px", sortable: true },
         retainedSize: { title: WebInspector.UIString("Retained Size"), width: "120px", sortable: true },
@@ -217,7 +217,7 @@ WebInspector.HeapSnapshotRetainmentDataGrid.prototype.__proto__ = WebInspector.H
 
 WebInspector.HeapSnapshotConstructorsDataGrid = function()
 {
-    var columns = {
+    let columns = {
         object: { title: WebInspector.UIString("Constructor"), disclosure: true, sortable: true },
         distanceToWindow: { title: WebInspector.UIString("Distance"), width: "90px", sortable: true },
         count: { title: WebInspector.UIString("Objects Count"), width: "90px", sortable: true },
@@ -254,7 +254,7 @@ WebInspector.HeapSnapshotConstructorsDataGrid.prototype = {
     {
         function aggregatesReceived(key, aggregates)
         {
-            for (var constructor in aggregates)
+            for (let constructor in aggregates)
                 this.appendChild(new WebInspector.HeapSnapshotConstructorNode(this, constructor, aggregates[constructor], key));
             this.sortingChanged();
         }
@@ -263,8 +263,8 @@ WebInspector.HeapSnapshotConstructorsDataGrid.prototype = {
         this.removeChildren();
         this.resetSortingCache();
 
-        var key = this._filterProfileIndex === -1 ? "allObjects" : this._minNodeId + ".." + this._maxNodeId;
-        var filter = this._filterProfileIndex === -1 ? null : "function(node) { var id = node.id; return id > " + this._minNodeId + " && id <= " + this._maxNodeId + "; }";
+        let key = this._filterProfileIndex === -1 ? "allObjects" : this._minNodeId + ".." + this._maxNodeId;
+        let filter = this._filterProfileIndex === -1 ? null : "function(node) { let id = node.id; return id > " + this._minNodeId + " && id <= " + this._maxNodeId + "; }";
 
         this.snapshot.aggregates(false, key, filter, aggregatesReceived.bind(this, key));
     },
@@ -307,7 +307,7 @@ WebInspector.HeapSnapshotConstructorsDataGrid.prototype.__proto__ = WebInspector
 
 WebInspector.HeapSnapshotDiffDataGrid = function()
 {
-    var columns = {
+    let columns = {
         object: { title: WebInspector.UIString("Constructor"), disclosure: true, sortable: true },
         addedCount: { title: WebInspector.UIString("# New"), width: "72px", sortable: true },
         removedCount: { title: WebInspector.UIString("# Deleted"), width: "72px", sortable: true },
@@ -365,9 +365,9 @@ WebInspector.HeapSnapshotDiffDataGrid.prototype = {
         {
             function aggregatesReceived(classes)
             {
-                var nodeCount = 0;
-                var nodes = [];
-                for (var clss in baseClasses)
+                let nodeCount = 0;
+                let nodes = [];
+                for (let clss in baseClasses)
                     nodes.push(new WebInspector.HeapSnapshotDiffNode(this, clss, baseClasses[clss], classes[clss]));
                 for (clss in classes) {
                     if (!(clss in baseClasses))
@@ -381,8 +381,8 @@ WebInspector.HeapSnapshotDiffDataGrid.prototype = {
                     if (!--nodeCount)
                         this.sortingChanged();
                 }
-                for (var i = 0, l = nodes.length; i < l; ++i) {
-                    var node = nodes[i];
+                for (let i = 0, l = nodes.length; i < l; ++i) {
+                    let node = nodes[i];
                     node.calculateDiff(this, addNodeIfNonZeroDiff.bind(this, node));
                 }
             }
@@ -396,7 +396,7 @@ WebInspector.HeapSnapshotDiffDataGrid.prototype.__proto__ = WebInspector.HeapSna
 
 WebInspector.HeapSnapshotDominatorsDataGrid = function()
 {
-    var columns = {
+    let columns = {
         object: { title: WebInspector.UIString("Object"), disclosure: true, sortable: true },
         shallowSize: { title: WebInspector.UIString("Shallow Size"), width: "120px", sortable: true },
         retainedSize: { title: WebInspector.UIString("Retained Size"), width: "120px", sort: "descending", sortable: true }
@@ -475,9 +475,9 @@ WebInspector.DetailedHeapshotView = function(parent, profile)
     this.retainmentViewHeader = document.createElement("div");
     this.retainmentViewHeader.addStyleClass("retainers-view-header");
     this.retainmentViewHeader.addEventListener("mousedown", this._startRetainersHeaderDragging.bind(this), true);
-    var retainingPathsTitleDiv = document.createElement("div");
+    let retainingPathsTitleDiv = document.createElement("div");
     retainingPathsTitleDiv.className = "title";
-    var retainingPathsTitle = document.createElement("span");
+    let retainingPathsTitle = document.createElement("span");
     retainingPathsTitle.textContent = WebInspector.UIString("Object's retaining tree");
     retainingPathsTitleDiv.appendChild(retainingPathsTitle);
     this.retainmentViewHeader.appendChild(retainingPathsTitleDiv);
@@ -505,9 +505,9 @@ WebInspector.DetailedHeapshotView = function(parent, profile)
                   {title: "Containment", view: this.containmentView, grid: this.containmentDataGrid},
                   {title: "Dominators", view: this.dominatorView, grid: this.dominatorDataGrid}];
     this.views.current = 0;
-    for (var i = 0; i < this.views.length; ++i) {
-        var view = this.views[i];
-        var option = document.createElement("option");
+    for (let i = 0; i < this.views.length; ++i) {
+        let view = this.views[i];
+        let option = document.createElement("option");
         option.label = WebInspector.UIString(view.title);
         this.viewSelectElement.appendChild(option);
     }
@@ -533,9 +533,9 @@ WebInspector.DetailedHeapshotView = function(parent, profile)
 
     function profileCallback()
     {
-        var list = this._profiles();
-        var profileIndex;
-        for (var i = 0; i < list.length; ++i) {
+        let list = this._profiles();
+        let profileIndex;
+        for (let i = 0; i < list.length; ++i) {
             if (list[i].uid === this._profileUid) {
                 profileIndex = i;
                 break;
@@ -617,15 +617,15 @@ WebInspector.DetailedHeapshotView.prototype = {
 
     onResize: function()
     {
-        var height = this.retainmentView.element.clientHeight;
+        let height = this.retainmentView.element.clientHeight;
         this._updateRetainmentViewHeight(height);
     },
 
     searchCanceled: function()
     {
         if (this._searchResults) {
-            for (var i = 0; i < this._searchResults.length; ++i) {
-                var node = this._searchResults[i].node;
+            for (let i = 0; i < this._searchResults.length; ++i) {
+                let node = this._searchResults[i].node;
                 delete node._searchMatched;
                 node.refresh();
             }
@@ -658,7 +658,7 @@ WebInspector.DetailedHeapshotView.prototype = {
             return ("snapshotNodeId" in gridNode) && gridNode.snapshotNodeId === query;
         }
 
-        var matchPredicate;
+        let matchPredicate;
         if (query.charAt(0) !== "@")
             matchPredicate = matchesByName;
         else {
@@ -677,9 +677,9 @@ WebInspector.DetailedHeapshotView.prototype = {
             return false;
         }
 
-        var current = this.dataGrid.children[0];
-        var depth = 0;
-        var info = {};
+        let current = this.dataGrid.children[0];
+        let depth = 0;
+        let info = {};
 
         // Restrict to type nodes and instances.
         const maxDepth = 1;
@@ -740,17 +740,17 @@ WebInspector.DetailedHeapshotView.prototype = {
 
     _jumpToSearchResult: function(index)
     {
-        var searchResult = this._searchResults[index];
+        let searchResult = this._searchResults[index];
         if (!searchResult)
             return;
 
-        var node = searchResult.node;
+        let node = searchResult.node;
         node.revealAndSelect();
     },
 
     refreshVisibleData: function()
     {
-        var child = this.dataGrid.children[0];
+        let child = this.dataGrid.children[0];
         while (child) {
             child.refresh();
             child = child.traverseNextNode(false, null, true);
@@ -777,7 +777,7 @@ WebInspector.DetailedHeapshotView.prototype = {
 
     _changeFilter: function()
     {
-        var profileIndex = this.filterSelectElement.selectedIndex - 1;
+        let profileIndex = this.filterSelectElement.selectedIndex - 1;
         this.dataGrid._filterSelectIndexChanged(this._loadProfileByIndex.bind(this), profileIndex);
 
         if (!this.currentQuery || !this._searchFinishedCallback || !this._searchResults)
@@ -792,9 +792,9 @@ WebInspector.DetailedHeapshotView.prototype = {
 
     _createToolbarWithClassNameFilter: function()
     {
-        var toolbar = document.createElement("div");
+        let toolbar = document.createElement("div");
         toolbar.addStyleClass("class-view-toolbar");
-        var classNameFilter = document.createElement("input");
+        let classNameFilter = document.createElement("input");
         classNameFilter.addStyleClass("class-name-filter");
         classNameFilter.setAttribute("placeholder", WebInspector.UIString("Class filter"));
         classNameFilter.addEventListener("keyup", this._changeNameFilter.bind(this, classNameFilter), false);
@@ -804,10 +804,10 @@ WebInspector.DetailedHeapshotView.prototype = {
 
     _changeNameFilter: function(classNameInputElement)
     {
-        var filter = classNameInputElement.value.toLowerCase();
-        var children = this.dataGrid.children;
-        for (var i = 0, l = children.length; i < l; ++i) {
-            var node = children[i];
+        let filter = classNameInputElement.value.toLowerCase();
+        let children = this.dataGrid.children;
+        for (let i = 0, l = children.length; i < l; ++i) {
+            let node = children[i];
             if (node.depth === 0)
                 node.revealed = node._name.toLowerCase().indexOf(filter) !== -1;
         }
@@ -825,14 +825,14 @@ WebInspector.DetailedHeapshotView.prototype = {
 
     _loadProfileByIndex: function(profileIndex, callback)
     {
-        var profileUid = this._profiles()[profileIndex].uid;
+        let profileUid = this._profiles()[profileIndex].uid;
         WebInspector.panels.profiles.loadHeapSnapshot(profileUid, callback);
     },
 
     isDetailedSnapshot: function(snapshot)
     {
-        var s = new WebInspector.HeapSnapshot(snapshot);
-        for (var iter = s.rootNode.edges; iter.hasNext(); iter.next())
+        let s = new WebInspector.HeapSnapshot(snapshot);
+        for (let iter = s.rootNode.edges; iter.hasNext(); iter.next())
             if (iter.edge.node.name === "(GC roots)")
                 return true;
         return false;
@@ -842,20 +842,20 @@ WebInspector.DetailedHeapshotView.prototype = {
     {
         profile.nodes = snapshot.nodes;
         profile.strings = snapshot.strings;
-        var s = new WebInspector.HeapSnapshot(profile);
+        let s = new WebInspector.HeapSnapshot(profile);
         profile.sidebarElement.subtitle = Number.bytesToString(s.totalSize);
     },
 
     _selectionChanged: function(event)
     {
-        var selectedNode = event.target.selectedNode;
+        let selectedNode = event.target.selectedNode;
         this._setRetainmentDataGridSource(selectedNode);
         this._inspectedObjectChanged(event);
     },
 
     _inspectedObjectChanged: function(event)
     {
-        var selectedNode = event.target.selectedNode;
+        let selectedNode = event.target.selectedNode;
         if (selectedNode instanceof WebInspector.HeapSnapshotGenericObjectNode)
             ConsoleAgent.addInspectedHeapObject(selectedNode.snapshotNodeId);
     },
@@ -873,7 +873,7 @@ WebInspector.DetailedHeapshotView.prototype = {
         if (event.detail < 2)
             return;
 
-        var cell = event.target.enclosingNodeOrSelfWithNodeName("td");
+        let cell = event.target.enclosingNodeOrSelfWithNodeName("td");
         if (!cell || (!cell.hasStyleClass("count-column") && !cell.hasStyleClass("shallowSize-column") && !cell.hasStyleClass("retainedSize-column")))
             return;
 
@@ -882,11 +882,11 @@ WebInspector.DetailedHeapshotView.prototype = {
 
     _mouseClickInRetainmentGrid: function(event)
     {
-        var cell = event.target.enclosingNodeOrSelfWithNodeName("td");
+        let cell = event.target.enclosingNodeOrSelfWithNodeName("td");
         if (!cell || (!cell.hasStyleClass("path-column")))
             return;
-        var row = event.target.enclosingNodeOrSelfWithNodeName("tr");
-        var nodeItem = row._dataGridNode;
+        let row = event.target.enclosingNodeOrSelfWithNodeName("tr");
+        let nodeItem = row._dataGridNode;
         if (!nodeItem || !nodeItem.route)
             return;
         function expandRoute()
@@ -898,8 +898,8 @@ WebInspector.DetailedHeapshotView.prototype = {
 
     changeView: function(viewTitle, callback)
     {
-        var viewIndex = null;
-        for (var i = 0; i < this.views.length; ++i)
+        let viewIndex = null;
+        for (let i = 0; i < this.views.length; ++i)
             if (this.views[i].title === viewTitle) {
                 viewIndex = i;
                 break;
@@ -908,7 +908,7 @@ WebInspector.DetailedHeapshotView.prototype = {
             setTimeout(callback, 0);
             return;
         }
-        var grid = this.views[viewIndex].grid;
+        let grid = this.views[viewIndex].grid;
         function sortingComplete()
         {
             grid.removeEventListener("sorting complete", sortingComplete, this);
@@ -928,7 +928,7 @@ WebInspector.DetailedHeapshotView.prototype = {
 
         this.views.current = event.target.selectedIndex;
         this.currentView.detach();
-        var view = this.views[this.views.current];
+        let view = this.views[this.views.current];
         this.currentView = view.view;
         this.dataGrid = view.grid;
         this.currentView.show(this.viewsContainer);
@@ -964,13 +964,13 @@ WebInspector.DetailedHeapshotView.prototype = {
 
     _getHoverAnchor: function(target)
     {
-        var span = target.enclosingNodeOrSelfWithNodeName("span");
+        let span = target.enclosingNodeOrSelfWithNodeName("span");
         if (!span)
             return;
-        var row = target.enclosingNodeOrSelfWithNodeName("tr");
+        let row = target.enclosingNodeOrSelfWithNodeName("tr");
         if (!row)
             return;
-        var gridNode = row._dataGridNode;
+        let gridNode = row._dataGridNode;
         if (!gridNode.hasHoverMessage)
             return;
         span.node = gridNode;
@@ -985,11 +985,11 @@ WebInspector.DetailedHeapshotView.prototype = {
     _helpClicked: function(event)
     {
         if (!this._helpPopoverContentElement) {
-            var refTypes = ["a:", "console-formatted-name", WebInspector.UIString("property"),
+            let refTypes = ["a:", "console-formatted-name", WebInspector.UIString("property"),
                             "0:", "console-formatted-name", WebInspector.UIString("element"),
-                            "a:", "console-formatted-number", WebInspector.UIString("context var"),
+                            "a:", "console-formatted-number", WebInspector.UIString("context let"),
                             "a:", "console-formatted-null", WebInspector.UIString("system prop")];
-            var objTypes = [" a ", "console-formatted-object", "Object",
+            let objTypes = [" a ", "console-formatted-object", "Object",
                             "\"a\"", "console-formatted-string", "String",
                             "/a/", "console-formatted-string", "RegExp",
                             "a()", "console-formatted-function", "Function",
@@ -997,24 +997,24 @@ WebInspector.DetailedHeapshotView.prototype = {
                             "num", "console-formatted-number", "Number",
                             " a ", "console-formatted-null", "System"];
 
-            var contentElement = document.createElement("table");
+            let contentElement = document.createElement("table");
             contentElement.className = "heapshot-help";
-            var headerRow = document.createElement("tr");
-            var propsHeader = document.createElement("th");
+            let headerRow = document.createElement("tr");
+            let propsHeader = document.createElement("th");
             propsHeader.textContent = WebInspector.UIString("Property types:");
             headerRow.appendChild(propsHeader);
-            var objsHeader = document.createElement("th");
+            let objsHeader = document.createElement("th");
             objsHeader.textContent = WebInspector.UIString("Object types:");
             headerRow.appendChild(objsHeader);
             contentElement.appendChild(headerRow);
-            var len = Math.max(refTypes.length, objTypes.length);
-            for (var i = 0; i < len; i += 3) {
-                var row = document.createElement("tr");
-                var refCell = document.createElement("td");
+            let len = Math.max(refTypes.length, objTypes.length);
+            for (let i = 0; i < len; i += 3) {
+                let row = document.createElement("tr");
+                let refCell = document.createElement("td");
                 if (refTypes[i])
                     appendHelp(refTypes, i, refCell);
                 row.appendChild(refCell);
-                var objCell = document.createElement("td");
+                let objCell = document.createElement("td");
                 if (objTypes[i])
                     appendHelp(objTypes, i, objCell);
                 row.appendChild(objCell);
@@ -1025,13 +1025,13 @@ WebInspector.DetailedHeapshotView.prototype = {
 
             function appendHelp(help, index, cell)
             {
-                var div = document.createElement("div");
+                let div = document.createElement("div");
                 div.className = "source-code event-properties";
-                var name = document.createElement("span");
+                let name = document.createElement("span");
                 name.textContent = help[index];
                 name.className = help[index + 1];
                 div.appendChild(name);
-                var desc = document.createElement("span");
+                let desc = document.createElement("span");
                 desc.textContent = " " + help[index + 2];
                 div.appendChild(desc);
                 cell.appendChild(div);
@@ -1055,7 +1055,7 @@ WebInspector.DetailedHeapshotView.prototype = {
 
     _retainersHeaderDragging: function(event)
     {
-        var height = this.retainmentView.element.clientHeight;
+        let height = this.retainmentView.element.clientHeight;
         height += this._previousDragPosition - event.pageY;
         this._previousDragPosition = event.pageY;
         this._updateRetainmentViewHeight(height);
@@ -1079,14 +1079,14 @@ WebInspector.DetailedHeapshotView.prototype = {
 
     _updateBaseOptions: function()
     {
-        var list = this._profiles();
+        let list = this._profiles();
         // We're assuming that snapshots can only be added.
         if (this.baseSelectElement.length === list.length)
             return;
 
-        for (var i = this.baseSelectElement.length, n = list.length; i < n; ++i) {
-            var baseOption = document.createElement("option");
-            var title = list[i].title;
+        for (let i = this.baseSelectElement.length, n = list.length; i < n; ++i) {
+            let baseOption = document.createElement("option");
+            let title = list[i].title;
             if (!title.indexOf(UserInitiatedProfileName))
                 title = WebInspector.UIString("Snapshot %d", title.substring(UserInitiatedProfileName.length + 1));
             baseOption.label = title;
@@ -1096,20 +1096,20 @@ WebInspector.DetailedHeapshotView.prototype = {
 
     _updateFilterOptions: function()
     {
-        var list = this._profiles();
+        let list = this._profiles();
         // We're assuming that snapshots can only be added.
         if (this.filterSelectElement.length - 1 === list.length)
             return;
 
         if (!this.filterSelectElement.length) {
-            var filterOption = document.createElement("option");
+            let filterOption = document.createElement("option");
             filterOption.label = WebInspector.UIString("All objects");
             this.filterSelectElement.appendChild(filterOption);
         }
 
-        for (var i = this.filterSelectElement.length - 1, n = list.length; i < n; ++i) {
-            var filterOption = document.createElement("option");
-            var title = list[i].title;
+        for (let i = this.filterSelectElement.length - 1, n = list.length; i < n; ++i) {
+            let filterOption = document.createElement("option");
+            let title = list[i].title;
             if (!title.indexOf(UserInitiatedProfileName)) {
                 if (!i)
                     title = WebInspector.UIString("Objects allocated before Snapshot %d", title.substring(UserInitiatedProfileName.length + 1));

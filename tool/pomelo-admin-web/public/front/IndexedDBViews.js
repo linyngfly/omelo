@@ -67,7 +67,7 @@ WebInspector.IDBDatabaseView.prototype = {
      */
     _formatHeader: function(name, value)
     {
-        var fragment = document.createDocumentFragment();
+        let fragment = document.createDocumentFragment();
         fragment.createChild("div", "attribute-name").textContent = name + ":";
         fragment.createChild("div", "attribute-value source-code").textContent = value;
 
@@ -112,7 +112,7 @@ WebInspector.IDBDataView = function(model, databaseId, objectStore, index)
 
     this.element.addStyleClass("indexed-db-data-view");
 
-    var editorToolbar = this._createEditorToolbar();
+    let editorToolbar = this._createEditorToolbar();
     this.element.appendChild(editorToolbar);
 
     this._dataGridContainer = this.element.createChild("div", "fill");
@@ -134,26 +134,26 @@ WebInspector.IDBDataView.prototype = {
      */
     _createDataGrid: function()
     {
-        var columns = {};
+        let columns = {};
         columns["number"] = {};
         columns["number"].title = WebInspector.UIString("#");
         columns["number"].width = "50px";
 
-        var keyPath = this._isIndex ? this._index.keyPath : this._objectStore.keyPath;
+        let keyPath = this._isIndex ? this._index.keyPath : this._objectStore.keyPath;
         columns["key"] = {};
-        var keyColumnTitle = WebInspector.UIString("Key") + this._keyPathHeader(keyPath);
+        let keyColumnTitle = WebInspector.UIString("Key") + this._keyPathHeader(keyPath);
         columns["key"].title = keyColumnTitle;
 
         if (this._isIndex) {
             columns["primaryKey"] = {};
-            var primaryKeyColumnTitle = WebInspector.UIString("Primary key") + this._keyPathHeader(this._objectStore.keyPath);
+            let primaryKeyColumnTitle = WebInspector.UIString("Primary key") + this._keyPathHeader(this._objectStore.keyPath);
             columns["primaryKey"].title = primaryKeyColumnTitle;
         }
 
         columns["value"] = {};
         columns["value"].title = WebInspector.UIString("Value");
 
-        var dataGrid = new WebInspector.DataGrid(columns);
+        let dataGrid = new WebInspector.DataGrid(columns);
         return dataGrid;
     },
 
@@ -172,7 +172,7 @@ WebInspector.IDBDataView.prototype = {
      */
     _createEditorToolbar: function()
     {
-        var editorToolbar = document.createElement("div");
+        let editorToolbar = document.createElement("div");
         editorToolbar.addStyleClass("status-bar");
         editorToolbar.addStyleClass("data-view-toolbar");
 
@@ -242,7 +242,7 @@ WebInspector.IDBDataView.prototype = {
      */
     _parseKey: function(keyString)
     {
-        var result;
+        let result;
         try {
             result = JSON.parse(keyString);
         } catch (e) {
@@ -266,9 +266,9 @@ WebInspector.IDBDataView.prototype = {
      */
     _updateData: function(force)
     {
-        var key = this._parseKey(this._keyInputElement.value);
-        var pageSize = this._pageSize;
-        var skipCount = this._skipCount;
+        let key = this._parseKey(this._keyInputElement.value);
+        let pageSize = this._pageSize;
+        let skipCount = this._skipCount;
 
         if (!force && this._lastKey === key && this._lastPageSize === pageSize && this._lastSkipCount === skipCount)
             return;
@@ -289,16 +289,16 @@ WebInspector.IDBDataView.prototype = {
         {
             this.clear();
             this._entries = entries;
-            for (var i = 0; i < entries.length; ++i) {
-                var data = {};
+            for (let i = 0; i < entries.length; ++i) {
+                let data = {};
                 data["number"] = i + skipCount;
                 data["key"] = entries[i].key;
                 data["primaryKey"] = entries[i].primaryKey;
                 data["value"] = entries[i].value;
 
-                var primaryKey = JSON.stringify(this._isIndex ? entries[i].primaryKey : entries[i].key);
-                var valueTitle = this._objectStore.name + "[" + primaryKey + "]";
-                var node = new WebInspector.IDBDataGridNode(valueTitle, data);
+                let primaryKey = JSON.stringify(this._isIndex ? entries[i].primaryKey : entries[i].key);
+                let valueTitle = this._objectStore.name + "[" + primaryKey + "]";
+                let node = new WebInspector.IDBDataGridNode(valueTitle, data);
                 this._dataGrid.appendChild(node);
             }
 
@@ -306,7 +306,7 @@ WebInspector.IDBDataView.prototype = {
             this._pageForwardButton.disabled = !hasMore;
         }
 
-        var idbKeyRange = key ? window.webkitIDBKeyRange.lowerBound(key) : null;
+        let idbKeyRange = key ? window.webkitIDBKeyRange.lowerBound(key) : null;
         if (this._isIndex)
             this._model.loadIndexData(this._databaseId, this._objectStore.name, this._index.name, idbKeyRange, skipCount, pageSize, callback.bind(this));
         else
@@ -326,8 +326,8 @@ WebInspector.IDBDataView.prototype = {
     clear: function()
     {
         this._dataGrid.removeChildren();
-        for (var i = 0; i < this._entries.length; ++i) {
-            var value = this._entries[i].value;
+        for (let i = 0; i < this._entries.length; ++i) {
+            let value = this._entries[i].value;
             value.release();
         }
         this._entries = [];
@@ -356,8 +356,8 @@ WebInspector.IDBDataGridNode.prototype = {
      */
     createCell: function(columnIdentifier)
     {
-        var cell = WebInspector.DataGridNode.prototype.createCell.call(this, columnIdentifier);
-        var value = this.data[columnIdentifier];
+        let cell = WebInspector.DataGridNode.prototype.createCell.call(this, columnIdentifier);
+        let value = this.data[columnIdentifier];
         
         switch (columnIdentifier) {
         case "value":
@@ -377,13 +377,13 @@ WebInspector.IDBDataGridNode.prototype = {
 
     _formatValue: function(cell, value)
     {
-        var type = value.subtype || value.type;
-        var contents = cell.createChild("div", "source-code console-formatted-" + type);
+        let type = value.subtype || value.type;
+        let contents = cell.createChild("div", "source-code console-formatted-" + type);
 
         switch (type) {
         case "object":
         case "array":
-            var section = new WebInspector.ObjectPropertiesSection(value, value.description)
+            let section = new WebInspector.ObjectPropertiesSection(value, value.description)
             section.editable = false;
             section.skipProto = true;
             contents.appendChild(section.element);

@@ -62,15 +62,15 @@ WebInspector.DOMBreakpointsSidebarPane.prototype = {
     {
         this._breakpointElements = {};
         this._reset();
-        var url = event.data;
+        let url = event.data;
         this._inspectedURL = url.removeURLFragment();
     },
 
     populateNodeContextMenu: function(node, contextMenu)
     {
-        var nodeBreakpoints = {};
-        for (var id in this._breakpointElements) {
-            var element = this._breakpointElements[id];
+        let nodeBreakpoints = {};
+        for (let id in this._breakpointElements) {
+            let element = this._breakpointElements[id];
             if (element._node === node)
                 nodeBreakpoints[element._type] = true;
         }
@@ -84,9 +84,9 @@ WebInspector.DOMBreakpointsSidebarPane.prototype = {
             this._saveBreakpoints();
         }
 
-        for (var key in this._breakpointTypes) {
-            var type = this._breakpointTypes[key];
-            var label = this._contextMenuLabels[type];
+        for (let key in this._breakpointTypes) {
+            let type = this._breakpointTypes[key];
+            let label = this._contextMenuLabels[type];
             contextMenu.appendCheckboxItem(label, toggleBreakpoint.bind(this, type), nodeBreakpoints[type]);
         }
     },
@@ -94,7 +94,7 @@ WebInspector.DOMBreakpointsSidebarPane.prototype = {
     createBreakpointHitStatusMessage: function(auxData, callback)
     {
         if (auxData.type === this._breakpointTypes.SubtreeModified) {
-            var targetNodeObject = WebInspector.RemoteObject.fromPayload(auxData["targetNode"]);
+            let targetNodeObject = WebInspector.RemoteObject.fromPayload(auxData["targetNode"]);
             function didPushNodeToFrontend(targetNodeId)
             {
                 if (targetNodeId)
@@ -108,11 +108,11 @@ WebInspector.DOMBreakpointsSidebarPane.prototype = {
 
     _doCreateBreakpointHitStatusMessage: function (auxData, targetNodeId, callback)
     {
-        var message;
-        var typeLabel = this._breakpointTypeLabels[auxData.type];
-        var linkifiedNode = WebInspector.DOMPresentationUtils.linkifyNodeById(auxData.nodeId);
-        var substitutions = [typeLabel, linkifiedNode];
-        var targetNode = "";
+        let message;
+        let typeLabel = this._breakpointTypeLabels[auxData.type];
+        let linkifiedNode = WebInspector.DOMPresentationUtils.linkifyNodeById(auxData.nodeId);
+        let substitutions = [typeLabel, linkifiedNode];
+        let targetNode = "";
         if (targetNodeId)
             targetNode = WebInspector.DOMPresentationUtils.linkifyNodeById(targetNodeId);
 
@@ -130,8 +130,8 @@ WebInspector.DOMBreakpointsSidebarPane.prototype = {
         } else
             message = "Paused on a \"%s\" breakpoint set on %s.";
 
-        var element = document.createElement("span");
-        var formatters = {
+        let element = document.createElement("span");
+        let formatters = {
             s: function(substitution)
             {
                 return substitution;
@@ -150,19 +150,19 @@ WebInspector.DOMBreakpointsSidebarPane.prototype = {
 
     _nodeRemoved: function(event)
     {
-        var node = event.data.node;
+        let node = event.data.node;
         this._removeBreakpointsForNode(event.data.node);
         if (!node.children)
             return;
-        for (var i = 0; i < node.children.length; ++i)
+        for (let i = 0; i < node.children.length; ++i)
             this._removeBreakpointsForNode(node.children[i]);
         this._saveBreakpoints();
     },
 
     _removeBreakpointsForNode: function(node)
     {
-        for (var id in this._breakpointElements) {
-            var element = this._breakpointElements[id];
+        for (let id in this._breakpointElements) {
+            let element = this._breakpointElements[id];
             if (element._node === node)
                 this._removeBreakpoint(element._node, element._type);
         }
@@ -170,16 +170,16 @@ WebInspector.DOMBreakpointsSidebarPane.prototype = {
 
     _setBreakpoint: function(node, type, enabled)
     {
-        var breakpointId = this._createBreakpointId(node.id, type);
+        let breakpointId = this._createBreakpointId(node.id, type);
         if (breakpointId in this._breakpointElements)
             return;
 
-        var element = document.createElement("li");
+        let element = document.createElement("li");
         element._node = node;
         element._type = type;
         element.addEventListener("contextmenu", this._contextMenu.bind(this, node, type), true);
 
-        var checkboxElement = document.createElement("input");
+        let checkboxElement = document.createElement("input");
         checkboxElement.className = "checkbox-elem";
         checkboxElement.type = "checkbox";
         checkboxElement.checked = enabled;
@@ -187,19 +187,19 @@ WebInspector.DOMBreakpointsSidebarPane.prototype = {
         element._checkboxElement = checkboxElement;
         element.appendChild(checkboxElement);
 
-        var labelElement = document.createElement("span");
+        let labelElement = document.createElement("span");
         element.appendChild(labelElement);
 
-        var linkifiedNode = WebInspector.DOMPresentationUtils.linkifyNodeById(node.id);
+        let linkifiedNode = WebInspector.DOMPresentationUtils.linkifyNodeById(node.id);
         linkifiedNode.addStyleClass("monospace");
         labelElement.appendChild(linkifiedNode);
 
-        var description = document.createElement("div");
+        let description = document.createElement("div");
         description.className = "source-text";
         description.textContent = this._breakpointTypeLabels[type];
         labelElement.appendChild(description);
 
-        var currentElement = this.listElement.firstChild;
+        let currentElement = this.listElement.firstChild;
         while (currentElement) {
             if (currentElement._type && currentElement._type < element._type)
                 break;
@@ -213,8 +213,8 @@ WebInspector.DOMBreakpointsSidebarPane.prototype = {
 
     _removeBreakpoint: function(node, type)
     {
-        var breakpointId = this._createBreakpointId(node.id, type);
-        var element = this._breakpointElements[breakpointId];
+        let breakpointId = this._createBreakpointId(node.id, type);
+        let element = this._breakpointElements[breakpointId];
         if (!element)
             return;
 
@@ -226,7 +226,7 @@ WebInspector.DOMBreakpointsSidebarPane.prototype = {
 
     _contextMenu: function(node, type, event)
     {
-        var contextMenu = new WebInspector.ContextMenu();
+        let contextMenu = new WebInspector.ContextMenu();
         function removeBreakpoint()
         {
             this._removeBreakpoint(node, type);
@@ -247,8 +247,8 @@ WebInspector.DOMBreakpointsSidebarPane.prototype = {
 
     highlightBreakpoint: function(auxData)
     {
-        var breakpointId = this._createBreakpointId(auxData.nodeId, auxData.type);
-        var element = this._breakpointElements[breakpointId];
+        let breakpointId = this._createBreakpointId(auxData.nodeId, auxData.type);
+        let element = this._breakpointElements[breakpointId];
         if (!element)
             return;
         this.expanded = true;
@@ -271,15 +271,15 @@ WebInspector.DOMBreakpointsSidebarPane.prototype = {
 
     _saveBreakpoints: function()
     {
-        var breakpoints = [];
-        var storedBreakpoints = WebInspector.settings.domBreakpoints.get();
-        for (var i = 0; i < storedBreakpoints.length; ++i) {
-            var breakpoint = storedBreakpoints[i];
+        let breakpoints = [];
+        let storedBreakpoints = WebInspector.settings.domBreakpoints.get();
+        for (let i = 0; i < storedBreakpoints.length; ++i) {
+            let breakpoint = storedBreakpoints[i];
             if (breakpoint.url !== this._inspectedURL)
                 breakpoints.push(breakpoint);
         }
-        for (var id in this._breakpointElements) {
-            var element = this._breakpointElements[id];
+        for (let id in this._breakpointElements) {
+            let element = this._breakpointElements[id];
             breakpoints.push({ url: this._inspectedURL, path: element._node.path(), type: element._type, enabled: element._checkboxElement.checked });
         }
         WebInspector.settings.domBreakpoints.set(breakpoints);
@@ -287,25 +287,25 @@ WebInspector.DOMBreakpointsSidebarPane.prototype = {
 
     restoreBreakpoints: function()
     {
-        var pathToBreakpoints = {};
+        let pathToBreakpoints = {};
 
         function didPushNodeByPathToFrontend(path, nodeId)
         {
-            var node = WebInspector.domAgent.nodeForId(nodeId);
+            let node = WebInspector.domAgent.nodeForId(nodeId);
             if (!node)
                 return;
 
-            var breakpoints = pathToBreakpoints[path];
-            for (var i = 0; i < breakpoints.length; ++i)
+            let breakpoints = pathToBreakpoints[path];
+            for (let i = 0; i < breakpoints.length; ++i)
                 this._setBreakpoint(node, breakpoints[i].type, breakpoints[i].enabled);
         }
 
-        var breakpoints = WebInspector.settings.domBreakpoints.get();
-        for (var i = 0; i < breakpoints.length; ++i) {
-            var breakpoint = breakpoints[i];
+        let breakpoints = WebInspector.settings.domBreakpoints.get();
+        for (let i = 0; i < breakpoints.length; ++i) {
+            let breakpoint = breakpoints[i];
             if (breakpoint.url !== this._inspectedURL)
                 continue;
-            var path = breakpoint.path;
+            let path = breakpoint.path;
             if (!pathToBreakpoints[path]) {
                 pathToBreakpoints[path] = [];
                 WebInspector.domAgent.pushNodeByPathToFrontend(path, didPushNodeByPathToFrontend.bind(this, path));

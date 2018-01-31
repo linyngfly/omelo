@@ -5,7 +5,7 @@ Ext.onReady(function(){
 	 * system monitor data store
 	 * without the data 'networkInterfaces' 
 	 */
-	var sysStore = Ext.create('Ext.data.Store', {
+	let sysStore = Ext.create('Ext.data.Store', {
 		id:'sysStore',
 		autoLoad:false,
 		pageSize:5,
@@ -27,7 +27,7 @@ Ext.onReady(function(){
 	/**
 	 * system's detailed  information
 	 */
-	var sysPanel = Ext.create('Ext.grid.Panel', {
+	let sysPanel = Ext.create('Ext.grid.Panel', {
 		id:'gridPanelId',
 	    // title: 'more information',
 		region:'center',
@@ -78,7 +78,7 @@ Ext.onReady(function(){
 	/**
 	 * the overall layout
 	 */
-	var viewport=new Ext.Viewport({
+	let viewport=new Ext.Viewport({
 	    layout:'border',
 	    items:[sysPanel]
 	});
@@ -86,7 +86,7 @@ Ext.onReady(function(){
 	refresh();
 });
 
-var refresh = function(){
+let refresh = function(){
 	window.parent.client.request('systemInfo', null, function(err, msg) {
 		if(err) {
 			console.error('fail to request system info:');
@@ -95,11 +95,11 @@ var refresh = function(){
 		}
 
 		// compose display data
-		var data = [];
-		for(var id in msg) {
+		let data = [];
+		for(let id in msg) {
 			data.push(msg[id]);
 		}
-		var store = Ext.getCmp('gridPanelId').getStore();
+		let store = Ext.getCmp('gridPanelId').getStore();
 		store.loadData(data);
 	});
 }
@@ -107,7 +107,7 @@ var refresh = function(){
 /*
  * update the data of gkPanel
  */
-var contentUpdate = function(system, cpu, start_time){
+let contentUpdate = function(system, cpu, start_time){
     document.getElementById("system").innerHTML = system;
     document.getElementById("cpu").innerHTML = cpu;
     document.getElementById("start_time").innerHTML = start_time;

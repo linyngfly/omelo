@@ -41,10 +41,10 @@ WebInspector.ResourceJSONView = function(resource, parsedJSON)
 
 WebInspector.ResourceJSONView.parseJSON = function(text)
 {
-    var prefix = "";
+    let prefix = "";
 
     // Trim while(1), for(;;), weird numbers, etc. We need JSON start.
-    var start = /[{[]/.exec(text);
+    let start = /[{[]/.exec(text);
     if (start && start.index) {
         prefix = text.substring(0, start.index);
         text = text.substring(start.index);
@@ -60,13 +60,13 @@ WebInspector.ResourceJSONView.parseJSON = function(text)
 WebInspector.ResourceJSONView.parseJSONP = function(text)
 {
     // Taking everything between first and last parentheses
-    var start = text.indexOf("(");
-    var end = text.lastIndexOf(")");
+    let start = text.indexOf("(");
+    let end = text.lastIndexOf(")");
     if (start == -1 || end == -1 || end < start)
         return;
 
-    var prefix = text.substring(0, start + 1);
-    var suffix = text.substring(end);
+    let prefix = text.substring(0, start + 1);
+    let suffix = text.substring(end);
     text = text.substring(start + 1, end);
 
     try {
@@ -93,9 +93,9 @@ WebInspector.ResourceJSONView.prototype = {
             return;
         this._initialized = true;
 
-        var obj = WebInspector.RemoteObject.fromLocalObject(this._parsedJSON.data);
-        var title = this._parsedJSON.prefix + obj.description + this._parsedJSON.suffix;
-        var section = new WebInspector.ObjectPropertiesSection(obj, title);
+        let obj = WebInspector.RemoteObject.fromLocalObject(this._parsedJSON.data);
+        let title = this._parsedJSON.prefix + obj.description + this._parsedJSON.suffix;
+        let section = new WebInspector.ObjectPropertiesSection(obj, title);
         section.expand();
         section.editable = false;
         this.element.appendChild(section.element);

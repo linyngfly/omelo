@@ -1,4 +1,4 @@
-var Event = function(app) {
+let Event = function(app) {
 	this.app = app;
 };
 

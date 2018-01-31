@@ -11,12 +11,12 @@
  * MIT Licensed
  */
 
-var logger = require('pomelo-logger').getLogger('bearcat-ha', 'WatcherStrategy');
-var Utils = require('../util/utils');
-var WatcherStrategy = {};
+let logger = require('pomelo-logger').getLogger('bearcat-ha', 'WatcherStrategy');
+let Utils = require('../util/utils');
+let WatcherStrategy = {};
 
 WatcherStrategy.elect = function(data) {
-  var votes = {};
+  let votes = {};
 
   data.forEach(function(item) {
     item.available.forEach(function(i) {
@@ -36,10 +36,10 @@ WatcherStrategy.elect = function(data) {
     });
   });
 
-  var available = [];
-  var unavailable = [];
+  let available = [];
+  let unavailable = [];
 
-  for (var name in votes) {
+  for (let name in votes) {
     if (votes[name] > 0) {
       available.push(name);
     } else {
@@ -64,7 +64,7 @@ WatcherStrategy.elect = function(data) {
  * @returns {boolean} return true means the node is available if a majority of watchers say this node is available
  */
 WatcherStrategy.electNode = function(node, snapshots) {
-  var count = 0;
+  let count = 0;
   snapshots.forEach(function(snapshot) {
     if (snapshot.unavailable.indexOf(node) > -1) {
       count -= 1;

@@ -2,7 +2,7 @@ Ext.onReady(function(){
 
 	Ext.BLANK_IMAGE_URL ='../ext-4.0.7-gpl/resources/themes/images/default/tree/s.gif'; 
 	
-var rpcStore = Ext.create('Ext.data.Store', {
+let rpcStore = Ext.create('Ext.data.Store', {
 	id:'reqStoreId',
 	autoLoad:false,
 	pageSize:5,
@@ -17,11 +17,11 @@ var rpcStore = Ext.create('Ext.data.Store', {
 });
 
 //server comboBox
-    var serverStore = Ext.create('Ext.data.Store', {
+    let serverStore = Ext.create('Ext.data.Store', {
 		fields: ['name', 'serverID']
 	});
 
-    var serverCom = Ext.create('Ext.form.ComboBox', {
+    let serverCom = Ext.create('Ext.form.ComboBox', {
 		id:'serverComId', 
 		fieldLabel: 'Server',
 		labelWidth: 60,
@@ -34,7 +34,7 @@ var rpcStore = Ext.create('Ext.data.Store', {
 /**
  * gridPanel,detail message
  */
-var rpcGrid=Ext.create('Ext.grid.Panel', {
+let rpcGrid=Ext.create('Ext.grid.Panel', {
 	id:'rpcGridId',
 	region:'center',
     store: rpcStore,
@@ -69,8 +69,8 @@ var rpcGrid=Ext.create('Ext.grid.Panel', {
 	]
 });
 rpcGrid.addListener('itemdblclick', function(rpcGrid, rowindex, e){
-	var theGrid=Ext.getCmp('conGridId');
-	var record=rpcGrid.getSelectionModel().getSelection();
+	let theGrid=Ext.getCmp('conGridId');
+	let record=rpcGrid.getSelectionModel().getSelection();
 	if(record.length>1){
 		alert('only one data is required!');
 		return;
@@ -78,10 +78,10 @@ rpcGrid.addListener('itemdblclick', function(rpcGrid, rowindex, e){
 	if(record.length<1){
 		alert('please choose one data!')
 	}
-	var data=record[0].data.params;
+	let data=record[0].data.params;
 	gridDetailShow(data);
 });
-var countStore=Ext.create('Ext.data.Store',{
+let countStore=Ext.create('Ext.data.Store',{
 	id:'countStoreId',
 	autoLoad:false,
 	pageSize:5,
@@ -94,7 +94,7 @@ var countStore=Ext.create('Ext.data.Store',{
 		}
 	}
 });
-var countGrid=Ext.create('Ext.grid.Panel',{
+let countGrid=Ext.create('Ext.grid.Panel',{
 	id:'countGridId',
 	region:'south',
 	store:countStore,
@@ -108,7 +108,7 @@ var countGrid=Ext.create('Ext.grid.Panel',{
 		{text:'avgTime',dataIndex:'avgTime',width:200}
 	]
 });
-var viewport=new Ext.Viewport({
+let viewport=new Ext.Viewport({
 	    layout:'border',
 	    items:[rpcGrid,countGrid]
 	});
@@ -121,11 +121,11 @@ var viewport=new Ext.Viewport({
 // 	if(rpcLogData.length<1){
 // 		return;
 // 	}
-// 	var maxTime=rpcLogData[0].timeUsed;
-// 	var minTime=rpcLogData[0].timeUsed;
-// 	var totalTime=0;
-//     for(var i=1;i<rpcLogData.length;i++){
-//     	var data=rpcLogData[i].timeUsed;
+// 	let maxTime=rpcLogData[0].timeUsed;
+// 	let minTime=rpcLogData[0].timeUsed;
+// 	let totalTime=0;
+//     for(let i=1;i<rpcLogData.length;i++){
+//     	let data=rpcLogData[i].timeUsed;
 //     	if(data<=minTime){minTime=data};
 //     	if(data>=maxTime){maxTime=data};
 //     	totalTime+=data;
@@ -137,8 +137,8 @@ var viewport=new Ext.Viewport({
 // }
 //{number:5,logfile:'rpc-log',serverId:"area-server-1"}
 function refresh(){
-	var number = Ext.getCmp('numberfieldId').getValue();
-	var serverId = Ext.getCmp('serverComId').getValue();
+	let number = Ext.getCmp('numberfieldId').getValue();
+	let serverId = Ext.getCmp('serverComId').getValue();
 	console.log(number);
 	console.log(serverId)
 	if(!number || !serverId){
@@ -154,9 +154,9 @@ function refresh(){
     console.log(msg);
  
     // compose display data
-    var data = [];
-    /*for(var id in msg) {
-    	for(var i=0;i<msg[id].length;i++){
+    let data = [];
+    /*for(let id in msg) {
+    	for(let i=0;i<msg[id].length;i++){
     		data.push({
 		      	serverId : id,
 		      	name : msg[id][i]['name'],
@@ -165,8 +165,8 @@ function refresh(){
 		    });
     	}
     }*/
-    var _msg = msg.body.dataArray;
-    for(var i=0;i<_msg.length;i++){
+    let _msg = msg.body.dataArray;
+    for(let i=0;i<_msg.length;i++){
     	data.push({
     		time : _msg[i].time,
     		serverId : _msg[i].serverId,
@@ -175,20 +175,20 @@ function refresh(){
     		params : _msg[i].params
     	});
     }
-    var store = Ext.getCmp('rpcGridId').getStore();
+    let store = Ext.getCmp('rpcGridId').getStore();
     store.loadData(data);
     list();
   });
 }	
 	
-var list = function() {
+let list = function() {
 	window.parent.client.request('scripts', {command: 'list'}, function(err, msg) {
 		if(err) {
 			alert(err);
 			return;
 		}
 		console.log(msg);
-		var servers = [], scripts = [], i, l, item;
+		let servers = [], scripts = [], i, l, item;
 		for(i=0, l=msg.servers.length; i<l; i++) {
 			item = msg.servers[i];
 			servers.push({name: item, serverID: item});

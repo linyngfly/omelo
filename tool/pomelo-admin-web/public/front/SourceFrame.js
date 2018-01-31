@@ -41,7 +41,7 @@ WebInspector.SourceFrame = function(url)
 
     this._textModel = new WebInspector.TextEditorModel();
 
-    var textViewerDelegate = new WebInspector.TextViewerDelegateForSourceFrame(this);
+    let textViewerDelegate = new WebInspector.TextViewerDelegateForSourceFrame(this);
     this._textViewer = new WebInspector.TextViewer(this._textModel, WebInspector.platform(), this._url, textViewerDelegate);
 
     this._currentSearchResultIndex = -1;
@@ -60,7 +60,7 @@ WebInspector.SourceFrame.Events = {
 
 WebInspector.SourceFrame.createSearchRegex = function(query)
 {
-    var regex;
+    let regex;
 
     // First try creating regex if user knows the / / hint.
     try {
@@ -148,8 +148,8 @@ WebInspector.SourceFrame.prototype = {
 
     clearMessages: function()
     {
-        for (var line in this._messageBubbles) {
-            var bubble = this._messageBubbles[line];
+        for (let line in this._messageBubbles) {
+            let bubble = this._messageBubbles[line];
             bubble.parentNode.removeChild(bubble);
         }
 
@@ -267,7 +267,7 @@ WebInspector.SourceFrame.prototype = {
             this._currentSearchResultIndex = -1;
             this._searchResults = [];
 
-            var regex = WebInspector.SourceFrame.createSearchRegex(query);
+            let regex = WebInspector.SourceFrame.createSearchRegex(query);
             this._searchResults = this._collectRegexMatches(regex);
 
             callback(this, this._searchResults.length);
@@ -342,12 +342,12 @@ WebInspector.SourceFrame.prototype = {
 
     _collectRegexMatches: function(regexObject)
     {
-        var ranges = [];
-        for (var i = 0; i < this._textModel.linesCount; ++i) {
-            var line = this._textModel.line(i);
-            var offset = 0;
+        let ranges = [];
+        for (let i = 0; i < this._textModel.linesCount; ++i) {
+            let line = this._textModel.line(i);
+            let offset = 0;
             do {
-                var match = regexObject.exec(line);
+                let match = regexObject.exec(line);
                 if (match) {
                     if (match[0].length)
                         ranges.push(new WebInspector.TextRange(i, offset + match.index, i, offset + match.index + match[0].length));
@@ -366,7 +366,7 @@ WebInspector.SourceFrame.prototype = {
 
         function addDecorations(textViewer, lines, className)
         {
-            for (var i = 0; i < lines.length; ++i)
+            for (let i = 0; i < lines.length; ++i)
                 textViewer.addDecoration(lines[i], className);
         }
         addDecorations(this._textViewer, this._diffLines.added, "webkit-added-line");
@@ -378,7 +378,7 @@ WebInspector.SourceFrame.prototype = {
     {
         function removeDecorations(textViewer, lines, className)
         {
-            for (var i = 0; i < lines.length; ++i)
+            for (let i = 0; i < lines.length; ++i)
                 textViewer.removeDecoration(lines[i], className);
         }
         removeDecorations(this._textViewer, this._diffLines.added, "webkit-added-line");
@@ -388,8 +388,8 @@ WebInspector.SourceFrame.prototype = {
 
     _addExistingMessagesToSource: function()
     {
-        var length = this._messages.length;
-        for (var i = 0; i < length; ++i)
+        let length = this._messages.length;
+        for (let i = 0; i < length; ++i)
             this.addMessageToSource(this._messages[i].line - 1, this._messages[i]);
     },
 
@@ -400,7 +400,7 @@ WebInspector.SourceFrame.prototype = {
         if (lineNumber < 0)
             lineNumber = 0;
 
-        var messageBubbleElement = this._messageBubbles[lineNumber];
+        let messageBubbleElement = this._messageBubbles[lineNumber];
         if (!messageBubbleElement || messageBubbleElement.nodeType !== Node.ELEMENT_NODE || !messageBubbleElement.hasStyleClass("webkit-html-message-bubble")) {
             messageBubbleElement = document.createElement("div");
             messageBubbleElement.className = "webkit-html-message-bubble";
@@ -408,13 +408,13 @@ WebInspector.SourceFrame.prototype = {
             this._textViewer.addDecoration(lineNumber, messageBubbleElement);
         }
 
-        var rowMessages = this._rowMessages[lineNumber];
+        let rowMessages = this._rowMessages[lineNumber];
         if (!rowMessages) {
             rowMessages = [];
             this._rowMessages[lineNumber] = rowMessages;
         }
 
-        for (var i = 0; i < rowMessages.length; ++i) {
+        for (let i = 0; i < rowMessages.length; ++i) {
             if (rowMessages[i].consoleMessage.isEqual(msg)) {
                 rowMessages[i].repeatCount = msg.totalRepeatCount;
                 this._updateMessageRepeatCount(rowMessages[i]);
@@ -422,10 +422,10 @@ WebInspector.SourceFrame.prototype = {
             }
         }
 
-        var rowMessage = { consoleMessage: msg };
+        let rowMessage = { consoleMessage: msg };
         rowMessages.push(rowMessage);
 
-        var imageURL;
+        let imageURL;
         switch (msg.level) {
             case WebInspector.ConsoleMessage.MessageLevel.Error:
                 messageBubbleElement.addStyleClass("webkit-html-error-message");
@@ -437,12 +437,12 @@ WebInspector.SourceFrame.prototype = {
                 break;
         }
 
-        var messageLineElement = document.createElement("div");
+        let messageLineElement = document.createElement("div");
         messageLineElement.className = "webkit-html-message-line";
         messageBubbleElement.appendChild(messageLineElement);
 
         // Create the image element in the Inspector's document so we can use relative image URLs.
-        var image = document.createElement("img");
+        let image = document.createElement("img");
         image.src = imageURL;
         image.className = "webkit-html-message-icon";
         messageLineElement.appendChild(image);
@@ -459,7 +459,7 @@ WebInspector.SourceFrame.prototype = {
             return;
 
         if (!rowMessage.repeatCountElement) {
-            var repeatCountElement = document.createElement("span");
+            let repeatCountElement = document.createElement("span");
             rowMessage.element.appendChild(repeatCountElement);
             rowMessage.repeatCountElement = repeatCountElement;
         }

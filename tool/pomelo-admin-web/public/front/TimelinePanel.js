@@ -63,7 +63,7 @@ WebInspector.TimelinePanel = function()
     this._overviewPane.addEventListener(WebInspector.TimelineOverviewPane.Events.ModeChanged, this._timelinesOverviewModeChanged, this);
     WebInspector.settings.memoryCounterGraphsHeight = WebInspector.settings.createSetting("memoryCounterGraphsHeight", 150);
 
-    var itemsTreeElement = new WebInspector.SidebarSectionTreeElement(WebInspector.UIString("RECORDS"), {}, true);
+    let itemsTreeElement = new WebInspector.SidebarSectionTreeElement(WebInspector.UIString("RECORDS"), {}, true);
     this.sidebarTree.appendChild(itemsTreeElement);
 
     this._sidebarListElement = document.createElement("div");
@@ -95,7 +95,7 @@ WebInspector.TimelinePanel = function()
     this._itemsGraphsElement.appendChild(this._expandElements);
 
     this._calculator = new WebInspector.TimelineCalculator(this._presentationModel);
-    var shortRecordThresholdTitle = Number.secondsToString(WebInspector.TimelinePresentationModel.shortRecordThreshold);
+    let shortRecordThresholdTitle = Number.secondsToString(WebInspector.TimelinePresentationModel.shortRecordThreshold);
     this._showShortRecordsTitleText = WebInspector.UIString("Show the records that are shorter than %s", shortRecordThresholdTitle);
     this._hideShortRecordsTitleText = WebInspector.UIString("Hide the records that are shorter than %s", shortRecordThresholdTitle);
     this._createStatusbarButtons();
@@ -146,7 +146,7 @@ WebInspector.TimelinePanel.prototype = {
      */
     _splitterDragging: function(event)
     {
-        var top = event.pageY + this._dragOffset
+        let top = event.pageY + this._dragOffset
         this._setSplitterPosition(top);
         event.preventDefault();
         this._refresh();
@@ -186,7 +186,7 @@ WebInspector.TimelinePanel.prototype = {
 
     get statusBarItems()
     {
-        var statusBarItems = [ this.toggleFilterButton.element, this.toggleTimelineButton.element, this.clearButton.element, this.garbageCollectButton.element, this._glueParentButton.element, this.statusBarFilters ];
+        let statusBarItems = [ this.toggleFilterButton.element, this.toggleTimelineButton.element, this.clearButton.element, this.garbageCollectButton.element, this._glueParentButton.element, this.statusBarFilters ];
 
         return statusBarItems;
     },
@@ -220,29 +220,29 @@ WebInspector.TimelinePanel.prototype = {
 
         this.statusBarFilters = document.createElement("div");
         this.statusBarFilters.className = "status-bar-items";
-        var categories = this._presentationModel.categories;
-        for (var categoryName in categories) {
-            var category = categories[categoryName];
+        let categories = this._presentationModel.categories;
+        for (let categoryName in categories) {
+            let category = categories[categoryName];
             this.statusBarFilters.appendChild(this._createTimelineCategoryStatusBarCheckbox(category, this._onCategoryCheckboxClicked.bind(this, category)));
         }
     },
 
     _createTimelineCategoryStatusBarCheckbox: function(category, onCheckboxClicked)
     {
-        var labelContainer = document.createElement("div");
+        let labelContainer = document.createElement("div");
         labelContainer.addStyleClass("timeline-category-statusbar-item");
         labelContainer.addStyleClass("timeline-category-" + category.name);
         labelContainer.addStyleClass("status-bar-item");
 
-        var label = document.createElement("label");
-        var checkElement = document.createElement("input");
+        let label = document.createElement("label");
+        let checkElement = document.createElement("input");
         checkElement.type = "checkbox";
         checkElement.className = "timeline-category-checkbox";
         checkElement.checked = true;
         checkElement.addEventListener("click", onCheckboxClicked, false);
         label.appendChild(checkElement);
 
-        var typeElement = document.createElement("span");
+        let typeElement = document.createElement("span");
         typeElement.className = "type";
         typeElement.textContent = category.title;
         label.appendChild(typeElement);
@@ -259,9 +259,9 @@ WebInspector.TimelinePanel.prototype = {
 
     _registerShortcuts: function()
     {
-        var shortcut = WebInspector.KeyboardShortcut;
-        var modifiers = shortcut.Modifiers;
-        var section = WebInspector.shortcutsScreen.section(WebInspector.UIString("Timeline Panel"));
+        let shortcut = WebInspector.KeyboardShortcut;
+        let modifiers = shortcut.Modifiers;
+        let section = WebInspector.shortcutsScreen.section(WebInspector.UIString("Timeline Panel"));
 
         this._shortcuts[shortcut.makeKey("e", modifiers.CtrlOrMeta)] = this._toggleTimelineButtonClicked.bind(this);
         section.addKey(shortcut.shortcutToString("e", modifiers.CtrlOrMeta), WebInspector.UIString("Start/stop recording"));
@@ -280,7 +280,7 @@ WebInspector.TimelinePanel.prototype = {
         if (this._fileSelectorElement)
             this.element.removeChild(this._fileSelectorElement);
 
-        var fileSelectorElement = document.createElement("input");
+        let fileSelectorElement = document.createElement("input");
         fileSelectorElement.type = "file";
         fileSelectorElement.style.zIndex = -1;
         fileSelectorElement.style.position = "absolute";
@@ -291,7 +291,7 @@ WebInspector.TimelinePanel.prototype = {
 
     _contextMenu: function(event)
     {
-        var contextMenu = new WebInspector.ContextMenu();
+        let contextMenu = new WebInspector.ContextMenu();
         if (InspectorFrontendHost.canSaveAs())
             contextMenu.appendItem(WebInspector.UIString("Save Timeline data\u2026"), this._saveToFile.bind(this));
         contextMenu.appendItem(WebInspector.UIString("Load Timeline data\u2026"), this._fileSelectorElement.click.bind(this._fileSelectorElement));
@@ -326,20 +326,20 @@ WebInspector.TimelinePanel.prototype = {
     _updateEventDividers: function()
     {
         this._timelineGrid.removeEventDividers();
-        var clientWidth = this._graphRowsElement.offsetWidth - this._expandOffset;
-        var dividers = [];
+        let clientWidth = this._graphRowsElement.offsetWidth - this._expandOffset;
+        let dividers = [];
         // Only show frames if we're zoomed close enough -- otherwise they'd be to dense to be useful and will overpopulate DOM.
-        var showFrames = this.calculator.boundarySpan < 1.0 && this._verticalOverview;
+        let showFrames = this.calculator.boundarySpan < 1.0 && this._verticalOverview;
 
-        for (var i = 0; i < this._timeStampRecords.length; ++i) {
-            var record = this._timeStampRecords[i];
+        for (let i = 0; i < this._timeStampRecords.length; ++i) {
+            let record = this._timeStampRecords[i];
             if (record.type === WebInspector.TimelineModel.RecordType.BeginFrame && !showFrames)
                 continue;
-            var positions = this._calculator.computeBarGraphWindowPosition(record, clientWidth);
-            var dividerPosition = Math.round(positions.left);
+            let positions = this._calculator.computeBarGraphWindowPosition(record, clientWidth);
+            let dividerPosition = Math.round(positions.left);
             if (dividerPosition < 0 || dividerPosition >= clientWidth || dividers[dividerPosition])
                 continue;
-            var divider = this._createEventDivider(record);
+            let divider = this._createEventDivider(record);
             divider.style.left = (dividerPosition + this._expandOffset) + "px";
             dividers[dividerPosition] = divider;
         }
@@ -349,11 +349,11 @@ WebInspector.TimelinePanel.prototype = {
 
     _createEventDivider: function(record)
     {
-        var eventDivider = document.createElement("div");
+        let eventDivider = document.createElement("div");
         eventDivider.className = "resources-event-divider";
-        var recordTypes = WebInspector.TimelineModel.RecordType;
+        let recordTypes = WebInspector.TimelineModel.RecordType;
 
-        var eventDividerPadding = document.createElement("div");
+        let eventDividerPadding = document.createElement("div");
         eventDividerPadding.className = "resources-event-divider-padding";
         eventDividerPadding.title = record.title;
 
@@ -373,8 +373,8 @@ WebInspector.TimelinePanel.prototype = {
 
     _timelinesOverviewModeChanged: function(event)
     {
-        var shouldShowMemory = event.data === WebInspector.TimelineOverviewPane.Mode.Memory;
-        var verticalOverview = event.data === WebInspector.TimelineOverviewPane.Mode.EventsVertical;
+        let shouldShowMemory = event.data === WebInspector.TimelineOverviewPane.Mode.Memory;
+        let verticalOverview = event.data === WebInspector.TimelineOverviewPane.Mode.EventsVertical;
         if (verticalOverview !== this._verticalOverview) {
             this._verticalOverview = verticalOverview;
             this._glueParentButton.disabled = verticalOverview;
@@ -435,8 +435,8 @@ WebInspector.TimelinePanel.prototype = {
     _repopulateRecords: function()
     {
         this._resetPanel();
-        var records = this._model.records;
-        for (var i = 0; i < records.length; ++i)
+        let records = this._model.records;
+        for (let i = 0; i < records.length; ++i)
             this._innerAddRecordToTimeline(records[i], this._rootRecord());
         this._scheduleRefresh(false);
     },
@@ -452,10 +452,10 @@ WebInspector.TimelinePanel.prototype = {
 
     _innerAddRecordToTimeline: function(record, parentRecord)
     {
-        var formattedRecord = this._presentationModel.addRecord(record, parentRecord);
+        let formattedRecord = this._presentationModel.addRecord(record, parentRecord);
         ++this._allRecordsCount;
-        var recordTypes = WebInspector.TimelineModel.RecordType;
-        var timeStampRecords = this._timeStampRecords;
+        let recordTypes = WebInspector.TimelineModel.RecordType;
+        let timeStampRecords = this._timeStampRecords;
         function addTimestampRecords(record)
         {
             if (record.type === recordTypes.MarkDOMContent || record.type === recordTypes.MarkLoad ||
@@ -468,7 +468,7 @@ WebInspector.TimelinePanel.prototype = {
 
     sidebarResized: function(event)
     {
-        var width = event.data;
+        let width = event.data;
         this._sidebarBackgroundElement.style.width = width + "px";
         this._scheduleRefresh(false);
         this._overviewPane.sidebarResized(width);
@@ -528,8 +528,8 @@ WebInspector.TimelinePanel.prototype = {
     _onScroll: function(event)
     {
         this._closeRecordDetails();
-        var scrollTop = this._containerElement.scrollTop;
-        var dividersTop = Math.max(0, scrollTop);
+        let scrollTop = this._containerElement.scrollTop;
+        let dividersTop = Math.max(0, scrollTop);
         this._timelineGrid.setScrollAndDividerTop(scrollTop, dividersTop);
         this._scheduleRefresh(true);
     },
@@ -562,7 +562,7 @@ WebInspector.TimelinePanel.prototype = {
         if (!this._boundariesAreValid)
             this._calculator.setWindow(this._overviewPane.windowStartTime(), this._overviewPane.windowEndTime());
 
-        var recordsInWindowCount = this._refreshRecords(!this._boundariesAreValid);
+        let recordsInWindowCount = this._refreshRecords(!this._boundariesAreValid);
         this._updateRecordsCounter(recordsInWindowCount);
         if(!this._boundariesAreValid)
             this._updateEventDividers();
@@ -575,10 +575,10 @@ WebInspector.TimelinePanel.prototype = {
     {
         if (this._verticalOverview)
             return;
-        var recordsInWindow = this._presentationModel.filteredRecords();
-        var recordToReveal;
-        for (var i = 0; i < recordsInWindow.length; ++i) {
-            var record = recordsInWindow[i];
+        let recordsInWindow = this._presentationModel.filteredRecords();
+        let recordToReveal;
+        for (let i = 0; i < recordsInWindow.length; ++i) {
+            let record = recordsInWindow[i];
             if (record.containsTime(time)) {
                 recordToReveal = record;
                 break;
@@ -595,26 +595,26 @@ WebInspector.TimelinePanel.prototype = {
         }
 
         // Expand all ancestors.
-        for (var parent = recordToReveal.parent; parent !== this._rootRecord(); parent = parent.parent)
+        for (let parent = recordToReveal.parent; parent !== this._rootRecord(); parent = parent.parent)
             parent.collapsed = false;
-        var index = recordsInWindow.indexOf(recordToReveal);
+        let index = recordsInWindow.indexOf(recordToReveal);
         this._containerElement.scrollTop = index * WebInspector.TimelinePanel.rowHeight;
     },
 
     _refreshRecords: function(updateBoundaries)
     {
-        var recordsInWindow = this._presentationModel.filteredRecords();
+        let recordsInWindow = this._presentationModel.filteredRecords();
 
         // Calculate the visible area.
         this._scrollTop = this._containerElement.scrollTop;
-        var visibleTop = this._scrollTop;
-        var visibleBottom = visibleTop + this._containerElement.clientHeight;
+        let visibleTop = this._scrollTop;
+        let visibleBottom = visibleTop + this._containerElement.clientHeight;
 
         const rowHeight = WebInspector.TimelinePanel.rowHeight;
 
         // Convert visible area to visible indexes. Always include top-level record for a visible nested record.
-        var startIndex = Math.max(0, Math.min(Math.floor(visibleTop / rowHeight) - 1, recordsInWindow.length - 1));
-        var endIndex = Math.min(recordsInWindow.length, Math.ceil(visibleBottom / rowHeight));
+        let startIndex = Math.max(0, Math.min(Math.floor(visibleTop / rowHeight) - 1, recordsInWindow.length - 1));
+        let endIndex = Math.min(recordsInWindow.length, Math.ceil(visibleBottom / rowHeight));
 
         // Resize gaps first.
         const top = (startIndex * rowHeight) + "px";
@@ -624,22 +624,22 @@ WebInspector.TimelinePanel.prototype = {
         this._bottomGapElement.style.height = (recordsInWindow.length - endIndex) * rowHeight + "px";
 
         // Update visible rows.
-        var listRowElement = this._sidebarListElement.firstChild;
-        var width = this._graphRowsElement.offsetWidth;
+        let listRowElement = this._sidebarListElement.firstChild;
+        let width = this._graphRowsElement.offsetWidth;
         this._itemsGraphsElement.removeChild(this._graphRowsElement);
-        var graphRowElement = this._graphRowsElement.firstChild;
-        var scheduleRefreshCallback = this._scheduleRefresh.bind(this, true);
+        let graphRowElement = this._graphRowsElement.firstChild;
+        let scheduleRefreshCallback = this._scheduleRefresh.bind(this, true);
         this._itemsGraphsElement.removeChild(this._expandElements);
         this._expandElements.removeChildren();
 
-        for (var i = 0; i < endIndex; ++i) {
-            var record = recordsInWindow[i];
-            var isEven = !(i % 2);
+        for (let i = 0; i < endIndex; ++i) {
+            let record = recordsInWindow[i];
+            let isEven = !(i % 2);
 
             if (i < startIndex) {
-                var lastChildIndex = i + record.visibleChildrenCount;
+                let lastChildIndex = i + record.visibleChildrenCount;
                 if (lastChildIndex >= startIndex && lastChildIndex < endIndex) {
-                    var expandElement = new WebInspector.TimelineExpandableElement(this._expandElements);
+                    let expandElement = new WebInspector.TimelineExpandableElement(this._expandElements);
                     expandElement._update(record, i, this._calculator.computeBarGraphWindowPosition(record, width - this._expandOffset));
                 }
             } else {
@@ -662,12 +662,12 @@ WebInspector.TimelinePanel.prototype = {
 
         // Remove extra rows.
         while (listRowElement) {
-            var nextElement = listRowElement.nextSibling;
+            let nextElement = listRowElement.nextSibling;
             listRowElement.row.dispose();
             listRowElement = nextElement;
         }
         while (graphRowElement) {
-            var nextElement = graphRowElement.nextSibling;
+            let nextElement = graphRowElement.nextSibling;
             graphRowElement.row.dispose();
             graphRowElement = nextElement;
         }
@@ -707,7 +707,7 @@ WebInspector.TimelinePanel.prototype = {
 
     _mouseMove: function(e)
     {
-        var anchor = this._getPopoverAnchor(e.target);
+        let anchor = this._getPopoverAnchor(e.target);
 
         if (anchor && anchor.row._record.type === "Paint")
             this._highlightRect(anchor.row._record);
@@ -737,7 +737,7 @@ WebInspector.TimelinePanel.prototype = {
      */
     _showPopover: function(anchor, popover)
     {
-        var record = anchor.row._record;
+        let record = anchor.row._record;
         popover.show(record.generatePopupContent(this._calculator), anchor);
     },
 
@@ -761,10 +761,10 @@ WebInspector.TimelineCalculator = function(presentationModel)
 WebInspector.TimelineCalculator.prototype = {
     computeBarGraphPercentages: function(record)
     {
-        var start = (record.startTime - this.minimumBoundary) / this.boundarySpan * 100;
-        var end = (record.startTime + record.selfTime - this.minimumBoundary) / this.boundarySpan * 100;
-        var endWithChildren = (record.lastChildEndTime - this.minimumBoundary) / this.boundarySpan * 100;
-        var cpuWidth = record.cpuTime / this.boundarySpan * 100;
+        let start = (record.startTime - this.minimumBoundary) / this.boundarySpan * 100;
+        let end = (record.startTime + record.selfTime - this.minimumBoundary) / this.boundarySpan * 100;
+        let endWithChildren = (record.lastChildEndTime - this.minimumBoundary) / this.boundarySpan * 100;
+        let cpuWidth = record.cpuTime / this.boundarySpan * 100;
         return {start: start, end: end, endWithChildren: endWithChildren, cpuWidth: cpuWidth};
     },
 
@@ -772,13 +772,13 @@ WebInspector.TimelineCalculator.prototype = {
     {
         const minWidth = 5;
         const borderWidth = 4;
-        var workingArea = clientWidth - minWidth - borderWidth;
-        var percentages = this.computeBarGraphPercentages(record);
+        let workingArea = clientWidth - minWidth - borderWidth;
+        let percentages = this.computeBarGraphPercentages(record);
 
-        var left = percentages.start / 100 * workingArea;
-        var width = (percentages.end - percentages.start) / 100 * workingArea + minWidth;
-        var widthWithChildren =  (percentages.endWithChildren - percentages.start) / 100 * workingArea;
-        var cpuWidth = percentages.cpuWidth / 100 * workingArea + minWidth;
+        let left = percentages.start / 100 * workingArea;
+        let width = (percentages.end - percentages.start) / 100 * workingArea + minWidth;
+        let widthWithChildren =  (percentages.endWithChildren - percentages.start) / 100 * workingArea;
+        let cpuWidth = percentages.cpuWidth / 100 * workingArea + minWidth;
         if (percentages.endWithChildren > percentages.end)
             widthWithChildren += borderWidth + minWidth;
         return {left: left, width: width, widthWithChildren: widthWithChildren, cpuWidth: cpuWidth};
@@ -805,7 +805,7 @@ WebInspector.TimelineRecordListRow = function()
     this.element = document.createElement("div");
     this.element.row = this;
     this.element.style.cursor = "pointer";
-    var iconElement = document.createElement("span");
+    let iconElement = document.createElement("span");
     iconElement.className = "timeline-tree-icon";
     this.element.appendChild(iconElement);
 
@@ -813,7 +813,7 @@ WebInspector.TimelineRecordListRow = function()
     this._typeElement.className = "type";
     this.element.appendChild(this._typeElement);
 
-    var separatorElement = document.createElement("span");
+    let separatorElement = document.createElement("span");
     separatorElement.className = "separator";
     separatorElement.textContent = " ";
 
@@ -837,7 +837,7 @@ WebInspector.TimelineRecordListRow.prototype = {
         if (this._dataElement.firstChild)
             this._dataElement.removeChildren();
         if (record.details) {
-            var detailsContainer = document.createElement("span");
+            let detailsContainer = document.createElement("span");
             if (typeof record.details === "object") {
                 detailsContainer.appendChild(document.createTextNode("("));
                 detailsContainer.appendChild(record.details);
@@ -892,7 +892,7 @@ WebInspector.TimelineRecordGraphRow.prototype = {
     {
         this._record = record;
         this.element.className = "timeline-graph-side timeline-category-" + record.category.name + (isEven ? " even" : "");
-        var barPosition = calculator.computeBarGraphWindowPosition(record, clientWidth - expandOffset);
+        let barPosition = calculator.computeBarGraphWindowPosition(record, clientWidth - expandOffset);
         this._barWithChildrenElement.style.left = barPosition.left + expandOffset + "px";
         this._barWithChildrenElement.style.width = barPosition.widthWithChildren + "px";
         this._barElement.style.left = barPosition.left + expandOffset + "px";
@@ -919,12 +919,12 @@ WebInspector.TimelinePanel.forAllRecords = function(recordsArray, callback)
 {
     if (!recordsArray)
         return;
-    var stack = [{array: recordsArray, index: 0}];
+    let stack = [{array: recordsArray, index: 0}];
     while (stack.length) {
-        var entry = stack[stack.length - 1];
-        var records = entry.array;
+        let entry = stack[stack.length - 1];
+        let records = entry.array;
         if (entry.index < records.length) {
-             var record = records[entry.index];
+             let record = records[entry.index];
              if (callback(record))
                  return;
              if (record.children)
@@ -943,7 +943,7 @@ WebInspector.TimelineExpandableElement = function(container)
     this._element = document.createElement("div");
     this._element.className = "timeline-expandable";
 
-    var leftBorder = document.createElement("div");
+    let leftBorder = document.createElement("div");
     leftBorder.className = "timeline-expandable-left";
     this._element.appendChild(leftBorder);
 

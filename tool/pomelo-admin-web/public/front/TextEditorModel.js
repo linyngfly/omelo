@@ -130,11 +130,11 @@ WebInspector.TextEditorModel.prototype = {
             range = new WebInspector.TextRange(0, 0, this._lines.length - 1, this._lines[this._lines.length - 1].length);
             this._lineBreak = /\r\n/.test(text) ? "\r\n" : "\n";
         }
-        var command = this._pushUndoableCommand(range, text);
+        let command = this._pushUndoableCommand(range, text);
         if (!command)
             return range; // Noop
 
-        var newRange = this._innerSetText(range, text);
+        let newRange = this._innerSetText(range, text);
         command.range = newRange.clone();
 
         if (this._changeListener)
@@ -148,12 +148,12 @@ WebInspector.TextEditorModel.prototype = {
         if (text === "")
             return new WebInspector.TextRange(range.startLine, range.startColumn, range.startLine, range.startColumn);
 
-        var newLines = text.split(/\r?\n/);
+        let newLines = text.split(/\r?\n/);
 
-        var prefix = this._lines[range.startLine].substring(0, range.startColumn);
-        var suffix = this._lines[range.startLine].substring(range.startColumn);
+        let prefix = this._lines[range.startLine].substring(0, range.startColumn);
+        let suffix = this._lines[range.startLine].substring(range.startColumn);
 
-        var postCaret = prefix.length;
+        let postCaret = prefix.length;
         // Insert text.
         if (newLines.length === 1) {
             this._setLine(range.startLine, prefix + newLines[0] + suffix);
@@ -171,22 +171,22 @@ WebInspector.TextEditorModel.prototype = {
 
     _insertLines: function(range, newLines)
     {
-        var lines = new Array(this._lines.length + newLines.length - 1);
-        for (var i = 0; i <= range.startLine; ++i)
+        let lines = new Array(this._lines.length + newLines.length - 1);
+        for (let i = 0; i <= range.startLine; ++i)
             lines[i] = this._lines[i];
         // Line at [0] is already set via setLine.
-        for (var i = 1; i < newLines.length; ++i)
+        for (let i = 1; i < newLines.length; ++i)
             lines[range.startLine + i] = newLines[i];
-        for (var i = range.startLine + newLines.length; i < lines.length; ++i)
+        for (let i = range.startLine + newLines.length; i < lines.length; ++i)
             lines[i] = this._lines[i - newLines.length + 1];
         this._lines = lines;
 
         // Adjust attributes, attributes move with the first character of line.
-        var attributes = new Array(lines.length);
-        var insertionIndex = range.startColumn ? range.startLine + 1 : range.startLine;
-        for (var i = 0; i < insertionIndex; ++i)
+        let attributes = new Array(lines.length);
+        let insertionIndex = range.startColumn ? range.startLine + 1 : range.startLine;
+        for (let i = 0; i < insertionIndex; ++i)
             attributes[i] = this._attributes[i];
-        for (var i = insertionIndex + newLines.length - 1; i < attributes.length; ++i)
+        for (let i = insertionIndex + newLines.length - 1; i < attributes.length; ++i)
             attributes[i] = this._attributes[i - newLines.length + 1];
         this._attributes = attributes;
     },
@@ -196,8 +196,8 @@ WebInspector.TextEditorModel.prototype = {
         if (range.isEmpty())
             return;
 
-        var prefix = this._lines[range.startLine].substring(0, range.startColumn);
-        var suffix = this._lines[range.endLine].substring(range.endColumn);
+        let prefix = this._lines[range.startLine].substring(0, range.startColumn);
+        let suffix = this._lines[range.endLine].substring(range.endColumn);
 
         if (range.endLine > range.startLine) {
             this._lines.splice(range.startLine + 1, range.endLine - range.startLine);
@@ -219,17 +219,17 @@ WebInspector.TextEditorModel.prototype = {
 
     wordStart: function(lineNumber, column, gapless)
     {
-        var line = this._lines[lineNumber];
-        var prefix = line.substring(0, column).split("").reverse().join("");
-        var prefixMatch = this._noPunctuationRegex.exec(prefix);
+        let line = this._lines[lineNumber];
+        let prefix = line.substring(0, column).split("").reverse().join("");
+        let prefixMatch = this._noPunctuationRegex.exec(prefix);
         return prefixMatch && (!gapless || prefixMatch.index === 0) ? column - prefixMatch.index - prefixMatch[0].length : column;
     },
 
     wordEnd: function(lineNumber, column, gapless)
     {
-        var line = this._lines[lineNumber];
-        var suffix = line.substring(column);
-        var suffixMatch = this._noPunctuationRegex.exec(suffix);
+        let line = this._lines[lineNumber];
+        let suffix = line.substring(column);
+        let suffixMatch = this._noPunctuationRegex.exec(suffix);
         return suffixMatch && (!gapless || suffixMatch.index === 0) ? column + suffixMatch.index + suffixMatch[0].length : column;
     },
 
@@ -238,13 +238,13 @@ WebInspector.TextEditorModel.prototype = {
         if (!range)
             range = new WebInspector.TextRange(0, 0, this._lines.length - 1, this._lines[this._lines.length - 1].length);
 
-        var clip = [];
+        let clip = [];
         if (range.startLine === range.endLine) {
             clip.push(this._lines[range.startLine].substring(range.startColumn, range.endColumn));
             return clip.join(this._lineBreak);
         }
         clip.push(this._lines[range.startLine].substring(range.startColumn));
-        for (var i = range.startLine + 1; i < range.endLine; ++i)
+        for (let i = range.startLine + 1; i < range.endLine; ++i)
             clip.push(this._lines[i]);
         clip.push(this._lines[range.endLine].substring(0, range.endColumn));
         return clip.join(this._lineBreak);
@@ -252,7 +252,7 @@ WebInspector.TextEditorModel.prototype = {
 
     setAttribute: function(line, name, value)
     {
-        var attrs = this._attributes[line];
+        let attrs = this._attributes[line];
         if (!attrs) {
             attrs = {};
             this._attributes[line] = attrs;
@@ -262,20 +262,20 @@ WebInspector.TextEditorModel.prototype = {
 
     getAttribute: function(line, name)
     {
-        var attrs = this._attributes[line];
+        let attrs = this._attributes[line];
         return attrs ? attrs[name] : null;
     },
 
     removeAttribute: function(line, name)
     {
-        var attrs = this._attributes[line];
+        let attrs = this._attributes[line];
         if (attrs)
             delete attrs[name];
     },
 
     _pushUndoableCommand: function(range, text)
     {
-        var command = {
+        let command = {
             text: this.copyRange(range),
             startLine: range.startLine,
             startColumn: range.startColumn,
@@ -300,7 +300,7 @@ WebInspector.TextEditorModel.prototype = {
         this._markRedoableState();
 
         this._inUndo = true;
-        var range = this._doUndo(this._undoStack, beforeCallback, afterCallback);
+        let range = this._doUndo(this._undoStack, beforeCallback, afterCallback);
         delete this._inUndo;
 
         return range;
@@ -311,7 +311,7 @@ WebInspector.TextEditorModel.prototype = {
         this.markUndoableState();
 
         this._inRedo = true;
-        var range = this._doUndo(this._redoStack, beforeCallback, afterCallback);
+        let range = this._doUndo(this._redoStack, beforeCallback, afterCallback);
         delete this._inRedo;
 
         return range;
@@ -319,9 +319,9 @@ WebInspector.TextEditorModel.prototype = {
 
     _doUndo: function(stack, beforeCallback, afterCallback)
     {
-        var range = null;
-        for (var i = stack.length - 1; i >= 0; --i) {
-            var command = stack[i];
+        let range = null;
+        for (let i = stack.length - 1; i >= 0; --i) {
+            let command = stack[i];
             stack.length = i;
 
             if (beforeCallback)

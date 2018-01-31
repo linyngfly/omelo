@@ -25,7 +25,7 @@
 
 WebInspector.TopDownProfileDataGridNode = function(/*ProfileView*/ profileView, /*ProfileNode*/ profileNode, /*TopDownProfileDataGridTree*/ owningTree)
 {
-    var hasChildren = (profileNode.children && profileNode.children.length);
+    let hasChildren = (profileNode.children && profileNode.children.length);
 
     WebInspector.ProfileDataGridNode.call(this, profileView, profileNode, owningTree, hasChildren);
 
@@ -35,10 +35,10 @@ WebInspector.TopDownProfileDataGridNode = function(/*ProfileView*/ profileView, 
 WebInspector.TopDownProfileDataGridNode.prototype = {
     _sharedPopulate: function()
     {
-        var children = this._remainingChildren;
-        var childrenLength = children.length;
+        let children = this._remainingChildren;
+        let childrenLength = children.length;
 
-        for (var i = 0; i < childrenLength; ++i)
+        for (let i = 0; i < childrenLength; ++i)
             this.appendChild(new WebInspector.TopDownProfileDataGridNode(this.profileView, children[i], this.tree));
 
         this._remainingChildren = null;
@@ -51,13 +51,13 @@ WebInspector.TopDownProfileDataGridNode.prototype = {
 
         this._save();
 
-        var children = this.children;
-        var index = this.children.length;
+        let children = this.children;
+        let index = this.children.length;
 
         while (index--)
             children[index]._exclude(aCallUID);
 
-        var child = this.childrenByCallUID[aCallUID];
+        let child = this.childrenByCallUID[aCallUID];
 
         if (child)
             this._merge(child, true);
@@ -95,7 +95,7 @@ WebInspector.TopDownProfileDataGridTree.prototype = {
 
         this._save();
 
-        var excludedCallUID = profileDataGrideNode.callUID;
+        let excludedCallUID = profileDataGrideNode.callUID;
 
         WebInspector.TopDownProfileDataGridNode.prototype._exclude.call(this, excludedCallUID);
 

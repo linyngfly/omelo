@@ -86,14 +86,14 @@ WebInspector.ObjectPropertiesSection.prototype = {
             rootPropertyComparer = WebInspector.ObjectPropertiesSection.CompareProperties;
 
         if (this.extraProperties)
-            for (var i = 0; i < this.extraProperties.length; ++i)
+            for (let i = 0; i < this.extraProperties.length; ++i)
                 properties.push(this.extraProperties[i]);
 
         properties.sort(rootPropertyComparer);
 
         this.propertiesTreeOutline.removeChildren();
 
-        for (var i = 0; i < properties.length; ++i) {
+        for (let i = 0; i < properties.length; ++i) {
             if (this.skipProto && properties[i].name === "__proto__")
                 continue;
             properties[i].parentObject = this.object;
@@ -101,14 +101,14 @@ WebInspector.ObjectPropertiesSection.prototype = {
 
         this.propertiesForTest = properties;
 
-        for (var i = 0; i < properties.length; ++i)
+        for (let i = 0; i < properties.length; ++i)
             this.propertiesTreeOutline.appendChild(new rootTreeElementConstructor(properties[i]));
 
         if (!this.propertiesTreeOutline.children.length) {
-            var title = document.createElement("div");
+            let title = document.createElement("div");
             title.className = "info";
             title.textContent = this.emptyPlaceholder;
-            var infoElement = new TreeElement(title, null, false);
+            let infoElement = new TreeElement(title, null, false);
             this.propertiesTreeOutline.appendChild(infoElement);
         }
     }
@@ -118,8 +118,8 @@ WebInspector.ObjectPropertiesSection.prototype.__proto__ = WebInspector.Properti
 
 WebInspector.ObjectPropertiesSection.CompareProperties = function(propertyA, propertyB)
 {
-    var a = propertyA.name;
-    var b = propertyB.name;
+    let a = propertyA.name;
+    let b = propertyB.name;
     if (a === "__proto__")
         return 1;
     if (b === "__proto__")
@@ -129,9 +129,9 @@ WebInspector.ObjectPropertiesSection.CompareProperties = function(propertyA, pro
     //  - convert a and b to strings (not needed here, properties are all strings)
     //  - check if a == b (not needed here, no two properties can be the same)
 
-    var diff = 0;
-    var chunk = /^\d+|^\D+/;
-    var chunka, chunkb, anum, bnum;
+    let diff = 0;
+    let chunk = /^\d+|^\D+/;
+    let chunka, chunkb, anum, bnum;
     while (diff === 0) {
         if (!a && b)
             return -1;
@@ -195,7 +195,7 @@ WebInspector.ObjectPropertyTreeElement.prototype = {
                 return;
 
             properties.sort(WebInspector.ObjectPropertiesSection.CompareProperties);
-            for (var i = 0; i < properties.length; ++i) {
+            for (let i = 0; i < properties.length; ++i) {
                 if (this.treeOutline.section.skipProto && properties[i].name === "__proto__")
                     continue;
                 properties[i].parentObject = this.property.value;
@@ -225,14 +225,14 @@ WebInspector.ObjectPropertyTreeElement.prototype = {
         if (!this.property.enumerable)
             this.nameElement.addStyleClass("dimmed");
 
-        var separatorElement = document.createElement("span");
+        let separatorElement = document.createElement("span");
         separatorElement.className = "separator";
         separatorElement.textContent = ": ";
 
         this.valueElement = document.createElement("span");
         this.valueElement.className = "value";
 
-        var description = this.property.value.description;
+        let description = this.property.value.description;
         // Render \n as a nice unicode cr symbol.
         if (this.property.wasThrown)
             this.valueElement.textContent = "[Exception: " + description + "]";
@@ -278,7 +278,7 @@ WebInspector.ObjectPropertyTreeElement.prototype = {
             this.property.value.pushNodeToFrontend(selectNode);
         }
 
-        var contextMenu = new WebInspector.ContextMenu();
+        let contextMenu = new WebInspector.ContextMenu();
         contextMenu.appendItem(WebInspector.UIString("Reveal in Elements Panel"), revealElement.bind(this));
         contextMenu.show(event);
     },
@@ -299,7 +299,7 @@ WebInspector.ObjectPropertyTreeElement.prototype = {
             DebuggerAgent.getFunctionDetails(this.property.value.objectId, didGetDetails.bind(this));
         }
 
-        var contextMenu = new WebInspector.ContextMenu();
+        let contextMenu = new WebInspector.ContextMenu();
         contextMenu.appendItem(WebInspector.UIString("Show function definition"), revealFunction.bind(this));
         contextMenu.show(event);
     },
@@ -327,9 +327,9 @@ WebInspector.ObjectPropertyTreeElement.prototype = {
 
     startEditing: function(event)
     {
-        var elementAndValueToEdit = this.elementAndValueToEdit(event);
-        var elementToEdit = elementAndValueToEdit[0];
-        var valueToEdit = elementAndValueToEdit[1];
+        let elementAndValueToEdit = this.elementAndValueToEdit(event);
+        let elementToEdit = elementAndValueToEdit[0];
+        let valueToEdit = elementAndValueToEdit[1];
 
         if (WebInspector.isBeingEdited(elementToEdit) || !this.treeOutline.section.editable || this._readOnly)
             return;
@@ -338,7 +338,7 @@ WebInspector.ObjectPropertyTreeElement.prototype = {
         if (typeof valueToEdit !== "undefined")
             elementToEdit.textContent = valueToEdit;
 
-        var context = { expanded: this.expanded, elementToEdit: elementToEdit, previousContent: elementToEdit.textContent };
+        let context = { expanded: this.expanded, elementToEdit: elementToEdit, previousContent: elementToEdit.textContent };
 
         // Lie about our children to prevent expanding on double click and to collapse subproperties.
         this.hasChildren = false;
@@ -352,7 +352,7 @@ WebInspector.ObjectPropertyTreeElement.prototype = {
             this.editingCommitted(null, elementToEdit.textContent, context.previousContent, context);
         }
 
-        var proxyElement = this._prompt.attachAndStartEditing(elementToEdit, blurListener.bind(this));
+        let proxyElement = this._prompt.attachAndStartEditing(elementToEdit, blurListener.bind(this));
         window.getSelection().setBaseAndExtent(elementToEdit, 0, elementToEdit, 1);
         proxyElement.addEventListener("keydown", this._promptKeyDown.bind(this, context), false);
     },
@@ -398,7 +398,7 @@ WebInspector.ObjectPropertyTreeElement.prototype = {
     applyExpression: function(expression, updateInterface)
     {
         expression = expression.trim();
-        var expressionLength = expression.length;
+        let expressionLength = expression.length;
         function callback(error)
         {
             if (!updateInterface)
@@ -467,14 +467,14 @@ WebInspector.ArrayGroupingTreeElement._populateRanges = function(treeElement, ob
     /** @this {Object} */
     function packRanges(fromIndex, toIndex, bucketThreshold)
     {
-        var count = 0;
-        for (var i = fromIndex; i <= toIndex; ++i) {
-            var value = this[i];
+        let count = 0;
+        for (let i = fromIndex; i <= toIndex; ++i) {
+            let value = this[i];
             if (typeof value !== "undefined")
                 ++count;
         }
 
-        var bucketSize;
+        let bucketSize;
         if (count < bucketThreshold)
             bucketSize = count;
         else {
@@ -483,12 +483,12 @@ WebInspector.ArrayGroupingTreeElement._populateRanges = function(treeElement, ob
                 bucketSize = Math.floor(Math.sqrt(count));
         }
 
-        var ranges = [];
+        let ranges = [];
         count = 0;
-        var groupStart = -1;
-        var groupEnd = 0;
-        for (var i = fromIndex; i <= toIndex; ++i) {
-            var value = this[i];
+        let groupStart = -1;
+        let groupEnd = 0;
+        for (let i = fromIndex; i <= toIndex; ++i) {
+            let value = this[i];
             if (typeof value === "undefined")
                 continue;
 
@@ -513,10 +513,10 @@ WebInspector.ArrayGroupingTreeElement._populateRanges = function(treeElement, ob
         if (ranges.length == 1)
             WebInspector.ArrayGroupingTreeElement._populateAsFragment(treeElement, object, ranges[0][0], ranges[0][1]);
         else {
-            for (var i = 0; i < ranges.length; ++i) {
-                var fromIndex = ranges[i][0];
-                var toIndex = ranges[i][1];
-                var count = ranges[i][2];
+            for (let i = 0; i < ranges.length; ++i) {
+                let fromIndex = ranges[i][0];
+                let toIndex = ranges[i][1];
+                let count = ranges[i][2];
                 if (fromIndex == toIndex)
                     WebInspector.ArrayGroupingTreeElement._populateAsFragment(treeElement, object, fromIndex, toIndex);
                 else
@@ -541,9 +541,9 @@ WebInspector.ArrayGroupingTreeElement._populateAsFragment = function(treeElement
     /** @this {Object} */
     function buildArrayFragment(fromIndex, toIndex)
     {
-        var result = Object.create(null);
-        for (var i = fromIndex; i <= toIndex; ++i) {
-            var value = this[i];
+        let result = Object.create(null);
+        for (let i = fromIndex; i <= toIndex; ++i) {
+            let value = this[i];
             if (typeof value !== "undefined")
                 result[i] = value;
         }
@@ -562,9 +562,9 @@ WebInspector.ArrayGroupingTreeElement._populateAsFragment = function(treeElement
             return;
 
         properties.sort(WebInspector.ObjectPropertiesSection.CompareProperties);
-        for (var i = 0; i < properties.length; ++i) {
+        for (let i = 0; i < properties.length; ++i) {
             properties[i].parentObject = this._object;
-            var childTreeElement = new treeElement.treeOutline.section.treeElementConstructor(properties[i]);
+            let childTreeElement = new treeElement.treeOutline.section.treeElementConstructor(properties[i]);
             childTreeElement._readOnly = true;
             treeElement.appendChild(childTreeElement);
         }
@@ -582,13 +582,13 @@ WebInspector.ArrayGroupingTreeElement._populateNonIndexProperties = function(tre
     /** @this {Object} */
     function buildObjectFragment()
     {
-        var result = Object.create(this.__proto__);
-        var names = Object.getOwnPropertyNames(this);
-        for (var i = 0; i < names.length; ++i) {
-            var name = names[i];
+        let result = Object.create(this.__proto__);
+        let names = Object.getOwnPropertyNames(this);
+        for (let i = 0; i < names.length; ++i) {
+            let name = names[i];
             if (!isNaN(name))
                 continue;
-            var descriptor = Object.getOwnPropertyDescriptor(this, name);
+            let descriptor = Object.getOwnPropertyDescriptor(this, name);
             if (descriptor)
                 Object.defineProperty(result, name, descriptor);
         }
@@ -607,9 +607,9 @@ WebInspector.ArrayGroupingTreeElement._populateNonIndexProperties = function(tre
             return;
 
         properties.sort(WebInspector.ObjectPropertiesSection.CompareProperties);
-        for (var i = 0; i < properties.length; ++i) {
+        for (let i = 0; i < properties.length; ++i) {
             properties[i].parentObject = this._object;
-            var childTreeElement = new treeElement.treeOutline.section.treeElementConstructor(properties[i]);
+            let childTreeElement = new treeElement.treeOutline.section.treeElementConstructor(properties[i]);
             childTreeElement._readOnly = true;
             treeElement.appendChild(childTreeElement);
         }

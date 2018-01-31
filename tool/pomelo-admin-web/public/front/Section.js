@@ -91,10 +91,10 @@ WebInspector.Section.prototype = {
 
     get subtitleAsTextForTest()
     {
-        var result = this.subtitleElement.textContent;
-        var child = this.subtitleElement.querySelector("[data-uncopyable]");
+        let result = this.subtitleElement.textContent;
+        let child = this.subtitleElement.querySelector("[data-uncopyable]");
         if (child) {
-            var linkData = child.getAttribute("data-uncopyable");
+            let linkData = child.getAttribute("data-uncopyable");
             if (linkData)
                 result += linkData;
         }
@@ -135,11 +135,11 @@ WebInspector.Section.prototype = {
 
     get firstSibling()
     {
-        var parent = this.element.parentElement;
+        let parent = this.element.parentElement;
         if (!parent)
             return null;
 
-        var childElement = parent.firstChild;
+        let childElement = parent.firstChild;
         while (childElement) {
             if (childElement._section)
                 return childElement._section;
@@ -151,11 +151,11 @@ WebInspector.Section.prototype = {
 
     get lastSibling()
     {
-        var parent = this.element.parentElement;
+        let parent = this.element.parentElement;
         if (!parent)
             return null;
 
-        var childElement = parent.lastChild;
+        let childElement = parent.lastChild;
         while (childElement) {
             if (childElement._section)
                 return childElement._section;
@@ -167,7 +167,7 @@ WebInspector.Section.prototype = {
 
     get nextSibling()
     {
-        var curElement = this.element;
+        let curElement = this.element;
         do {
             curElement = curElement.nextSibling;
         } while (curElement && !curElement._section);
@@ -177,7 +177,7 @@ WebInspector.Section.prototype = {
 
     get previousSibling()
     {
-        var curElement = this.element;
+        let curElement = this.element;
         do {
             curElement = curElement.previousSibling;
         } while (curElement && !curElement._section);

@@ -40,7 +40,7 @@ WebInspector.PropertiesSidebarPane._objectGroupName = "properties-sidebar-pane";
 WebInspector.PropertiesSidebarPane.prototype = {
     update: function(node)
     {
-        var body = this.bodyElement;
+        let body = this.bodyElement;
 
         if (!node) {
             body.removeChildren();
@@ -56,9 +56,9 @@ WebInspector.PropertiesSidebarPane.prototype = {
                 return;
             function protoList()
             {
-                var proto = this;
-                var result = {};
-                var counter = 1;
+                let proto = this;
+                let result = {};
+                let counter = 1;
                 while (proto) {
                     result[counter++] = proto;
                     proto = proto.__proto__;
@@ -81,20 +81,20 @@ WebInspector.PropertiesSidebarPane.prototype = {
             if (!prototypes)
                 return;
 
-            var body = this.bodyElement;
+            let body = this.bodyElement;
             body.removeChildren();
             this.sections = [];
 
             // Get array of prototype user-friendly names.
-            for (var i = 0; i < prototypes.length; ++i) {
+            for (let i = 0; i < prototypes.length; ++i) {
                 if (!parseInt(prototypes[i].name, 10))
                     continue;
 
-                var prototype = prototypes[i].value;
-                var title = prototype.description;
+                let prototype = prototypes[i].value;
+                let title = prototype.description;
                 if (title.match(/Prototype$/))
                     title = title.replace(/Prototype$/, "");
-                var section = new WebInspector.ObjectPropertiesSection(prototype, title);
+                let section = new WebInspector.ObjectPropertiesSection(prototype, title);
                 this.sections.push(section);
                 body.appendChild(section.element);
             }

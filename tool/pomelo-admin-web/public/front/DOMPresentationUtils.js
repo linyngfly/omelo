@@ -33,18 +33,18 @@ WebInspector.DOMPresentationUtils = {}
 
 WebInspector.DOMPresentationUtils.decorateNodeLabel = function(node, parentElement)
 {
-    var title = node.nodeNameInCorrectCase();
+    let title = node.nodeNameInCorrectCase();
 
-    var nameElement = document.createElement("span");
+    let nameElement = document.createElement("span");
     nameElement.textContent = title;
     parentElement.appendChild(nameElement);
 
-    var idAttribute = node.getAttribute("id");
+    let idAttribute = node.getAttribute("id");
     if (idAttribute) {
-        var idElement = document.createElement("span");
+        let idElement = document.createElement("span");
         parentElement.appendChild(idElement);
 
-        var part = "#" + idAttribute;
+        let part = "#" + idAttribute;
         title += part;
         idElement.appendChild(document.createTextNode(part));
 
@@ -52,20 +52,20 @@ WebInspector.DOMPresentationUtils.decorateNodeLabel = function(node, parentEleme
         nameElement.className = "extra";
     }
 
-    var classAttribute = node.getAttribute("class");
+    let classAttribute = node.getAttribute("class");
     if (classAttribute) {
-        var classes = classAttribute.split(/\s+/);
-        var foundClasses = {};
+        let classes = classAttribute.split(/\s+/);
+        let foundClasses = {};
 
         if (classes.length) {
-            var classesElement = document.createElement("span");
+            let classesElement = document.createElement("span");
             classesElement.className = "extra";
             parentElement.appendChild(classesElement);
 
-            for (var i = 0; i < classes.length; ++i) {
-                var className = classes[i];
+            for (let i = 0; i < classes.length; ++i) {
+                let className = classes[i];
                 if (className && !(className in foundClasses)) {
-                    var part = "." + className;
+                    let part = "." + className;
                     title += part;
                     classesElement.appendChild(document.createTextNode(part));
                     foundClasses[className] = true;
@@ -78,7 +78,7 @@ WebInspector.DOMPresentationUtils.decorateNodeLabel = function(node, parentEleme
 
 WebInspector.DOMPresentationUtils.linkifyNodeReference = function(node)
 {
-    var link = document.createElement("span");
+    let link = document.createElement("span");
     link.className = "node-link";
     WebInspector.DOMPresentationUtils.decorateNodeLabel(node, link);
 
@@ -91,7 +91,7 @@ WebInspector.DOMPresentationUtils.linkifyNodeReference = function(node)
 
 WebInspector.DOMPresentationUtils.linkifyNodeById = function(nodeId)
 {
-    var node = WebInspector.domAgent.nodeForId(nodeId);
+    let node = WebInspector.domAgent.nodeForId(nodeId);
     if (!node)
         return document.createTextNode(WebInspector.UIString("<node>"));
     return WebInspector.DOMPresentationUtils.linkifyNodeReference(node);

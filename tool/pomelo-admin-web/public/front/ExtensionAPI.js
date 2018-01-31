@@ -94,12 +94,12 @@ function defineCommonExtensionSymbols(apiPrivate)
 function injectedExtensionAPI(injectedScriptId)
 {
 
-var apiPrivate = {};
+let apiPrivate = {};
 
 defineCommonExtensionSymbols(apiPrivate);
 
-var commands = apiPrivate.Commands;
-var events = apiPrivate.Events;
+let commands = apiPrivate.Commands;
+let events = apiPrivate.Events;
 
 // Here and below, all constructors are private to API implementation.
 // For a public type Foo, if internal fields are present, these are on
@@ -130,9 +130,9 @@ EventSinkImpl.prototype = {
 
     removeListener: function(callback)
     {
-        var listeners = this._listeners;
+        let listeners = this._listeners;
 
-        for (var i = 0; i < listeners.length; ++i) {
+        for (let i = 0; i < listeners.length; ++i) {
             if (listeners[i] === callback) {
                 listeners.splice(i, 1);
                 break;
@@ -144,8 +144,8 @@ EventSinkImpl.prototype = {
 
     _fire: function()
     {
-        var listeners = this._listeners.slice();
-        for (var i = 0; i < listeners.length; ++i)
+        let listeners = this._listeners.slice();
+        for (let i = 0; i < listeners.length; ++i)
             listeners[i].apply(null, arguments);
     },
 
@@ -216,7 +216,7 @@ function Network()
 {
     function dispatchRequestEvent(message)
     {
-        var request = message.arguments[1];
+        let request = message.arguments[1];
         request.__proto__ = new Request(message.arguments[0]);
         this._fire(request);
     }
@@ -230,8 +230,8 @@ Network.prototype = {
     {
         function callbackWrapper(result)
         {
-            var entries = (result && result.entries) || [];
-            for (var i = 0; i < entries.length; ++i) {
+            let entries = (result && result.entries) || [];
+            for (let i = 0; i < entries.length; ++i) {
                 entries[i].__proto__ = new Request(entries[i]._requestId);
                 delete entries[i]._requestId;
             }
@@ -270,7 +270,7 @@ RequestImpl.prototype = {
  */
 function Panels()
 {
-    var panels = {
+    let panels = {
         elements: new ElementsPanel()
     };
 
@@ -278,15 +278,15 @@ function Panels()
     {
         return panels[name];
     }
-    for (var panel in panels)
+    for (let panel in panels)
         this.__defineGetter__(panel, panelGetter.bind(null, panel));
 }
 
 Panels.prototype = {
     create: function(title, icon, page, callback)
     {
-        var id = "extension-panel-" + extensionServer.nextObjectId();
-        var request = {
+        let id = "extension-panel-" + extensionServer.nextObjectId();
+        let request = {
             command: commands.CreatePanel,
             id: id,
             title: title,
@@ -298,7 +298,7 @@ Panels.prototype = {
 
     setOpenResourceHandler: function(callback)
     {
-        var hadHandler = extensionServer.hasHandler(events.OpenResource);
+        let hadHandler = extensionServer.hasHandler(events.OpenResource);
 
         if (!callback)
             extensionServer.unregisterHandler(events.OpenResource);
@@ -324,7 +324,7 @@ function ExtensionViewImpl(id)
 
     function dispatchShowEvent(message)
     {
-        var frameIndex = message.arguments[0];
+        let frameIndex = message.arguments[0];
         this._fire(window.top.frames[frameIndex]);
     }
     this.onShown = new EventSink(events.ViewShown + id, dispatchShowEvent);
@@ -342,8 +342,8 @@ function PanelWithSidebarImpl(id)
 PanelWithSidebarImpl.prototype = {
     createSidebarPane: function(title, callback)
     {
-        var id = "extension-sidebar-" + extensionServer.nextObjectId();
-        var request = {
+        let id = "extension-sidebar-" + extensionServer.nextObjectId();
+        let request = {
             command: commands.CreateSidebarPane,
             panel: this._id,
             id: id,
@@ -365,7 +365,7 @@ PanelWithSidebarImpl.prototype.__proto__ = ExtensionViewImpl.prototype;
  */
 function ElementsPanel()
 {
-    var id = "elements";
+    let id = "elements";
     PanelWithSidebar.call(this, id);
     this.onSelectionChanged = new EventSink(events.ElementsPanelObjectSelected);
 }
@@ -383,8 +383,8 @@ function ExtensionPanelImpl(id)
 ExtensionPanelImpl.prototype = {
     createStatusBarButton: function(iconPath, tooltipText, disabled)
     {
-        var id = "button-" + extensionServer.nextObjectId();
-        var request = {
+        let id = "button-" + extensionServer.nextObjectId();
+        let request = {
             command: commands.CreateStatusBarButton,
             panel: this._id,
             id: id,
@@ -442,7 +442,7 @@ function ButtonImpl(id)
 ButtonImpl.prototype = {
     update: function(iconPath, tooltipText, disabled)
     {
-        var request = {
+        let request = {
             command: commands.UpdateButton,
             id: this._id,
             icon: iconPath,
@@ -463,7 +463,7 @@ function Audits()
 Audits.prototype = {
     addCategory: function(displayName, resultCount)
     {
-        var id = "extension-audit-category-" + extensionServer.nextObjectId();
+        let id = "extension-audit-category-" + extensionServer.nextObjectId();
         extensionServer.sendRequest({ command: commands.AddAuditCategory, id: id, displayName: displayName, resultCount: resultCount });
         return new AuditCategory(id);
     }
@@ -476,7 +476,7 @@ function AuditCategoryImpl(id)
 {
     function dispatchAuditEvent(request)
     {
-        var auditResult = new AuditResult(request.arguments[0]);
+        let auditResult = new AuditResult(request.arguments[0]);
         try {
             this._fire(auditResult);
         } catch (e) {
@@ -507,7 +507,7 @@ AuditResultImpl.prototype = {
         if (details && !(details instanceof AuditResultNode))
             details = new AuditResultNode(details instanceof Array ? details : [details]);
 
-        var request = {
+        let request = {
             command: commands.AddAuditResult,
             resultId: this._id,
             displayName: displayName,
@@ -563,7 +563,7 @@ function AuditResultNode(contents)
 AuditResultNode.prototype = {
     addChild: function()
     {
-        var node = new AuditResultNode(Array.prototype.slice.call(arguments));
+        let node = new AuditResultNode(Array.prototype.slice.call(arguments));
         this.children.push(node);
         return node;
     }
@@ -589,7 +589,7 @@ function InspectedWindow()
 InspectedWindow.prototype = {
     reload: function(optionsOrUserAgent)
     {
-        var options = null;
+        let options = null;
         if (typeof optionsOrUserAgent === "object")
             options = optionsOrUserAgent;
         else if (typeof optionsOrUserAgent === "string") {
@@ -679,7 +679,7 @@ function ExtensionServerClient()
 
     this.registerHandler("callback", this._onCallback.bind(this));
 
-    var channel = new MessageChannel();
+    let channel = new MessageChannel();
     this._port = channel.port1;
     this._port.addEventListener("message", this._onMessage.bind(this), false);
     this._port.start();
@@ -717,7 +717,7 @@ ExtensionServerClient.prototype = {
 
     _registerCallback: function(callback)
     {
-        var id = ++this._lastRequestId;
+        let id = ++this._lastRequestId;
         this._callbacks[id] = callback;
         return id;
     },
@@ -725,7 +725,7 @@ ExtensionServerClient.prototype = {
     _onCallback: function(request)
     {
         if (request.requestId in this._callbacks) {
-            var callback = this._callbacks[request.requestId];
+            let callback = this._callbacks[request.requestId];
             delete this._callbacks[request.requestId];
             callback(request.result);
         }
@@ -733,8 +733,8 @@ ExtensionServerClient.prototype = {
 
     _onMessage: function(event)
     {
-        var request = event.data;
-        var handler = this._handlers[request.command];
+        let request = event.data;
+        let handler = this._handlers[request.command];
         if (handler)
             handler.call(this, request);
     }
@@ -742,12 +742,12 @@ ExtensionServerClient.prototype = {
 
 function populateInterfaceClass(interface, implementation)
 {
-    for (var member in implementation) {
+    for (let member in implementation) {
         if (member.charAt(0) === "_")
             continue;
-        var descriptor = null;
+        let descriptor = null;
         // Traverse prototype chain until we find the owner.
-        for (var owner = implementation; owner && !descriptor; owner = owner.__proto__)
+        for (let owner = implementation; owner && !descriptor; owner = owner.__proto__)
             descriptor = Object.getOwnPropertyDescriptor(owner, member);
         if (!descriptor)
             continue;
@@ -764,7 +764,7 @@ function declareInterfaceClass(implConstructor)
 {
     return function()
     {
-        var impl = { __proto__: implConstructor.prototype };
+        let impl = { __proto__: implConstructor.prototype };
         implConstructor.apply(impl, arguments);
         populateInterfaceClass(this, impl);
     }
@@ -772,7 +772,7 @@ function declareInterfaceClass(implConstructor)
 
 function defineDeprecatedProperty(object, className, oldName, newName)
 {
-    var warningGiven = false;
+    let warningGiven = false;
     function getter()
     {
         if (!warningGiven) {
@@ -784,18 +784,18 @@ function defineDeprecatedProperty(object, className, oldName, newName)
     object.__defineGetter__(oldName, getter);
 }
 
-var AuditCategory = declareInterfaceClass(AuditCategoryImpl);
-var AuditResult = declareInterfaceClass(AuditResultImpl);
-var Button = declareInterfaceClass(ButtonImpl);
-var EventSink = declareInterfaceClass(EventSinkImpl);
-var ExtensionPanel = declareInterfaceClass(ExtensionPanelImpl);
-var ExtensionSidebarPane = declareInterfaceClass(ExtensionSidebarPaneImpl);
-var PanelWithSidebar = declareInterfaceClass(PanelWithSidebarImpl);
-var Request = declareInterfaceClass(RequestImpl);
-var Resource = declareInterfaceClass(ResourceImpl);
-var Timeline = declareInterfaceClass(TimelineImpl);
+let AuditCategory = declareInterfaceClass(AuditCategoryImpl);
+let AuditResult = declareInterfaceClass(AuditResultImpl);
+let Button = declareInterfaceClass(ButtonImpl);
+let EventSink = declareInterfaceClass(EventSinkImpl);
+let ExtensionPanel = declareInterfaceClass(ExtensionPanelImpl);
+let ExtensionSidebarPane = declareInterfaceClass(ExtensionSidebarPaneImpl);
+let PanelWithSidebar = declareInterfaceClass(PanelWithSidebarImpl);
+let Request = declareInterfaceClass(RequestImpl);
+let Resource = declareInterfaceClass(ResourceImpl);
+let Timeline = declareInterfaceClass(TimelineImpl);
 
-var extensionServer = new ExtensionServerClient();
+let extensionServer = new ExtensionServerClient();
 
 return new InspectorExtensionAPI();
 }

@@ -59,11 +59,11 @@ WebInspector.CSSCompletions.requestCSSNameCompletions = function()
 WebInspector.CSSCompletions.prototype = {
     startsWith: function(prefix)
     {
-        var firstIndex = this._firstIndexOfPrefix(prefix);
+        let firstIndex = this._firstIndexOfPrefix(prefix);
         if (firstIndex === -1)
             return [];
 
-        var results = [];
+        let results = [];
         while (firstIndex < this._values.length && this._values[firstIndex].indexOf(prefix) === 0)
             results.push(this._values[firstIndex++]);
         return results;
@@ -71,7 +71,7 @@ WebInspector.CSSCompletions.prototype = {
 
     firstStartsWith: function(prefix)
     {
-        var foundIndex = this._firstIndexOfPrefix(prefix);
+        let foundIndex = this._firstIndexOfPrefix(prefix);
         return (foundIndex === -1 ? "" : this._values[foundIndex]);
     },
 
@@ -82,12 +82,12 @@ WebInspector.CSSCompletions.prototype = {
         if (!prefix)
             return this._acceptEmptyPrefix ? 0 : -1;
 
-        var maxIndex = this._values.length - 1;
-        var minIndex = 0;
-        var foundIndex;
+        let maxIndex = this._values.length - 1;
+        let minIndex = 0;
+        let foundIndex;
 
         do {
-            var middleIndex = (maxIndex + minIndex) >> 1;
+            let middleIndex = (maxIndex + minIndex) >> 1;
             if (this._values[middleIndex].indexOf(prefix) === 0) {
                 foundIndex = middleIndex;
                 break;
@@ -129,7 +129,7 @@ WebInspector.CSSCompletions.prototype = {
         if (!str)
             return "";
 
-        var index = this._values.indexOf(str);
+        let index = this._values.indexOf(str);
         if (index === -1)
             return "";
 
@@ -138,8 +138,8 @@ WebInspector.CSSCompletions.prototype = {
             return this._values[index];
         }
 
-        var propertiesWithPrefix = this.startsWith(prefix);
-        var j = propertiesWithPrefix.indexOf(str);
+        let propertiesWithPrefix = this.startsWith(prefix);
+        let j = propertiesWithPrefix.indexOf(str);
         j = (j + propertiesWithPrefix.length + shift) % propertiesWithPrefix.length;
         return propertiesWithPrefix[j];
     }

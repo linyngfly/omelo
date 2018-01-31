@@ -219,8 +219,8 @@ WebInspector.TextPrompt.prototype = {
 
     onKeyDown: function(event)
     {
-        var handled = false;
-        var invokeDefault = true;
+        let handled = false;
+        let invokeDefault = true;
 
         switch (event.keyIdentifier) {
         case "Up":
@@ -285,7 +285,7 @@ WebInspector.TextPrompt.prototype = {
 
     acceptAutoComplete: function()
     {
-        var result = false;
+        let result = false;
         if (this.isSuggestBoxVisible())
             result = this._suggestBox.acceptSuggestion();
         if (!result)
@@ -318,14 +318,14 @@ WebInspector.TextPrompt.prototype = {
         this._userEnteredRange.deleteContents();
         this._element.pruneEmptyTextNodes();
 
-        var userTextNode = document.createTextNode(this._userEnteredText);
+        let userTextNode = document.createTextNode(this._userEnteredText);
         this._userEnteredRange.insertNode(userTextNode);
 
-        var selectionRange = document.createRange();
+        let selectionRange = document.createRange();
         selectionRange.setStart(userTextNode, this._userEnteredText.length);
         selectionRange.setEnd(userTextNode, this._userEnteredText.length);
 
-        var selection = window.getSelection();
+        let selection = window.getSelection();
         selection.removeAllRanges();
         selection.addRange(selectionRange);
 
@@ -338,7 +338,7 @@ WebInspector.TextPrompt.prototype = {
      */
     autoCompleteSoon: function(force)
     {
-        var immediately = this.isSuggestBoxVisible() || force;
+        let immediately = this.isSuggestBoxVisible() || force;
         if (!this._completeTimeout)
             this._completeTimeout = setTimeout(this.complete.bind(this, true, force), immediately ? 0 : 250);
     },
@@ -349,14 +349,14 @@ WebInspector.TextPrompt.prototype = {
     complete: function(auto, force, reverse)
     {
         this.clearAutoComplete(true);
-        var selection = window.getSelection();
+        let selection = window.getSelection();
         if (!selection.rangeCount)
             return;
 
-        var selectionRange = selection.getRangeAt(0);
-        var isEmptyInput = selectionRange.commonAncestorContainer === this._element; // this._element has no child Text nodes.
+        let selectionRange = selection.getRangeAt(0);
+        let isEmptyInput = selectionRange.commonAncestorContainer === this._element; // this._element has no child Text nodes.
 
-        var shouldExit;
+        let shouldExit;
 
         // Do not attempt to auto-complete an empty input in the auto mode (only on demand).
         if (auto && isEmptyInput && !force)
@@ -369,7 +369,7 @@ WebInspector.TextPrompt.prototype = {
             shouldExit = true;
         else if (!force) {
             // BUG72018: Do not show suggest box if caret is followed by a non-stop character.
-            var wordSuffixRange = selectionRange.startContainer.rangeOfWord(selectionRange.endOffset, this._completionStopCharacters, this._element, "forward");
+            let wordSuffixRange = selectionRange.startContainer.rangeOfWord(selectionRange.endOffset, this._completionStopCharacters, this._element, "forward");
             if (wordSuffixRange.toString().length)
                 shouldExit = true;
         }
@@ -378,18 +378,18 @@ WebInspector.TextPrompt.prototype = {
             return;
         }
 
-        var wordPrefixRange = selectionRange.startContainer.rangeOfWord(selectionRange.startOffset, this._completionStopCharacters, this._element, "backward");
+        let wordPrefixRange = selectionRange.startContainer.rangeOfWord(selectionRange.startOffset, this._completionStopCharacters, this._element, "backward");
         this._waitingForCompletions = true;
         this._loadCompletions(this, wordPrefixRange, force, this._completionsReady.bind(this, selection, auto, wordPrefixRange, !!reverse));
     },
 
     _boxForAnchorAtStart: function(selection, textRange)
     {
-        var rangeCopy = selection.getRangeAt(0).cloneRange();
-        var anchorElement = document.createElement("span");
+        let rangeCopy = selection.getRangeAt(0).cloneRange();
+        let anchorElement = document.createElement("span");
         anchorElement.textContent = "\u200B";
         textRange.insertNode(anchorElement);
-        var box = anchorElement.boxInWindow(window);
+        let box = anchorElement.boxInWindow(window);
         anchorElement.parentElement.removeChild(anchorElement);
         selection.removeAllRanges();
         selection.addRange(rangeCopy);
@@ -402,11 +402,11 @@ WebInspector.TextPrompt.prototype = {
      */
     _buildCommonPrefix: function(completions, wordPrefixLength)
     {
-        var commonPrefix = completions[0];
-        for (var i = 0; i < completions.length; ++i) {
-            var completion = completions[i];
-            var lastIndex = Math.min(commonPrefix.length, completion.length);
-            for (var j = wordPrefixLength; j < lastIndex; ++j) {
+        let commonPrefix = completions[0];
+        for (let i = 0; i < completions.length; ++i) {
+            let completion = completions[i];
+            let lastIndex = Math.min(commonPrefix.length, completion.length);
+            for (let j = wordPrefixLength; j < lastIndex; ++j) {
                 if (commonPrefix[j] !== completion[j]) {
                     commonPrefix = commonPrefix.substr(0, j);
                     break;
@@ -431,9 +431,9 @@ WebInspector.TextPrompt.prototype = {
         }
         delete this._waitingForCompletions;
 
-        var selectionRange = selection.getRangeAt(0);
+        let selectionRange = selection.getRangeAt(0);
 
-        var fullWordRange = document.createRange();
+        let fullWordRange = document.createRange();
         fullWordRange.setStart(originalWordPrefixRange.startContainer, originalWordPrefixRange.startOffset);
         fullWordRange.setEnd(selectionRange.endContainer, selectionRange.endOffset);
 
@@ -446,39 +446,39 @@ WebInspector.TextPrompt.prototype = {
         if (this._suggestBox)
             this._suggestBox.updateSuggestions(this._boxForAnchorAtStart(selection, fullWordRange), completions, !this.isCaretAtEndOfPrompt());
 
-        var wordPrefixLength = originalWordPrefixRange.toString().length;
+        let wordPrefixLength = originalWordPrefixRange.toString().length;
 
         if (auto) {
-            var completionText = completions[0];
-            var commonPrefix = this._buildCommonPrefix(completions, wordPrefixLength);
+            let completionText = completions[0];
+            let commonPrefix = this._buildCommonPrefix(completions, wordPrefixLength);
 
             this._commonPrefix = commonPrefix;
         } else {
             if (completions.length === 1) {
-                var completionText = completions[0];
+                let completionText = completions[0];
                 wordPrefixLength = completionText.length;
             } else {
-                var commonPrefix = this._buildCommonPrefix(completions, wordPrefixLength);
+                let commonPrefix = this._buildCommonPrefix(completions, wordPrefixLength);
                 wordPrefixLength = commonPrefix.length;
 
                 if (selection.isCollapsed)
-                    var completionText = completions[0];
+                    let completionText = completions[0];
                 else {
-                    var currentText = fullWordRange.toString();
+                    let currentText = fullWordRange.toString();
 
-                    var foundIndex = null;
-                    for (var i = 0; i < completions.length; ++i) {
+                    let foundIndex = null;
+                    for (let i = 0; i < completions.length; ++i) {
                         if (completions[i] === currentText)
                             foundIndex = i;
                     }
 
-                    var nextIndex = foundIndex + (reverse ? -1 : 1);
+                    let nextIndex = foundIndex + (reverse ? -1 : 1);
                     if (foundIndex === null || nextIndex >= completions.length)
-                        var completionText = completions[0];
+                        let completionText = completions[0];
                     else if (nextIndex < 0)
-                        var completionText = completions[completions.length - 1];
+                        let completionText = completions[completions.length - 1];
                     else
-                        var completionText = completions[nextIndex];
+                        let completionText = completions[nextIndex];
                 }
             }
         }
@@ -487,11 +487,11 @@ WebInspector.TextPrompt.prototype = {
             if (this.isCaretAtEndOfPrompt()) {
                 this._userEnteredRange.deleteContents();
                 this._element.pruneEmptyTextNodes();
-                var finalSelectionRange = document.createRange();
-                var prefixText = completionText.substring(0, wordPrefixLength);
-                var suffixText = completionText.substring(wordPrefixLength);
+                let finalSelectionRange = document.createRange();
+                let prefixText = completionText.substring(0, wordPrefixLength);
+                let suffixText = completionText.substring(wordPrefixLength);
 
-                var prefixTextNode = document.createTextNode(prefixText);
+                let prefixTextNode = document.createTextNode(prefixText);
                 fullWordRange.insertNode(prefixTextNode);
 
                 this.autoCompleteElement = document.createElement("span");
@@ -528,7 +528,7 @@ WebInspector.TextPrompt.prototype = {
      */
     applySuggestion: function(completionText, isIntermediateSuggestion, originalPrefixRange)
     {
-        var wordPrefixLength;
+        let wordPrefixLength;
         if (originalPrefixRange)
             wordPrefixLength = originalPrefixRange.toString().length;
         else
@@ -536,8 +536,8 @@ WebInspector.TextPrompt.prototype = {
 
         this._userEnteredRange.deleteContents();
         this._element.pruneEmptyTextNodes();
-        var finalSelectionRange = document.createRange();
-        var completionTextNode = document.createTextNode(completionText);
+        let finalSelectionRange = document.createRange();
+        let completionTextNode = document.createTextNode(completionText);
         this._userEnteredRange.insertNode(completionTextNode);
         if (this.autoCompleteElement && this.autoCompleteElement.parentNode) {
             this.autoCompleteElement.parentNode.removeChild(this.autoCompleteElement);
@@ -551,7 +551,7 @@ WebInspector.TextPrompt.prototype = {
 
         finalSelectionRange.setEnd(completionTextNode, completionText.length);
 
-        var selection = window.getSelection();
+        let selection = window.getSelection();
         selection.removeAllRanges();
         selection.addRange(finalSelectionRange);
         if (isIntermediateSuggestion)
@@ -569,16 +569,16 @@ WebInspector.TextPrompt.prototype = {
         if (!this.autoCompleteElement || !this.autoCompleteElement.parentNode)
             return false;
 
-        var text = this.autoCompleteElement.textContent;
-        var textNode = document.createTextNode(text);
+        let text = this.autoCompleteElement.textContent;
+        let textNode = document.createTextNode(text);
         this.autoCompleteElement.parentNode.replaceChild(textNode, this.autoCompleteElement);
         delete this.autoCompleteElement;
 
-        var finalSelectionRange = document.createRange();
+        let finalSelectionRange = document.createRange();
         finalSelectionRange.setStart(textNode, text.length);
         finalSelectionRange.setEnd(textNode, text.length);
 
-        var selection = window.getSelection();
+        let selection = window.getSelection();
         selection.removeAllRanges();
         selection.addRange(finalSelectionRange);
 
@@ -609,19 +609,19 @@ WebInspector.TextPrompt.prototype = {
 
     isCaretAtEndOfPrompt: function()
     {
-        var selection = window.getSelection();
+        let selection = window.getSelection();
         if (!selection.rangeCount || !selection.isCollapsed)
             return false;
 
-        var selectionRange = selection.getRangeAt(0);
-        var node = selectionRange.startContainer;
+        let selectionRange = selection.getRangeAt(0);
+        let node = selectionRange.startContainer;
         if (!node.isSelfOrDescendant(this._element))
             return false;
 
         if (node.nodeType === Node.TEXT_NODE && selectionRange.startOffset < node.nodeValue.length)
             return false;
 
-        var foundNextText = false;
+        let foundNextText = false;
         while (node) {
             if (node.nodeType === Node.TEXT_NODE && node.nodeValue.length) {
                 if (foundNextText && (!this.autoCompleteElement || !this.autoCompleteElement.isAncestor(node)))
@@ -637,8 +637,8 @@ WebInspector.TextPrompt.prototype = {
 
     isCaretOnFirstLine: function()
     {
-        var selection = window.getSelection();
-        var focusNode = selection.focusNode;
+        let selection = window.getSelection();
+        let focusNode = selection.focusNode;
         if (!focusNode || focusNode.nodeType !== Node.TEXT_NODE || focusNode.parentNode !== this._element)
             return true;
 
@@ -659,8 +659,8 @@ WebInspector.TextPrompt.prototype = {
 
     isCaretOnLastLine: function()
     {
-        var selection = window.getSelection();
-        var focusNode = selection.focusNode;
+        let selection = window.getSelection();
+        let focusNode = selection.focusNode;
         if (!focusNode || focusNode.nodeType !== Node.TEXT_NODE || focusNode.parentNode !== this._element)
             return true;
 
@@ -681,10 +681,10 @@ WebInspector.TextPrompt.prototype = {
 
     moveCaretToEndOfPrompt: function()
     {
-        var selection = window.getSelection();
-        var selectionRange = document.createRange();
+        let selection = window.getSelection();
+        let selectionRange = document.createRange();
 
-        var offset = this._element.childNodes.length;
+        let offset = this._element.childNodes.length;
         selectionRange.setStart(this._element, offset);
         selectionRange.setEnd(this._element, offset);
 
@@ -855,8 +855,8 @@ WebInspector.TextPromptWithHistory.prototype = {
      */
     defaultKeyHandler: function(event, force)
     {
-        var newText;
-        var isPrevious;
+        let newText;
+        let isPrevious;
 
         switch (event.keyIdentifier) {
         case "Up":
@@ -887,12 +887,12 @@ WebInspector.TextPromptWithHistory.prototype = {
             this.text = newText;
 
             if (isPrevious) {
-                var firstNewlineIndex = this.text.indexOf("\n");
+                let firstNewlineIndex = this.text.indexOf("\n");
                 if (firstNewlineIndex === -1)
                     this.moveCaretToEndOfPrompt();
                 else {
-                    var selection = window.getSelection();
-                    var selectionRange = document.createRange();
+                    let selection = window.getSelection();
+                    let selectionRange = document.createRange();
 
                     selectionRange.setStart(this._element.firstChild, firstNewlineIndex);
                     selectionRange.setEnd(this._element.firstChild, firstNewlineIndex);
@@ -964,8 +964,8 @@ WebInspector.TextPrompt.SuggestBox.prototype = {
         this.contentElement.style.display = "inline-block";
         document.body.appendChild(this.contentElement);
         this.contentElement.positionAt(0, 0);
-        var contentWidth = this.contentElement.offsetWidth;
-        var contentHeight = this.contentElement.offsetHeight;
+        let contentWidth = this.contentElement.offsetWidth;
+        let contentHeight = this.contentElement.offsetHeight;
         this.contentElement.style.display = "block";
         this.containerElement.appendChild(this.contentElement);
 
@@ -974,10 +974,10 @@ WebInspector.TextPrompt.SuggestBox.prototype = {
         const spacer = 6;
 
         const suggestBoxPaddingX = 21;
-        var maxWidth = document.body.offsetWidth - anchorBox.x - spacer;
-        var width = Math.min(contentWidth, maxWidth - suggestBoxPaddingX) + suggestBoxPaddingX;
-        var paddedWidth = contentWidth + suggestBoxPaddingX;
-        var boxX = anchorBox.x;
+        let maxWidth = document.body.offsetWidth - anchorBox.x - spacer;
+        let width = Math.min(contentWidth, maxWidth - suggestBoxPaddingX) + suggestBoxPaddingX;
+        let paddedWidth = contentWidth + suggestBoxPaddingX;
+        let boxX = anchorBox.x;
         if (width < paddedWidth) {
             // Shift the suggest box to the left to accommodate the content without trimming to the BODY edge.
             maxWidth = document.body.offsetWidth - spacer;
@@ -986,11 +986,11 @@ WebInspector.TextPrompt.SuggestBox.prototype = {
         }
 
         const suggestBoxPaddingY = 2;
-        var boxY;
-        var aboveHeight = anchorBox.y;
-        var underHeight = document.body.offsetHeight - anchorBox.y - anchorBox.height;
-        var maxHeight = Math.max(underHeight, aboveHeight) - spacer;
-        var height = Math.min(contentHeight, maxHeight - suggestBoxPaddingY) + suggestBoxPaddingY;
+        let boxY;
+        let aboveHeight = anchorBox.y;
+        let underHeight = document.body.offsetHeight - anchorBox.y - anchorBox.height;
+        let maxHeight = Math.max(underHeight, aboveHeight) - spacer;
+        let height = Math.min(contentHeight, maxHeight - suggestBoxPaddingY) + suggestBoxPaddingY;
         if (underHeight >= aboveHeight) {
             // Locate the suggest box under the anchorBox.
             boxY = anchorBox.y + anchorBox.height;
@@ -1038,7 +1038,7 @@ WebInspector.TextPrompt.SuggestBox.prototype = {
         if (!this.visible || !(text || this._selectedElement))
             return false;
 
-        var suggestion = text || this._selectedElement.textContent;
+        let suggestion = text || this._selectedElement.textContent;
         if (!suggestion)
             return false;
 
@@ -1051,7 +1051,7 @@ WebInspector.TextPrompt.SuggestBox.prototype = {
      */
     acceptSuggestion: function(text)
     {
-        var result = this._applySuggestion(text, false);
+        let result = this._applySuggestion(text, false);
         this.hide();
         if (!result)
             return false;
@@ -1063,7 +1063,7 @@ WebInspector.TextPrompt.SuggestBox.prototype = {
 
     _onNextItem: function(event, isPageScroll)
     {
-        var children = this.contentElement.childNodes;
+        let children = this.contentElement.childNodes;
         if (!children.length)
             return false;
 
@@ -1073,9 +1073,9 @@ WebInspector.TextPrompt.SuggestBox.prototype = {
             if (!isPageScroll)
                 this._selectedElement = this._selectedElement.nextSibling || this.contentElement.firstChild;
             else {
-                var candidate = this._selectedElement;
+                let candidate = this._selectedElement;
 
-                for (var itemsLeft = this._rowCountPerViewport; itemsLeft; --itemsLeft) {
+                for (let itemsLeft = this._rowCountPerViewport; itemsLeft; --itemsLeft) {
                     if (candidate.nextSibling)
                         candidate = candidate.nextSibling;
                     else
@@ -1092,7 +1092,7 @@ WebInspector.TextPrompt.SuggestBox.prototype = {
 
     _onPreviousItem: function(event, isPageScroll)
     {
-        var children = this.contentElement.childNodes;
+        let children = this.contentElement.childNodes;
         if (!children.length)
             return false;
 
@@ -1102,9 +1102,9 @@ WebInspector.TextPrompt.SuggestBox.prototype = {
             if (!isPageScroll)
                 this._selectedElement = this._selectedElement.previousSibling || this.contentElement.lastChild;
             else {
-                var candidate = this._selectedElement;
+                let candidate = this._selectedElement;
 
-                for (var itemsLeft = this._rowCountPerViewport; itemsLeft; --itemsLeft) {
+                for (let itemsLeft = this._rowCountPerViewport; itemsLeft; --itemsLeft) {
                     if (candidate.previousSibling)
                         candidate = candidate.previousSibling;
                     else
@@ -1141,16 +1141,16 @@ WebInspector.TextPrompt.SuggestBox.prototype = {
 
     _createItemElement: function(prefix, text)
     {
-        var element = document.createElement("div");
+        let element = document.createElement("div");
         element.className = "suggest-box-content-item source-code";
         element.tabIndex = -1;
         if (prefix && prefix.length && !text.indexOf(prefix)) {
-            var prefixElement = element.createChild("span", "prefix");
+            let prefixElement = element.createChild("span", "prefix");
             prefixElement.textContent = prefix;
-            var suffixElement = element.createChild("span", "suffix");
+            let suffixElement = element.createChild("span", "suffix");
             suffixElement.textContent = text.substring(prefix.length);
         } else {
-            var suffixElement = element.createChild("span", "suffix");
+            let suffixElement = element.createChild("span", "suffix");
             suffixElement.textContent = text;
         }
         element.addEventListener("mousedown", this._onItemMouseDown.bind(this, text), false);
@@ -1164,10 +1164,10 @@ WebInspector.TextPrompt.SuggestBox.prototype = {
     {
         this.contentElement.removeChildren();
 
-        var userEnteredText = this._textPrompt._userEnteredText;
-        for (var i = 0; i < items.length; ++i) {
-            var item = items[i];
-            var currentItemElement = this._createItemElement(userEnteredText, item);
+        let userEnteredText = this._textPrompt._userEnteredText;
+        for (let i = 0; i < items.length; ++i) {
+            let item = items[i];
+            let currentItemElement = this._createItemElement(userEnteredText, item);
             this.contentElement.appendChild(currentItemElement);
         }
 
@@ -1178,7 +1178,7 @@ WebInspector.TextPrompt.SuggestBox.prototype = {
     _updateSelection: function()
     {
         // FIXME: might want some optimization if becomes a bottleneck.
-        for (var child = this.contentElement.firstChild; child; child = child.nextSibling) {
+        for (let child = this.contentElement.firstChild; child; child = child.nextSibling) {
             if (child !== this._selectedElement)
                 child.removeStyleClass("selected");
         }
@@ -1251,7 +1251,7 @@ WebInspector.TextPrompt.SuggestBox.prototype = {
 
     enterKeyPressed: function(event)
     {
-        var hasSelectedItem = !!this._selectedElement;
+        let hasSelectedItem = !!this._selectedElement;
         this.acceptSuggestion();
 
         // Report the event as non-handled if there is no selected item,

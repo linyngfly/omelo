@@ -1,17 +1,17 @@
 (function(window){
-	var cloneError = function(origin) {
+	let cloneError = function(origin) {
 		// copy the stack infos for Error instance json result is empty
 		if(!(origin instanceof Error)) {
 			return origin;
 		}
-		var res = {
+		let res = {
 			message: origin.message, 
 			stack: origin.stack
 		};
 		return res;
 	};
 
-	var protocol = function(){
+	let protocol = function(){
 		this.PRO_OK = 1;
 		this.PRO_FAIL = -1;
 	}

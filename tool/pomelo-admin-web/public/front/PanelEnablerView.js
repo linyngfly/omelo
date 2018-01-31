@@ -49,10 +49,10 @@ WebInspector.PanelEnablerView = function(identifier, headingText, disclaimerText
     this.headerElement.textContent = headingText;
     this.choicesForm.appendChild(this.headerElement);
 
-    var self = this;
+    let self = this;
     function enableOption(text, checked) {
-        var label = document.createElement("label");
-        var option = document.createElement("input");
+        let label = document.createElement("label");
+        let option = document.createElement("input");
         option.type = "radio";
         option.name = "enable-option";
         if (checked)

@@ -1,7 +1,7 @@
-var logger = require('log4js').getLogger('HZJob');
-var Schedule = require('pomelo-schedule');
+let logger = require('log4js').getLogger('HZJob');
+let Schedule = require('pomelo-schedule');
 
-var jobTypes = [{
+let jobTypes = [{
 		id: 'hzJob1',
 		cron: '0 0 1 * * *',
 		hz: 200
@@ -26,7 +26,7 @@ var jobTypes = [{
 	// }
 ];
 
-var HZJob = function() {
+let HZJob = function() {
 	this.jobMaps = {};
 	this.watcherManager = null;
 }
@@ -36,14 +36,14 @@ HZJob.prototype.setWatcherManager = function(watcherManager) {
 }
 
 HZJob.prototype.start = function() {
-	var len = jobTypes.length;
-	for (var i = 0; i < len; i++) {
-		var job = jobTypes[i];
-		var id = job['id'];
-		var cron = job['cron'];
-		var hz = job['hz'];
+	let len = jobTypes.length;
+	for (let i = 0; i < len; i++) {
+		let job = jobTypes[i];
+		let id = job['id'];
+		let cron = job['cron'];
+		let hz = job['hz'];
 
-		var oldJobId = this.jobMaps[id];
+		let oldJobId = this.jobMaps[id];
 		if (oldJobId) {
 			Schedule.cancelJob(oldJobId);
 		}
@@ -54,7 +54,7 @@ HZJob.prototype.start = function() {
 }
 
 HZJob.prototype.updateHZ = function(hz) {
-	var masterNode = this.watcherManager.masterNode;
+	let masterNode = this.watcherManager.masterNode;
 	if (masterNode && masterNode.available) {
 		masterNode.updateHZ(hz, function(err, r) {
 			if (err) {

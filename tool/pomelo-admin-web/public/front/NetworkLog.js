@@ -63,12 +63,12 @@ WebInspector.NetworkLog.prototype = {
      */
     _onMainFrameNavigated: function(event)
     {
-        var mainFrame = /** type {WebInspector.ResourceTreeFrame} */ event.data;
+        let mainFrame = /** type {WebInspector.ResourceTreeFrame} */ event.data;
         // Preserve resources from the new session.
         this._currentPageLoad = null;
-        var oldResources = this._resources.splice(0, this._resources.length);
-        for (var i = 0; i < oldResources.length; ++i) {
-            var resource = oldResources[i];
+        let oldResources = this._resources.splice(0, this._resources.length);
+        for (let i = 0; i < oldResources.length; ++i) {
+            let resource = oldResources[i];
             if (resource.loaderId === mainFrame.loaderId) {
                 if (!this._currentPageLoad)
                     this._currentPageLoad = new WebInspector.PageLoad(resource);
@@ -83,7 +83,7 @@ WebInspector.NetworkLog.prototype = {
      */
     _onResourceStarted: function(event)
     {
-        var resource = /** @type {WebInspector.Resource} */ event.data;
+        let resource = /** @type {WebInspector.Resource} */ event.data;
         this._resources.push(resource);
         resource.__page = this._currentPageLoad;
     },

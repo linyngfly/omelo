@@ -44,7 +44,7 @@ WebInspector.ExtensionServer = function()
     this._registeredExtensions = {};
     this._status = new WebInspector.ExtensionStatus();
 
-    var commands = WebInspector.extensionAPI.Commands;
+    let commands = WebInspector.extensionAPI.Commands;
 
     this._registerHandler(commands.AddAuditCategory, this._onAddAuditCategory.bind(this));
     this._registerHandler(commands.AddAuditResult, this._onAddAuditResult.bind(this));
@@ -103,7 +103,7 @@ WebInspector.ExtensionServer.prototype = {
     _inspectedURLChanged: function(event)
     {
         this._requests = {};
-        var url = event.data;
+        let url = event.data;
         this._postNotification(WebInspector.extensionAPI.Events.InspectedURLChanged, url);
     },
 
@@ -128,20 +128,20 @@ WebInspector.ExtensionServer.prototype = {
      */
     _postNotification: function(type, vararg)
     {
-        var subscribers = this._subscribers[type];
+        let subscribers = this._subscribers[type];
         if (!subscribers)
             return;
-        var message = {
+        let message = {
             command: "notify-" + type,
             arguments: Array.prototype.slice.call(arguments, 1)
         };
-        for (var i = 0; i < subscribers.length; ++i)
+        for (let i = 0; i < subscribers.length; ++i)
             subscribers[i].postMessage(message);
     },
 
     _onSubscribe: function(message, port)
     {
-        var subscribers = this._subscribers[message.type];
+        let subscribers = this._subscribers[message.type];
         if (subscribers)
             subscribers.push(port);
         else {
@@ -153,7 +153,7 @@ WebInspector.ExtensionServer.prototype = {
 
     _onUnsubscribe: function(message, port)
     {
-        var subscribers = this._subscribers[message.type];
+        let subscribers = this._subscribers[message.type];
         if (!subscribers)
             return;
         subscribers.remove(port);
@@ -166,19 +166,19 @@ WebInspector.ExtensionServer.prototype = {
 
     _onAddRequestHeaders: function(message)
     {
-        var id = message.extensionId;
+        let id = message.extensionId;
         if (typeof id !== "string")
             return this._status.E_BADARGTYPE("extensionId", typeof id, "string");
-        var extensionHeaders = this._extraHeaders[id];
+        let extensionHeaders = this._extraHeaders[id];
         if (!extensionHeaders) {
             extensionHeaders = {};
             this._extraHeaders[id] = extensionHeaders;
         }
-        for (var name in message.headers)
+        for (let name in message.headers)
             extensionHeaders[name] = message.headers[name];
-        var allHeaders = /** @type NetworkAgent.Headers */ {};
-        for (var extension in this._extraHeaders) {
-            var headers = this._extraHeaders[extension];
+        let allHeaders = /** @type NetworkAgent.Headers */ {};
+        for (let extension in this._extraHeaders) {
+            let headers = this._extraHeaders[extension];
             for (name in headers) {
                 if (typeof headers[name] === "string")
                     allHeaders[name] = headers[name];
@@ -189,15 +189,15 @@ WebInspector.ExtensionServer.prototype = {
 
     _onCreatePanel: function(message, port)
     {
-        var id = message.id;
+        let id = message.id;
         // The ids are generated on the client API side and must be unique, so the check below
         // shouldn't be hit unless someone is bypassing the API.
         if (id in this._clientObjects || id in WebInspector.panels)
             return this._status.E_EXISTS(id);
 
-        var page = this._expandResourcePath(port._extensionOrigin, message.page);
-        var icon = this._expandResourcePath(port._extensionOrigin, message.icon)
-        var panel = new WebInspector.ExtensionPanel(id, message.title, page, icon);
+        let page = this._expandResourcePath(port._extensionOrigin, message.page);
+        let icon = this._expandResourcePath(port._extensionOrigin, message.icon)
+        let panel = new WebInspector.ExtensionPanel(id, message.title, page, icon);
         this._clientObjects[id] = panel;
         WebInspector.panels[id] = panel;
         WebInspector.addPanel(panel);
@@ -206,10 +206,10 @@ WebInspector.ExtensionServer.prototype = {
 
     _onCreateStatusBarButton: function(message, port)
     {
-        var panel = this._clientObjects[message.panel];
+        let panel = this._clientObjects[message.panel];
         if (!panel || !(panel instanceof WebInspector.ExtensionPanel))
             return this._status.E_NOTFOUND(message.panel);
-        var button = new WebInspector.ExtensionButton(message.id, this._expandResourcePath(port._extensionOrigin, message.icon), message.tooltip, message.disabled);
+        let button = new WebInspector.ExtensionButton(message.id, this._expandResourcePath(port._extensionOrigin, message.icon), message.tooltip, message.disabled);
         this._clientObjects[message.id] = button;
         panel.addStatusBarItem(button.element);
         return this._status.OK();
@@ -217,7 +217,7 @@ WebInspector.ExtensionServer.prototype = {
 
     _onUpdateButton: function(message, port)
     {
-        var button = this._clientObjects[message.id];
+        let button = this._clientObjects[message.id];
         if (!button || !(button instanceof WebInspector.ExtensionButton))
             return this._status.E_NOTFOUND(message.id);
         button.update(this._expandResourcePath(port._extensionOrigin, message.icon), message.tooltip, message.disabled);
@@ -226,13 +226,13 @@ WebInspector.ExtensionServer.prototype = {
 
     _onCreateSidebarPane: function(message)
     {
-        var panel = WebInspector.panels[message.panel];
+        let panel = WebInspector.panels[message.panel];
         if (!panel)
             return this._status.E_NOTFOUND(message.panel);
         if (!panel.sidebarElement || !panel.sidebarPanes)
             return this._status.E_NOTSUPPORTED();
-        var id = message.id;
-        var sidebar = new WebInspector.ExtensionSidebarPane(message.title, message.id);
+        let id = message.id;
+        let sidebar = new WebInspector.ExtensionSidebarPane(message.title, message.id);
         this._clientObjects[id] = sidebar;
         panel.sidebarPanes[id] = sidebar;
         panel.sidebarElement.appendChild(sidebar.element);
@@ -242,7 +242,7 @@ WebInspector.ExtensionServer.prototype = {
 
     _onSetSidebarHeight: function(message)
     {
-        var sidebar = this._clientObjects[message.id];
+        let sidebar = this._clientObjects[message.id];
         if (!sidebar)
             return this._status.E_NOTFOUND(message.id);
         sidebar.setHeight(message.height);
@@ -251,12 +251,12 @@ WebInspector.ExtensionServer.prototype = {
 
     _onSetSidebarContent: function(message, port)
     {
-        var sidebar = this._clientObjects[message.id];
+        let sidebar = this._clientObjects[message.id];
         if (!sidebar)
             return this._status.E_NOTFOUND(message.id);
         function callback(error)
         {
-            var result = error ? this._status.E_FAILED(error) : this._status.OK();
+            let result = error ? this._status.E_FAILED(error) : this._status.OK();
             this._dispatchCallback(message.requestId, port, result);
         }
         if (message.evaluateOnPage)
@@ -267,7 +267,7 @@ WebInspector.ExtensionServer.prototype = {
 
     _onSetSidebarPage: function(message, port)
     {
-        var sidebar = this._clientObjects[message.id];
+        let sidebar = this._clientObjects[message.id];
         if (!sidebar)
             return this._status.E_NOTFOUND(message.id);
         sidebar.setPage(this._expandResourcePath(port._extensionOrigin, message.page));
@@ -275,7 +275,7 @@ WebInspector.ExtensionServer.prototype = {
 
     _onSetOpenResourceHandler: function(message, port)
     {
-        var name = this._registeredExtensions[port._extensionOrigin].name || ("Extension " + port._extensionOrigin);
+        let name = this._registeredExtensions[port._extensionOrigin].name || ("Extension " + port._extensionOrigin);
         if (message.handlerPresent)
             WebInspector.openAnchorLocationRegistry.registerHandler(name, this._handleOpenURL.bind(this, port));
         else
@@ -284,10 +284,10 @@ WebInspector.ExtensionServer.prototype = {
 
     _handleOpenURL: function(port, details)
     {
-        var resource = WebInspector.resourceForURL(details.url);
+        let resource = WebInspector.resourceForURL(details.url);
         if (!resource)
             return false;
-        var lineNumber = details.lineNumber;
+        let lineNumber = details.lineNumber;
         if (typeof lineNumber === "number")
             lineNumber += 1;
         port.postMessage({
@@ -305,9 +305,9 @@ WebInspector.ExtensionServer.prototype = {
 
     _onReload: function(message)
     {
-        var options = /** @type ExtensionReloadOptions */ (message.options || {});
+        let options = /** @type ExtensionReloadOptions */ (message.options || {});
         NetworkAgent.setUserAgentOverride(typeof options.userAgent === "string" ? options.userAgent : "");
-        var injectedScript;
+        let injectedScript;
         if (options.injectedScript) {
             // Wrap client script into anonymous function, return another anonymous function that
             // returns empty object for compatibility with InjectedScriptManager on the backend.
@@ -321,7 +321,7 @@ WebInspector.ExtensionServer.prototype = {
     {
         function callback(error, resultPayload, wasThrown)
         {
-            var result = {};
+            let result = {};
             if (error) {
                 result.isException = true;
                 result.value = error.message;
@@ -358,11 +358,11 @@ WebInspector.ExtensionServer.prototype = {
                     return WebInspector.ConsoleMessage.MessageLevel.Debug;
             }
         }
-        var level = convertSeverity(message.severity);
+        let level = convertSeverity(message.severity);
         if (!level)
             return this._status.E_BADARG("message.severity", message.severity);
 
-        var consoleMessage = WebInspector.ConsoleMessage.create(
+        let consoleMessage = WebInspector.ConsoleMessage.create(
             WebInspector.ConsoleMessage.MessageSource.JS,
             level,
             message.text,
@@ -393,7 +393,7 @@ WebInspector.ExtensionServer.prototype = {
                     return WebInspector.extensionAPI.console.Severity.Log;
             }
         }
-        var result = {
+        let result = {
             severity: convertLevel(message.level),
             text: message.text,
         };
@@ -406,9 +406,9 @@ WebInspector.ExtensionServer.prototype = {
 
     _onGetHAR: function()
     {
-        var requests = WebInspector.networkLog.resources;
-        var harLog = (new WebInspector.HARLog(requests)).build();
-        for (var i = 0; i < harLog.entries.length; ++i)
+        let requests = WebInspector.networkLog.resources;
+        let harLog = (new WebInspector.HARLog(requests)).build();
+        for (let i = 0; i < harLog.entries.length; ++i)
             harLog.entries[i]._requestId = this._requestId(requests[i]);
         return harLog;
     },
@@ -423,7 +423,7 @@ WebInspector.ExtensionServer.prototype = {
 
     _onGetPageResources: function()
     {
-        var resources = [];
+        let resources = [];
         function pushResourceData(resource)
         {
             resources.push(this._makeResource(resource));
@@ -436,7 +436,7 @@ WebInspector.ExtensionServer.prototype = {
     {
         function onContentAvailable(content, encoded)
         {
-            var response = {
+            let response = {
                 encoding: encoded ? "base64" : "",
                 content: content
             };
@@ -447,7 +447,7 @@ WebInspector.ExtensionServer.prototype = {
 
     _onGetRequestContent: function(message, port)
     {
-        var request = this._requestById(message.id);
+        let request = this._requestById(message.id);
         if (!request)
             return this._status.E_NOTFOUND(message.id);
         this._getResourceContent(request, message, port);
@@ -455,7 +455,7 @@ WebInspector.ExtensionServer.prototype = {
 
     _onGetResourceContent: function(message, port)
     {
-        var resource = WebInspector.resourceTreeModel.resourceForURL(message.url);
+        let resource = WebInspector.resourceTreeModel.resourceForURL(message.url);
         if (!resource)
             return this._status.E_NOTFOUND(message.url);
         this._getResourceContent(resource, message, port);
@@ -465,10 +465,10 @@ WebInspector.ExtensionServer.prototype = {
     {
         function callbackWrapper(error)
         {
-            var response = error ? this._status.E_FAILED(error) : this._status.OK();
+            let response = error ? this._status.E_FAILED(error) : this._status.OK();
             this._dispatchCallback(message.requestId, port, response);
         }
-        var resource = WebInspector.resourceTreeModel.resourceForURL(message.url);
+        let resource = WebInspector.resourceTreeModel.resourceForURL(message.url);
         if (!resource)
             return this._status.E_NOTFOUND(message.url);
         resource.setContent(message.content, message.commit, callbackWrapper.bind(this));
@@ -490,7 +490,7 @@ WebInspector.ExtensionServer.prototype = {
 
     _onAddAuditCategory: function(message)
     {
-        var category = new WebInspector.ExtensionAuditCategory(message.id, message.displayName, message.resultCount);
+        let category = new WebInspector.ExtensionAuditCategory(message.id, message.displayName, message.resultCount);
         if (WebInspector.panels.audits.getCategory(category.id))
             return this._status.E_EXISTS(category.id);
         this._clientObjects[message.id] = category;
@@ -499,7 +499,7 @@ WebInspector.ExtensionServer.prototype = {
 
     _onAddAuditResult: function(message)
     {
-        var auditResult = this._clientObjects[message.resultId];
+        let auditResult = this._clientObjects[message.resultId];
         if (!auditResult)
             return this._status.E_NOTFOUND(message.resultId);
         try {
@@ -512,7 +512,7 @@ WebInspector.ExtensionServer.prototype = {
 
     _onStopAuditCategoryRun: function(message)
     {
-        var auditRun = this._clientObjects[message.resultId];
+        let auditRun = this._clientObjects[message.resultId];
         if (!auditRun)
             return this._status.E_NOTFOUND(message.resultId);
         auditRun.cancel();
@@ -573,7 +573,7 @@ WebInspector.ExtensionServer.prototype = {
 
     _notifyResourceAdded: function(event)
     {
-        var resource = event.data;
+        let resource = event.data;
         this._postNotification(WebInspector.extensionAPI.Events.ResourceAdded, this._makeResource(resource));
     },
 
@@ -584,7 +584,7 @@ WebInspector.ExtensionServer.prototype = {
 
     _notifyRequestFinished: function(event)
     {
-        var request = event.data;
+        let request = event.data;
         this._postNotification(WebInspector.extensionAPI.Events.NetworkRequestFinished, this._requestId(request), (new WebInspector.HAREntry(request)).build());
     },
 
@@ -603,29 +603,29 @@ WebInspector.ExtensionServer.prototype = {
      */
     _addExtensions: function(extensions)
     {
-        for (var i = 0; i < extensions.length; ++i)
+        for (let i = 0; i < extensions.length; ++i)
             this._addExtension(extensions[i]);
     },
 
     _addExtension: function(extensionInfo)
     {
         const urlOriginRegExp = new RegExp("([^:]+:\/\/[^/]*)\/"); // Can't use regexp literal here, MinJS chokes on it.
-        var startPage = extensionInfo.startPage;
-        var name = extensionInfo.name;
+        let startPage = extensionInfo.startPage;
+        let name = extensionInfo.name;
 
         try {
-            var originMatch = urlOriginRegExp.exec(startPage);
+            let originMatch = urlOriginRegExp.exec(startPage);
             if (!originMatch) {
                 console.error("Skipping extension with invalid URL: " + startPage);
                 return false;
             }
-            var extensionOrigin = originMatch[1];
+            let extensionOrigin = originMatch[1];
             if (!this._registeredExtensions[extensionOrigin]) {
                 // See ExtensionAPI.js and ExtensionCommon.js for details.
                 InspectorFrontendHost.setInjectedScriptForOrigin(extensionOrigin, buildExtensionAPIInjectedScript(extensionInfo));
                 this._registeredExtensions[extensionOrigin] = { name: name };
             }
-            var iframe = document.createElement("iframe");
+            let iframe = document.createElement("iframe");
             iframe.src = startPage;
             iframe.style.display = "none";
             document.body.appendChild(iframe);
@@ -656,8 +656,8 @@ WebInspector.ExtensionServer.prototype = {
 
     _onmessage: function(event)
     {
-        var message = event.data;
-        var result;
+        let message = event.data;
+        let result;
 
         if (message.command in this._handlers)
             result = this._handlers[message.command](message, event.target);
@@ -695,10 +695,10 @@ WebInspector.ExtensionServer.prototype = {
 
     _normalizePath: function(path)
     {
-        var source = path.split("/");
-        var result = [];
+        let source = path.split("/");
+        let result = [];
 
-        for (var i = 0; i < source.length; ++i) {
+        for (let i = 0; i < source.length; ++i) {
             if (source[i] === ".")
                 continue;
             // Ignore empty path components resulting from //, as well as a leading and traling slashes.
@@ -720,8 +720,8 @@ WebInspector.ExtensionStatus = function()
 {
     function makeStatus(code, description)
     {
-        var details = Array.prototype.slice.call(arguments, 2);
-        var status = { code: code, description: description, details: details };
+        let details = Array.prototype.slice.call(arguments, 2);
+        let status = { code: code, description: description, details: details };
         if (code !== "OK") {
             status.isError = true;
             console.log("Extension server error: " + String.vsprintf(description, details));

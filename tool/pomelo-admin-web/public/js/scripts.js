@@ -3,11 +3,11 @@ Ext.onReady(function() {
 	Ext.BLANK_IMAGE_URL = '../ext-4.0.7-gpl/resources/themes/images/default/tree/s.gif';
 
 	//server comboBox
-	var serverStore = Ext.create('Ext.data.Store', {
+	let serverStore = Ext.create('Ext.data.Store', {
 		fields: ['name', 'serverId']
 	});
 
-	var serverCom = Ext.create('Ext.form.ComboBox', {
+	let serverCom = Ext.create('Ext.form.ComboBox', {
 		id: 'serverComId',
 		fieldLabel: 'On Server',
 		labelWidth: 60,
@@ -18,11 +18,11 @@ Ext.onReady(function() {
 	});
 
 	//script comboBox
-	var scriptStore = Ext.create('Ext.data.Store', {
+	let scriptStore = Ext.create('Ext.data.Store', {
 		fields: ['name', 'script']
 	});
 
-	var scriptCom = Ext.create('Ext.form.ComboBox', {
+	let scriptCom = Ext.create('Ext.form.ComboBox', {
 		id: 'scriptComId',
 		fieldLabel: 'Script List',
 		labelWidth: 80,
@@ -33,14 +33,14 @@ Ext.onReady(function() {
 		listeners: {
 			select: {
 				fn: function() {
-					var value = scriptCom.getValue();
+					let value = scriptCom.getValue();
 					get(value);
 				}
 			}
 		}
 	});
 
-	var runScriptPanel = Ext.create('Ext.form.FormPanel', {
+	let runScriptPanel = Ext.create('Ext.form.FormPanel', {
 		bodyPadding: 10,
 		autoScroll: true,
 		autoShow: true,
@@ -101,8 +101,8 @@ Ext.onReady(function() {
 	});
 });
 
-var saveForm = function() {
-	var saveForm = Ext.create('Ext.form.Panel', {
+let saveForm = function() {
+	let saveForm = Ext.create('Ext.form.Panel', {
 		frame: true,
 		bodyStyle: 'padding:2px 2px 0',
 		width: 300,
@@ -131,7 +131,7 @@ var saveForm = function() {
 		}]
 	});
 
-	var win = Ext.create('Ext.window.Window', {
+	let win = Ext.create('Ext.window.Window', {
 		id: 'saveWinId',
 		title: 'saveScript',
 		height: 100,
@@ -144,11 +144,11 @@ var saveForm = function() {
 	win.show();
 };
 
-var cancel = function() {
+let cancel = function() {
 	Ext.getCmp('saveWinId').close();
 };
 
-var list = function() {
+let list = function() {
 	window.parent.client.request('scripts', {
 		command: 'list'
 	}, function(err, msg) {
@@ -156,7 +156,7 @@ var list = function() {
 			alert(err);
 			return;
 		}
-		var servers = [],
+		let servers = [],
 			scripts = [],
 			i, l, item;
 		for (i = 0, l = msg.servers.length; i < l; i++) {
@@ -189,9 +189,9 @@ var list = function() {
 };
 
 //run the script
-var run = function() {
-	var scriptJs = Ext.getCmp('scriptAreaId').getValue();
-	var serverId = Ext.getCmp('serverComId').getValue();
+let run = function() {
+	let scriptJs = Ext.getCmp('scriptAreaId').getValue();
+	let serverId = Ext.getCmp('serverComId').getValue();
 
 	if (!serverId) {
 		alert('serverId is required!');
@@ -211,7 +211,7 @@ var run = function() {
 	});
 };
 
-var get = function(filename) {
+let get = function(filename) {
 	window.parent.client.request('scripts', {
 		command: 'get',
 		filename: filename
@@ -224,14 +224,14 @@ var get = function(filename) {
 	});
 };
 
-var save = function() {
-	var filename = Ext.getCmp('scriptNameId').getValue();
+let save = function() {
+	let filename = Ext.getCmp('scriptNameId').getValue();
 	if (!filename.match(/\.js$/)) {
 		alert('the filename is required!');
 		return;
 	}
 
-	var data = Ext.getCmp('scriptAreaId').getValue();
+	let data = Ext.getCmp('scriptAreaId').getValue();
 
 	window.parent.client.request('scripts', {
 		command: 'save',

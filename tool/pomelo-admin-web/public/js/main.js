@@ -1,13 +1,13 @@
 /**
  * @author lwj Admin Console
  */
-var centerPanel = '';
+let centerPanel = '';
 Ext.onReady(function() {
 	Ext.BLANK_IMAGE_URL = '../ext-4.0.7-gpl/resources/themes/images/default/tree/s.gif';
 	// Ext.BLANK_IMAGE_URL =
 	// 'http://www.cnblogs.com/ext4/resources/images/default/s.gif';
 
-	var treeStore = Ext.create('Ext.data.TreeStore', {
+	let treeStore = Ext.create('Ext.data.TreeStore', {
 		root : {
 			expanded : true,
 			children : [ {
@@ -63,7 +63,7 @@ Ext.onReady(function() {
 	});
 			
 	// admin consle menu----------------------------------------------------
-	var westpanel = Ext.create('Ext.tree.Panel', {
+	let westpanel = Ext.create('Ext.tree.Panel', {
 		title : 'Menu',
 		region : 'west',
 		width : 150,
@@ -72,17 +72,17 @@ Ext.onReady(function() {
 		rootVisible : false,
 		listeners : {
 			'itemclick' : function(view, re) {
-				var title = re.data.text;
-				var id = re.data.id;
-				var leaf = re.data.leaf;
+				let title = re.data.text;
+				let id = re.data.id;
+				let leaf = re.data.leaf;
 				if (!leaf) {
 					return;
 				}
 				if (id === 'profiler') {
-					var url = '/front/inspector.html?host='
+					let url = '/front/inspector.html?host='
 						+ window.location.hostname + ':2337&page=0';
 				} else {
-					var url = '/module/' + id + '.html';
+					let url = '/module/' + id + '.html';
 				}
 				addIframe(title, url, id);
 
@@ -97,7 +97,7 @@ Ext.onReady(function() {
 		border : false,
 		activeTab : 0
 	});
-	var viewport = new Ext.Viewport(
+	let viewport = new Ext.Viewport(
 	{
 		layout : 'border',
 		items : [
@@ -117,11 +117,11 @@ function addIframe(title, url, id) {
 	tabPanel = centerPanel;
 
 	if (tabPanel.getComponent(id) != null) {
-		var arr = url.split('?');
+		let arr = url.split('?');
 		if (arr.length >= 2) {
 			tabPanel.remove(tabPanel.getComponent(id));
 
-			var iframe = Ext.DomHelper.append(document.body, {
+			let iframe = Ext.DomHelper.append(document.body, {
 				tag : 'iframe',
 				frameBorder : 0,
 				src : url,
@@ -129,7 +129,7 @@ function addIframe(title, url, id) {
 				height : '100%'
 			});
 
-			var tab = new Ext.Panel({
+			let tab = new Ext.Panel({
 				id : id,
 				title : title,
 				titleCollapse : true,
@@ -150,7 +150,7 @@ function addIframe(title, url, id) {
 		return;
 	}
 
-	var iframe = Ext.DomHelper.append(document.body, {
+	let iframe = Ext.DomHelper.append(document.body, {
 		tag : 'iframe',
 		frameBorder : 0,
 		src : url,
@@ -158,7 +158,7 @@ function addIframe(title, url, id) {
 		height : '100%'
 	});
 
-	var tab = new Ext.Panel({
+	let tab = new Ext.Panel({
 		id : id,
 		title : title,
 		titleCollapse : true,

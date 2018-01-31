@@ -39,8 +39,8 @@ re2c -isc Source/WebCore/inspector/front-end/SourceCSSTokenizer.re2js \
  | sed 's|[*]cursor|this._charAt(cursor)|' \
  | sed 's|yych = \*\([^;]*\)|yych = this._charAt\1|' \
  | sed 's|{ gotoCase = \([^; continue; };]*\)|{ gotoCase = \1; continue; }|' \
- | sed 's|unsigned\ int|var|' \
- | sed 's|var\ yych|case 1: case 1: var yych|' > Source/WebCore/inspector/front-end/SourceCSSTokenizer.js
+ | sed 's|unsigned\ int|let|' \
+ | sed 's|let\ yych|case 1: case 1: let yych|' > Source/WebCore/inspector/front-end/SourceCSSTokenizer.js
 */
 
 /**
@@ -154,16 +154,16 @@ WebInspector.SourceCSSTokenizer.prototype = {
 
     nextToken: function(cursor)
     {
-        var cursorOnEnter = cursor;
-        var gotoCase = 1;
-        var YYMARKER;
+        let cursorOnEnter = cursor;
+        let gotoCase = 1;
+        let YYMARKER;
         while (1) {
             switch (gotoCase)
             // Following comment is replaced with generated state machine.
             
         {
-            case 1: var yych;
-            var yyaccept = 0;
+            case 1: let yych;
+            let yyaccept = 0;
             if (this.getLexCondition() < 2) {
                 if (this.getLexCondition() < 1) {
                     { gotoCase = this.case_INITIAL; continue; };
@@ -390,7 +390,7 @@ case 31:
             { gotoCase = 50; continue; };
 case 32:
             {
-                    var token = this._line.substring(cursorOnEnter, cursor);
+                    let token = this._line.substring(cursorOnEnter, cursor);
                     if (this._condition.parseCondition === this._parseConditions.INITIAL) {
                         if (token === "@media") {
                             this.tokenType = "css-at-rule";

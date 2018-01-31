@@ -54,18 +54,18 @@ WebInspector.displayNameForURL = function(url)
     if (!url)
         return "";
 
-    var resource = WebInspector.resourceForURL(url);
+    let resource = WebInspector.resourceForURL(url);
     if (resource)
         return resource.displayName;
 
     if (!WebInspector.inspectedPageURL)
         return url.trimURL("");
 
-    var parsedURL = WebInspector.inspectedPageURL.asParsedURL();
-    var lastPathComponent = parsedURL.lastPathComponent;
-    var index = WebInspector.inspectedPageURL.indexOf(lastPathComponent);
+    let parsedURL = WebInspector.inspectedPageURL.asParsedURL();
+    let lastPathComponent = parsedURL.lastPathComponent;
+    let index = WebInspector.inspectedPageURL.indexOf(lastPathComponent);
     if (index !== -1 && index + lastPathComponent.length === WebInspector.inspectedPageURL.length) {
-        var baseURL = WebInspector.inspectedPageURL.substring(0, index);
+        let baseURL = WebInspector.inspectedPageURL.substring(0, index);
         if (url.indexOf(baseURL) === 0)
             return url.substring(index);
     }
@@ -80,27 +80,27 @@ WebInspector.displayNameForURL = function(url)
  */
 WebInspector.linkifyStringAsFragmentWithCustomLinkifier = function(string, linkifier)
 {
-    var container = document.createDocumentFragment();
-    var linkStringRegEx = /(?:[a-zA-Z][a-zA-Z0-9+.-]{2,}:\/\/|www\.)[\w$\-_+*'=\|\/\\(){}[\]%@&#~,:;.!?]{2,}[\w$\-_+*=\|\/\\({%@&#~]/;
-    var lineColumnRegEx = /:(\d+)(:(\d+))?$/;
+    let container = document.createDocumentFragment();
+    let linkStringRegEx = /(?:[a-zA-Z][a-zA-Z0-9+.-]{2,}:\/\/|www\.)[\w$\-_+*'=\|\/\\(){}[\]%@&#~,:;.!?]{2,}[\w$\-_+*=\|\/\\({%@&#~]/;
+    let lineColumnRegEx = /:(\d+)(:(\d+))?$/;
 
     while (string) {
-        var linkString = linkStringRegEx.exec(string);
+        let linkString = linkStringRegEx.exec(string);
         if (!linkString)
             break;
 
         linkString = linkString[0];
-        var linkIndex = string.indexOf(linkString);
-        var nonLink = string.substring(0, linkIndex);
+        let linkIndex = string.indexOf(linkString);
+        let nonLink = string.substring(0, linkIndex);
         container.appendChild(document.createTextNode(nonLink));
 
-        var title = linkString;
-        var realURL = (linkString.indexOf("www.") === 0 ? "http://" + linkString : linkString);
-        var lineColumnMatch = lineColumnRegEx.exec(realURL);
+        let title = linkString;
+        let realURL = (linkString.indexOf("www.") === 0 ? "http://" + linkString : linkString);
+        let lineColumnMatch = lineColumnRegEx.exec(realURL);
         if (lineColumnMatch)
             realURL = realURL.substring(0, realURL.length - lineColumnMatch[0].length);
 
-        var linkNode = linkifier(title, realURL, lineColumnMatch ? lineColumnMatch[1] : undefined);
+        let linkNode = linkifier(title, realURL, lineColumnMatch ? lineColumnMatch[1] : undefined);
         container.appendChild(linkNode);
         string = string.substring(linkIndex + linkString.length, string.length);
     }
@@ -129,11 +129,11 @@ WebInspector.linkifyStringAsFragment = function(string)
 {
     function linkifier(title, url, lineNumber)
     {
-        for (var i = 0; i < WebInspector._linkifierPlugins.length; ++i)
+        for (let i = 0; i < WebInspector._linkifierPlugins.length; ++i)
             title = WebInspector._linkifierPlugins[i](title);
 
-        var isExternal = !WebInspector.resourceForURL(url);
-        var urlNode = WebInspector.linkifyURLAsNode(url, title, undefined, isExternal);
+        let isExternal = !WebInspector.resourceForURL(url);
+        let urlNode = WebInspector.linkifyURLAsNode(url, title, undefined, isExternal);
         if (typeof(lineNumber) !== "undefined") {
             urlNode.lineNumber = lineNumber;
             urlNode.preferredPanel = "scripts";
@@ -160,7 +160,7 @@ WebInspector.linkifyURLAsNode = function(url, linkText, classes, isExternal, too
     classes = (classes ? classes + " " : "");
     classes += isExternal ? "webkit-html-external-link" : "webkit-html-resource-link";
 
-    var a = document.createElement("a");
+    let a = document.createElement("a");
     a.href = url;
     a.className = classes;
     if (typeof tooltipText === "undefined")
@@ -182,7 +182,7 @@ WebInspector.linkifyURLAsNode = function(url, linkText, classes, isExternal, too
  */
 WebInspector.formatLinkText = function(url, lineNumber)
 {
-    var text = WebInspector.displayNameForURL(url);
+    let text = WebInspector.displayNameForURL(url);
     if (typeof lineNumber === "number")
         text += ":" + (lineNumber + 1);
     return text;
@@ -197,8 +197,8 @@ WebInspector.formatLinkText = function(url, lineNumber)
  */
 WebInspector.linkifyResourceAsNode = function(url, lineNumber, classes, tooltipText)
 {
-    var linkText = WebInspector.formatLinkText(url, lineNumber);
-    var anchor = WebInspector.linkifyURLAsNode(url, linkText, classes, false, tooltipText);
+    let linkText = WebInspector.formatLinkText(url, lineNumber);
+    let anchor = WebInspector.linkifyURLAsNode(url, linkText, classes, false, tooltipText);
     anchor.preferredPanel = "resources";
     anchor.lineNumber = lineNumber;
     return anchor;
@@ -211,7 +211,7 @@ WebInspector.linkifyResourceAsNode = function(url, lineNumber, classes, tooltipT
  */
 WebInspector.linkifyRequestAsNode = function(request, classes)
 {
-    var anchor = WebInspector.linkifyURLAsNode(request.url);
+    let anchor = WebInspector.linkifyURLAsNode(request.url);
     anchor.preferredPanel = "network";
     anchor.requestId  = request.requestId;
     return anchor;
@@ -228,9 +228,9 @@ WebInspector.resourceURLForRelatedNode = function(node, url)
     if (url.trim().indexOf("javascript:") === 0)
         return null; // Do not provide a resource URL for security.
 
-    for (var frameOwnerCandidate = node; frameOwnerCandidate; frameOwnerCandidate = frameOwnerCandidate.parentNode) {
+    for (let frameOwnerCandidate = node; frameOwnerCandidate; frameOwnerCandidate = frameOwnerCandidate.parentNode) {
         if (frameOwnerCandidate.documentURL) {
-            var result = WebInspector.completeURL(frameOwnerCandidate.documentURL, url);
+            let result = WebInspector.completeURL(frameOwnerCandidate.documentURL, url);
             if (result)
                 return result;
             break;
@@ -238,7 +238,7 @@ WebInspector.resourceURLForRelatedNode = function(node, url)
     }
 
     // documentURL not found or has bad value
-    var resourceURL = url;
+    let resourceURL = url;
     function callback(resource)
     {
         if (resource.path === url) {
@@ -259,31 +259,31 @@ WebInspector.completeURL = function(baseURL, href)
 {
     if (href) {
         // Return absolute URLs as-is.
-        var parsedHref = href.asParsedURL();
+        let parsedHref = href.asParsedURL();
         if (parsedHref && parsedHref.scheme)
             return href;
 
         // Return special URLs as-is.
-        var trimmedHref = href.trim();
+        let trimmedHref = href.trim();
         if (trimmedHref.indexOf("data:") === 0 || trimmedHref.indexOf("javascript:") === 0)
             return href;
     }
 
-    var parsedURL = baseURL.asParsedURL();
+    let parsedURL = baseURL.asParsedURL();
     if (parsedURL) {
-        var path = href;
+        let path = href;
         if (path.charAt(0) !== "/") {
-            var basePath = parsedURL.path;
+            let basePath = parsedURL.path;
 
             // Trim off the query part of the basePath.
-            var questionMarkIndex = basePath.indexOf("?");
+            let questionMarkIndex = basePath.indexOf("?");
             if (questionMarkIndex > 0)
                 basePath = basePath.substring(0, questionMarkIndex);
             // A href of "?foo=bar" implies "basePath?foo=bar".
             // With "basePath?a=b" and "?foo=bar" we should get "basePath?foo=bar".
-            var prefix;
+            let prefix;
             if (path.charAt(0) === "?") {
-                var basePathCutIndex = basePath.indexOf("?");
+                let basePathCutIndex = basePath.indexOf("?");
                 if (basePathCutIndex !== -1)
                     prefix = basePath.substring(0, basePathCutIndex);
                 else

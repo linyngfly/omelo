@@ -84,21 +84,21 @@ WebInspector.TimelinePresentationModel.prototype = {
 
     addRecord: function(record, parentRecord)
     {
-        var connectedToOldRecord = false;
-        var recordTypes = WebInspector.TimelineModel.RecordType;
+        let connectedToOldRecord = false;
+        let recordTypes = WebInspector.TimelineModel.RecordType;
 
         if (record.type === recordTypes.MarkDOMContent || record.type === recordTypes.MarkLoad)
             parentRecord = null; // No bar entry for load events.
         else {
-            var newParentRecord = this._findParentRecord(record);
+            let newParentRecord = this._findParentRecord(record);
             if (newParentRecord) {
                 parentRecord = newParentRecord;
                 connectedToOldRecord = true;
             }
         }
 
-        var children = record.children;
-        var scriptDetails;
+        let children = record.children;
+        let scriptDetails;
         if (record.data && record.data["scriptName"]) {
             scriptDetails = {
                 scriptName: record.data["scriptName"],
@@ -107,7 +107,7 @@ WebInspector.TimelinePresentationModel.prototype = {
         };
 
         if ((record.type === recordTypes.TimerFire || record.type === recordTypes.FireAnimationFrame) && children && children.length) {
-            var childRecord = children[0];
+            let childRecord = children[0];
             if (childRecord.type === recordTypes.FunctionCall) {
                 scriptDetails = {
                     scriptName: childRecord.data["scriptName"],
@@ -117,7 +117,7 @@ WebInspector.TimelinePresentationModel.prototype = {
             }
         }
 
-        var formattedRecord = new WebInspector.TimelinePresentationModel.Record(this, record, parentRecord, scriptDetails);
+        let formattedRecord = new WebInspector.TimelinePresentationModel.Record(this, record, parentRecord, scriptDetails);
         this._updateBoundaries(formattedRecord);    
 
         if (record.type === recordTypes.MarkDOMContent || record.type === recordTypes.MarkLoad)
@@ -125,8 +125,8 @@ WebInspector.TimelinePresentationModel.prototype = {
 
         formattedRecord.collapsed = (parentRecord === this._rootRecord);
 
-        var childrenCount = children ? children.length : 0;
-        for (var i = 0; i < childrenCount; ++i)
+        let childrenCount = children ? children.length : 0;
+        for (let i = 0; i < childrenCount; ++i)
             this.addRecord(children[i], formattedRecord);
 
         formattedRecord.calculateAggregatedStats(this._categories);
@@ -134,10 +134,10 @@ WebInspector.TimelinePresentationModel.prototype = {
         if (connectedToOldRecord) {
             record = formattedRecord;
             do {
-                var parent = record.parent;
+                let parent = record.parent;
                 if (parent.lastChildEndTime < record.lastChildEndTime)
                     parent.lastChildEndTime = record.lastChildEndTime;
-                for (var category in formattedRecord.aggregatedStats)
+                for (let category in formattedRecord.aggregatedStats)
                     parent.aggregatedStats[category] += formattedRecord.aggregatedStats[category];
                 record = parent;
             } while (record.parent);
@@ -160,8 +160,8 @@ WebInspector.TimelinePresentationModel.prototype = {
     {
         if (!this._glueRecords)
             return null;
-        var recordTypes = WebInspector.TimelineModel.RecordType;
-        var parentRecord;
+        let recordTypes = WebInspector.TimelineModel.RecordType;
+        let parentRecord;
         if (record.type === recordTypes.ResourceReceiveResponse ||
             record.type === recordTypes.ResourceFinish ||
             record.type === recordTypes.ResourceReceivedData)
@@ -196,10 +196,10 @@ WebInspector.TimelinePresentationModel.prototype = {
     get _recordStyles()
     {
         if (!this._recordStylesArray) {
-            var recordTypes = WebInspector.TimelineModel.RecordType;
-            var categories = this._categories;
+            let recordTypes = WebInspector.TimelineModel.RecordType;
+            let categories = this._categories;
 
-            var recordStyles = {};
+            let recordStyles = {};
             recordStyles[recordTypes.Root] = { title: "#root", category: categories["loading"] };
             recordStyles[recordTypes.EventDispatch] = { title: WebInspector.UIString("Event"), category: categories["scripting"] };
             recordStyles[recordTypes.Layout] = { title: WebInspector.UIString("Layout"), category: categories["rendering"] };
@@ -235,7 +235,7 @@ WebInspector.TimelinePresentationModel.prototype = {
     {
         function filter(record)
         {
-            for (var i = 0; i < this._filters.length; ++i) {
+            for (let i = 0; i < this._filters.length; ++i) {
                 if (!this._filters[i].accept(record))
                     return false;
             }
@@ -246,14 +246,14 @@ WebInspector.TimelinePresentationModel.prototype = {
 
     _filterRecords: function(filter)
     {
-        var recordsInWindow = [];
+        let recordsInWindow = [];
 
-        var stack = [{children: this._rootRecord.children, index: 0, parentIsCollapsed: false}];
+        let stack = [{children: this._rootRecord.children, index: 0, parentIsCollapsed: false}];
         while (stack.length) {
-            var entry = stack[stack.length - 1];
-            var records = entry.children;
+            let entry = stack[stack.length - 1];
+            let records = entry.children;
             if (records && entry.index < records.length) {
-                 var record = records[entry.index];
+                 let record = records[entry.index];
                  ++entry.index;
 
                  if (filter(record)) {
@@ -290,8 +290,8 @@ WebInspector.TimelinePresentationModel.Record = function(presentationModel, reco
     this._presentationModel = presentationModel;
     this._linkifier = this._presentationModel._linkifier;
     this._aggregatedStats = [];
-    var recordTypes = WebInspector.TimelineModel.RecordType;
-    var style = presentationModel._recordStyles[record.type];
+    let recordTypes = WebInspector.TimelineModel.RecordType;
+    let style = presentationModel._recordStyles[record.type];
     this.parent = parentRecord;
     if (parentRecord)
         parentRecord.children.push(this);
@@ -322,7 +322,7 @@ WebInspector.TimelinePresentationModel.Record = function(presentationModel, reco
     } else if (record.type === recordTypes.ScheduleResourceRequest) {
         presentationModel._scheduledResourceRequests[record.data["url"]] = this;
     } else if (record.type === recordTypes.ResourceReceiveResponse) {
-        var sendRequestRecord = presentationModel._sendRequestRecords[record.data["requestId"]];
+        let sendRequestRecord = presentationModel._sendRequestRecords[record.data["requestId"]];
         if (sendRequestRecord) { // False if we started instrumentation in the middle of request.
             this.url = sendRequestRecord.url;
             // Now that we have resource in the collection, recalculate details in order to display short url.
@@ -331,7 +331,7 @@ WebInspector.TimelinePresentationModel.Record = function(presentationModel, reco
                 sendRequestRecord.parent._refreshDetails();
         }
     } else if (record.type === recordTypes.ResourceReceivedData || record.type === recordTypes.ResourceFinish) {
-        var sendRequestRecord = presentationModel._sendRequestRecords[record.data["requestId"]];
+        let sendRequestRecord = presentationModel._sendRequestRecords[record.data["requestId"]];
         if (sendRequestRecord) // False for main resource.
             this.url = sendRequestRecord.url;
     } else if (record.type === recordTypes.TimerInstall) {
@@ -339,7 +339,7 @@ WebInspector.TimelinePresentationModel.Record = function(presentationModel, reco
         this.singleShot = record.data["singleShot"];
         presentationModel._timerRecords[record.data["timerId"]] = this;
     } else if (record.type === recordTypes.TimerFire) {
-        var timerInstalledRecord = presentationModel._timerRecords[record.data["timerId"]];
+        let timerInstalledRecord = presentationModel._timerRecords[record.data["timerId"]];
         if (timerInstalledRecord) {
             this.callSiteStackTrace = timerInstalledRecord.stackTrace;
             this.timeout = timerInstalledRecord.timeout;
@@ -348,7 +348,7 @@ WebInspector.TimelinePresentationModel.Record = function(presentationModel, reco
     } else if (record.type === recordTypes.RequestAnimationFrame) {
         presentationModel._requestAnimationFrameRecords[record.data["id"]] = this;
     } else if (record.type === recordTypes.FireAnimationFrame) {
-        var requestAnimationRecord = presentationModel._requestAnimationFrameRecords[record.data["id"]];
+        let requestAnimationRecord = presentationModel._requestAnimationFrameRecords[record.data["id"]];
         if (requestAnimationRecord)
             this.callSiteStackTrace = requestAnimationRecord.stackTrace;
     }
@@ -410,13 +410,13 @@ WebInspector.TimelinePresentationModel.Record.prototype = {
 
     _generateAggregatedInfo: function()
     {
-        var cell = document.createElement("span");
+        let cell = document.createElement("span");
         cell.className = "timeline-aggregated-info";
-        for (var index in this._aggregatedStats) {
-            var label = document.createElement("div");
+        for (let index in this._aggregatedStats) {
+            let label = document.createElement("div");
             label.className = "timeline-aggregated-category timeline-" + index;
             cell.appendChild(label);
-            var text = document.createElement("span");
+            let text = document.createElement("span");
             text.textContent = Number.secondsToString(this._aggregatedStats[index], true);
             cell.appendChild(text);
         }
@@ -425,13 +425,13 @@ WebInspector.TimelinePresentationModel.Record.prototype = {
 
     generatePopupContent: function(calculator)
     {
-        var contentHelper = new WebInspector.TimelinePresentationModel.PopupContentHelper(this.title);
+        let contentHelper = new WebInspector.TimelinePresentationModel.PopupContentHelper(this.title);
 
         if (this._children && this._children.length) {
             contentHelper._appendTextRow(WebInspector.UIString("Self Time"), Number.secondsToString(this._selfTime, true));
             contentHelper._appendElementRow(WebInspector.UIString("Aggregated Time"), this._generateAggregatedInfo());
         }
-        var text = WebInspector.UIString("%s (at %s)", Number.secondsToString(this._lastChildEndTime - this.startTime, true),
+        let text = WebInspector.UIString("%s (at %s)", Number.secondsToString(this._lastChildEndTime - this.startTime, true),
             Number.secondsToString(this.startTime - this._presentationModel.minimumRecordTime()));
         contentHelper._appendTextRow(WebInspector.UIString("Duration"), text);
 
@@ -582,17 +582,17 @@ WebInspector.TimelinePresentationModel.Record.prototype = {
     calculateAggregatedStats: function(categories)
     {
         this._aggregatedStats = {};
-        for (var category in categories)
+        for (let category in categories)
             this._aggregatedStats[category] = 0;
         this._cpuTime = this._selfTime;
 
         if (this._children) {
-            for (var index = this._children.length; index; --index) {
-                var child = this._children[index - 1];
-                for (var category in categories)
+            for (let index = this._children.length; index; --index) {
+                let child = this._children[index - 1];
+                for (let category in categories)
                     this._aggregatedStats[category] += child._aggregatedStats[category];
             }
-            for (var category in this._aggregatedStats)
+            for (let category in this._aggregatedStats)
                 this._cpuTime += this._aggregatedStats[category];
         }
         this._aggregatedStats[this.category.name] += this._selfTime;
@@ -610,9 +610,9 @@ WebInspector.TimelinePresentationModel.Record.prototype = {
 WebInspector.TimelinePresentationModel.PopupContentHelper = function(title)
 {
     this._contentTable = document.createElement("table");
-    var titleCell = this._createCell(WebInspector.UIString("%s - Details", title), "timeline-details-title");
+    let titleCell = this._createCell(WebInspector.UIString("%s - Details", title), "timeline-details-title");
     titleCell.colSpan = 2;
-    var titleRow = document.createElement("tr");
+    let titleRow = document.createElement("tr");
     titleRow.appendChild(titleCell);
     this._contentTable.appendChild(titleRow);
 }
@@ -623,9 +623,9 @@ WebInspector.TimelinePresentationModel.PopupContentHelper.prototype = {
      */
     _createCell: function(content, styleName)
     {
-        var text = document.createElement("label");
+        let text = document.createElement("label");
         text.appendChild(document.createTextNode(content));
-        var cell = document.createElement("td");
+        let cell = document.createElement("td");
         cell.className = "timeline-details";
         if (styleName)
             cell.className += " " + styleName;
@@ -635,7 +635,7 @@ WebInspector.TimelinePresentationModel.PopupContentHelper.prototype = {
 
     _appendTextRow: function(title, content)
     {
-        var row = document.createElement("tr");
+        let row = document.createElement("tr");
         row.appendChild(this._createCell(title, "timeline-details-row-title"));
         row.appendChild(this._createCell(content, "timeline-details-row-data"));
         this._contentTable.appendChild(row);
@@ -646,12 +646,12 @@ WebInspector.TimelinePresentationModel.PopupContentHelper.prototype = {
      */
     _appendElementRow: function(title, content, titleStyle)
     {
-        var row = document.createElement("tr");
-        var titleCell = this._createCell(title, "timeline-details-row-title");
+        let row = document.createElement("tr");
+        let titleCell = this._createCell(title, "timeline-details-row-title");
         if (titleStyle)
             titleCell.addStyleClass(titleStyle);
         row.appendChild(titleCell);
-        var cell = document.createElement("td");
+        let cell = document.createElement("td");
         cell.className = "timeline-details";
         cell.appendChild(content);
         row.appendChild(cell);
@@ -661,15 +661,15 @@ WebInspector.TimelinePresentationModel.PopupContentHelper.prototype = {
     _appendStackTrace: function(title, stackTrace, callFrameLinkifier)
     {
         this._appendTextRow("", "");
-        var framesTable = document.createElement("table");
-        for (var i = 0; i < stackTrace.length; ++i) {
-            var stackFrame = stackTrace[i];
-            var row = document.createElement("tr");
+        let framesTable = document.createElement("table");
+        for (let i = 0; i < stackTrace.length; ++i) {
+            let stackFrame = stackTrace[i];
+            let row = document.createElement("tr");
             row.className = "timeline-details";
             row.appendChild(this._createCell(stackFrame.functionName ? stackFrame.functionName : WebInspector.UIString("(anonymous function)"), "timeline-function-name"));
             row.appendChild(this._createCell(" @ "));
-            var linkCell = document.createElement("td");
-            var urlElement = callFrameLinkifier(stackFrame);
+            let linkCell = document.createElement("td");
+            let urlElement = callFrameLinkifier(stackFrame);
             linkCell.appendChild(urlElement);
             row.appendChild(linkCell);
             framesTable.appendChild(row);

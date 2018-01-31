@@ -88,7 +88,7 @@ WebInspector.ExtensionAuditCategoryResults.prototype = {
 
     addResult: function(displayName, description, severity, details)
     {
-        var result = new WebInspector.AuditRuleResult(displayName);
+        let result = new WebInspector.AuditRuleResult(displayName);
         result.addChild(description);
         result.severity = severity;
         if (details)
@@ -98,9 +98,9 @@ WebInspector.ExtensionAuditCategoryResults.prototype = {
 
     _addNode: function(parent, node)
     {
-        var addedNode = parent.addChild(node.contents, node.expanded);
+        let addedNode = parent.addChild(node.contents, node.expanded);
         if (node.children) {
-            for (var i = 0; i < node.children.length; ++i)
+            for (let i = 0; i < node.children.length; ++i)
                 this._addNode(addedNode, node.children[i]);
         }
     },

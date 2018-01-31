@@ -71,13 +71,13 @@ WebInspector.ResourcePreviewView.prototype = {
             return new WebInspector.ResourceHTMLView(this.resource);
 
         if (this.resource.category === WebInspector.resourceCategories.xhr && this.resource.content) {
-            var parsedJSON = WebInspector.ResourceJSONView.parseJSON(this.resource.content);
+            let parsedJSON = WebInspector.ResourceJSONView.parseJSON(this.resource.content);
             if (parsedJSON)
                 return new WebInspector.ResourceJSONView(this.resource, parsedJSON);
         }
 
         if (this.resource.content && this.resource.category === WebInspector.resourceCategories.scripts && this.resource.mimeType === "application/json") {
-            var parsedJSONP = WebInspector.ResourceJSONView.parseJSONP(this.resource.content);
+            let parsedJSONP = WebInspector.ResourceJSONView.parseJSONP(this.resource.content);
             if (parsedJSONP)
                 return new WebInspector.ResourceJSONView(this.resource, parsedJSONP);
         }

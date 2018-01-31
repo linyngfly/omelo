@@ -10,7 +10,7 @@
 'use strict';
 
 // Project metadata.
-var pkg = require('../package.json');
+let pkg = require('../package.json');
 
 // Display grunt-cli version.
 exports.version = function() {

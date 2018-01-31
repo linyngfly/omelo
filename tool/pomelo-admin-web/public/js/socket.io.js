@@ -14,7 +14,7 @@
    * @namespace
    */
 
-  var io = exports;
+  let io = exports;
 
   /**
    * Socket.IO version
@@ -65,7 +65,7 @@
    */
 
   io.connect = function (host, details) {
-    var uri = io.util.parseUri(host)
+    let uri = io.util.parseUri(host)
       , uuri
       , socket;
 
@@ -78,7 +78,7 @@
 
     uuri = io.util.uniqueUri(uri);
 
-    var options = {
+    let options = {
         host: uri.host
       , secure: 'https' == uri.protocol
       , port: uri.port || ('https' == uri.protocol ? 443 : 80)
@@ -117,7 +117,7 @@
    * @namespace
    */
 
-  var util = exports.util = {};
+  let util = exports.util = {};
 
   /**
    * Parses an URI
@@ -126,14 +126,14 @@
    * @api public
    */
 
-  var re = /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;
+  let re = /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;
 
-  var parts = ['source', 'protocol', 'authority', 'userInfo', 'user', 'password',
+  let parts = ['source', 'protocol', 'authority', 'userInfo', 'user', 'password',
                'host', 'port', 'relative', 'path', 'directory', 'file', 'query',
                'anchor'];
 
   util.parseUri = function (str) {
-    var m = re.exec(str || '')
+    let m = re.exec(str || '')
       , uri = {}
       , i = 14;
 
@@ -152,7 +152,7 @@
    */
 
   util.uniqueUri = function (uri) {
-    var protocol = uri.protocol
+    let protocol = uri.protocol
       , host = uri.host
       , port = uri.port;
 
@@ -180,11 +180,11 @@
    */
 
   util.query = function (base, addition) {
-    var query = util.chunkQuery(base || '')
+    let query = util.chunkQuery(base || '')
       , components = [];
 
     util.merge(query, util.chunkQuery(addition || ''));
-    for (var part in query) {
+    for (let part in query) {
       if (query.hasOwnProperty(part)) {
         components.push(part + '=' + query[part]);
       }
@@ -201,7 +201,7 @@
    */
 
   util.chunkQuery = function (qs) {
-    var query = {}
+    let query = {}
       , params = qs.split('&')
       , i = 0
       , l = params.length
@@ -226,7 +226,7 @@
    * @api public
    */
 
-  var pageLoaded = false;
+  let pageLoaded = false;
 
   util.load = function (fn) {
     if ('document' in global && document.readyState === 'complete' || pageLoaded) {
@@ -318,7 +318,7 @@
    */
   
   util.merge = function merge (target, additional, deep, lastseen) {
-    var seen = lastseen || []
+    let seen = lastseen || []
       , depth = typeof deep == 'undefined' ? 2 : deep
       , prop;
 
@@ -379,11 +379,11 @@
    */
 
   util.intersect = function (arr, arr2) {
-    var ret = []
+    let ret = []
       , longest = arr.length > arr2.length ? arr : arr2
       , shortest = arr.length > arr2.length ? arr2 : arr;
 
-    for (var i = 0, l = shortest.length; i < l; i++) {
+    for (let i = 0, l = shortest.length; i < l; i++) {
       if (~util.indexOf(longest, shortest[i]))
         ret.push(shortest[i]);
     }
@@ -403,7 +403,7 @@
       return Array.prototype.indexOf.call(arr, o, i);
     }
 
-    for (var j = arr.length, i = i < 0 ? i + j < 0 ? 0 : i + j : i || 0; 
+    for (let j = arr.length, i = i < 0 ? i + j < 0 ? 0 : i + j : i || 0; 
          i < j && arr[i] !== o; i++) {}
 
     return j <= i ? -1 : i;
@@ -416,9 +416,9 @@
    */
 
   util.toArray = function (enu) {
-    var arr = [];
+    let arr = [];
 
-    for (var i = 0, l = enu.length; i < l; i++)
+    for (let i = 0, l = enu.length; i < l; i++)
       arr.push(enu[i]);
 
     return arr;
@@ -440,7 +440,7 @@
 
   util.ua.hasCORS = 'undefined' != typeof XMLHttpRequest && (function () {
     try {
-      var a = new XMLHttpRequest();
+      let a = new XMLHttpRequest();
     } catch (e) {
       return false;
     }
@@ -512,7 +512,7 @@
    */
 
   EventEmitter.prototype.once = function (name, fn) {
-    var self = this;
+    let self = this;
 
     function on () {
       self.removeListener(name, on);
@@ -533,12 +533,12 @@
 
   EventEmitter.prototype.removeListener = function (name, fn) {
     if (this.$events && this.$events[name]) {
-      var list = this.$events[name];
+      let list = this.$events[name];
 
       if (io.util.isArray(list)) {
-        var pos = -1;
+        let pos = -1;
 
-        for (var i = 0, l = list.length; i < l; i++) {
+        for (let i = 0, l = list.length; i < l; i++) {
           if (list[i] === fn || (list[i].listener && list[i].listener === fn)) {
             pos = i;
             break;
@@ -615,20 +615,20 @@
       return false;
     }
 
-    var handler = this.$events[name];
+    let handler = this.$events[name];
 
     if (!handler) {
       return false;
     }
 
-    var args = Array.prototype.slice.call(arguments, 1);
+    let args = Array.prototype.slice.call(arguments, 1);
 
     if ('function' == typeof handler) {
       handler.apply(this, args);
     } else if (io.util.isArray(handler)) {
-      var listeners = handler.slice();
+      let listeners = handler.slice();
 
-      for (var i = 0, l = listeners.length; i < l; i++) {
+      for (let i = 0, l = listeners.length; i < l; i++) {
         listeners[i].apply(this, args);
       }
     } else {
@@ -664,7 +664,7 @@
     }
   }
 
-  var JSON = exports.JSON = {};
+  let JSON = exports.JSON = {};
 
   function f(n) {
       // Format integers to have at least two digits.
@@ -681,7 +681,7 @@
         f(d.getUTCSeconds())   + 'Z' : null;
   };
 
-  var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
+  let cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
       escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
       gap,
       indent,
@@ -706,7 +706,7 @@
 
       escapable.lastIndex = 0;
       return escapable.test(string) ? '"' + string.replace(escapable, function (a) {
-          var c = meta[a];
+          let c = meta[a];
           return typeof c === 'string' ? c :
               '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
       }) + '"' : '"' + string + '"';
@@ -717,7 +717,7 @@
 
 // Produce a string from holder[key].
 
-      var i,          // The loop counter.
+      let i,          // The loop counter.
           k,          // The member key.
           v,          // The member value.
           length,
@@ -846,7 +846,7 @@
 // A default replacer method can be provided. Use of the space parameter can
 // produce text that is more easily readable.
 
-      var i;
+      let i;
       gap = '';
       indent = '';
 
@@ -886,14 +886,14 @@
   // The parse method takes a text and an optional reviver function, and returns
   // a JavaScript value if the text is a valid JSON text.
 
-      var j;
+      let j;
 
       function walk(holder, key) {
 
   // The walk method is used to recursively walk the resulting structure so
   // that modifications can be made.
 
-          var k, v, value = holder[key];
+          let k, v, value = holder[key];
           if (value && typeof value === 'object') {
               for (k in value) {
                   if (Object.prototype.hasOwnProperty.call(value, k)) {
@@ -979,13 +979,13 @@
    * @namespace
    */
 
-  var parser = exports.parser = {};
+  let parser = exports.parser = {};
 
   /**
    * Packet types.
    */
 
-  var packets = parser.packets = [
+  let packets = parser.packets = [
       'disconnect'
     , 'connect'
     , 'heartbeat'
@@ -1001,7 +1001,7 @@
    * Errors reasons.
    */
 
-  var reasons = parser.reasons = [
+  let reasons = parser.reasons = [
       'transport not supported'
     , 'client not handshaken'
     , 'unauthorized'
@@ -1011,7 +1011,7 @@
    * Errors advice.
    */
 
-  var advice = parser.advice = [
+  let advice = parser.advice = [
       'reconnect'
   ];
 
@@ -1019,7 +1019,7 @@
    * Shortcuts.
    */
 
-  var JSON = io.JSON
+  let JSON = io.JSON
     , indexOf = io.util.indexOf;
 
   /**
@@ -1029,7 +1029,7 @@
    */
 
   parser.encodePacket = function (packet) {
-    var type = indexOf(packets, packet.type)
+    let type = indexOf(packets, packet.type)
       , id = packet.id || ''
       , endpoint = packet.endpoint || ''
       , ack = packet.ack
@@ -1037,7 +1037,7 @@
 
     switch (packet.type) {
       case 'error':
-        var reason = packet.reason ? indexOf(reasons, packet.reason) : ''
+        let reason = packet.reason ? indexOf(reasons, packet.reason) : ''
           , adv = packet.advice ? indexOf(advice, packet.advice) : '';
 
         if (reason !== '' || adv !== '')
@@ -1051,7 +1051,7 @@
         break;
 
       case 'event':
-        var ev = { name: packet.name };
+        let ev = { name: packet.name };
 
         if (packet.args && packet.args.length) {
           ev.args = packet.args;
@@ -1077,7 +1077,7 @@
     }
 
     // construct packet with required fragments
-    var encoded = [
+    let encoded = [
         type
       , id + (ack == 'data' ? '+' : '')
       , endpoint
@@ -1098,13 +1098,13 @@
    */
 
   parser.encodePayload = function (packets) {
-    var decoded = '';
+    let decoded = '';
 
     if (packets.length == 1)
       return packets[0];
 
-    for (var i = 0, l = packets.length; i < l; i++) {
-      var packet = packets[i];
+    for (let i = 0, l = packets.length; i < l; i++) {
+      let packet = packets[i];
       decoded += '\ufffd' + packet.length + '\ufffd' + packets[i];
     }
 
@@ -1117,14 +1117,14 @@
    * @api private
    */
 
-  var regexp = /([^:]+):([0-9]+)?(\+)?:([^:]+)?:?([\s\S]*)?/;
+  let regexp = /([^:]+):([0-9]+)?(\+)?:([^:]+)?:?([\s\S]*)?/;
 
   parser.decodePacket = function (data) {
-    var pieces = data.match(regexp);
+    let pieces = data.match(regexp);
 
     if (!pieces) return {};
 
-    var id = pieces[2] || ''
+    let id = pieces[2] || ''
       , data = pieces[5] || ''
       , packet = {
             type: packets[pieces[1]]
@@ -1143,7 +1143,7 @@
     // handle different packet types
     switch (packet.type) {
       case 'error':
-        var pieces = data.split('+');
+        let pieces = data.split('+');
         packet.reason = reasons[pieces[0]] || '';
         packet.advice = advice[pieces[1]] || '';
         break;
@@ -1154,7 +1154,7 @@
 
       case 'event':
         try {
-          var opts = JSON.parse(data);
+          let opts = JSON.parse(data);
           packet.name = opts.name;
           packet.args = opts.args;
         } catch (e) { }
@@ -1173,7 +1173,7 @@
         break;
 
       case 'ack':
-        var pieces = data.match(/^([0-9]+)(\+)?(.*)/);
+        let pieces = data.match(/^([0-9]+)(\+)?(.*)/);
         if (pieces) {
           packet.ackId = pieces[1];
           packet.args = [];
@@ -1204,9 +1204,9 @@
   parser.decodePayload = function (data) {
     // IE doesn't like data[i] for unicode chars, charAt works fine
     if (data.charAt(0) == '\ufffd') {
-      var ret = [];
+      let ret = [];
 
-      for (var i = 1, length = ''; i < data.length; i++) {
+      for (let i = 1, length = ''; i < data.length; i++) {
         if (data.charAt(i) == '\ufffd') {
           ret.push(parser.decodePacket(data.substr(i + 1).substr(0, length)));
           i += Number(length) + 1;
@@ -1279,10 +1279,10 @@
 
     if (data !== '') {
       // todo: we should only do decodePayload for xhr transports
-      var msgs = io.parser.decodePayload(data);
+      let msgs = io.parser.decodePayload(data);
 
       if (msgs && msgs.length) {
-        for (var i = 0, l = msgs.length; i < l; i++) {
+        for (let i = 0, l = msgs.length; i < l; i++) {
           this.onPacket(msgs[i]);
         }
       }
@@ -1319,7 +1319,7 @@
   
   Transport.prototype.setCloseTimeout = function () {
     if (!this.closeTimeout) {
-      var self = this;
+      let self = this;
 
       this.closeTimeout = setTimeout(function () {
         self.onDisconnect();
@@ -1421,7 +1421,7 @@
    */
 
   Transport.prototype.onClose = function () {
-    var self = this;
+    let self = this;
 
     /* FIXME: reopen delay causing a infinit loop
     this.reopenTimeout = setTimeout(function () {
@@ -1442,7 +1442,7 @@
    */
 
   Transport.prototype.prepareUrl = function () {
-    var options = this.socket.options;
+    let options = this.socket.options;
 
     return this.scheme() + '://'
       + options.host + ':' + options.port + '/'
@@ -1518,7 +1518,7 @@
 
     if (this.options['sync disconnect on unload'] &&
         (!this.isXDomain() || io.util.ua.hasCORS)) {
-      var self = this;
+      let self = this;
 
       io.util.on(global, 'beforeunload', function () {
         self.disconnectSync();
@@ -1563,9 +1563,9 @@
   Socket.prototype.publish = function () {
     this.emit.apply(this, arguments);
 
-    var nsp;
+    let nsp;
 
-    for (var i in this.namespaces) {
+    for (let i in this.namespaces) {
       if (this.namespaces.hasOwnProperty(i)) {
         nsp = this.of(i);
         nsp.$emit.apply(nsp, arguments);
@@ -1582,7 +1582,7 @@
   function empty () { };
 
   Socket.prototype.handshake = function (fn) {
-    var self = this
+    let self = this
       , options = this.options;
 
     function complete (data) {
@@ -1593,7 +1593,7 @@
       }
     };
 
-    var url = [
+    let url = [
           'http' + (options.secure ? 's' : '') + ':/'
         , options.host + ':' + options.port
         , options.resource
@@ -1602,7 +1602,7 @@
       ].join('/');
 
     if (this.isXDomain() && !io.util.ua.hasCORS) {
-      var insertAt = document.getElementsByTagName('script')[0]
+      let insertAt = document.getElementsByTagName('script')[0]
         , script = document.createElement('script');
 
       script.src = url + '&jsonp=' + io.j.length;
@@ -1613,7 +1613,7 @@
         script.parentNode.removeChild(script);
       });
     } else {
-      var xhr = io.util.request();
+      let xhr = io.util.request();
 
       xhr.open('GET', url, true);
       xhr.onreadystatechange = function () {
@@ -1638,9 +1638,9 @@
    */
 
   Socket.prototype.getTransport = function (override) {
-    var transports = override || this.transports, match;
+    let transports = override || this.transports, match;
 
-    for (var i = 0, transport; transport = transports[i]; i++) {
+    for (let i = 0, transport; transport = transports[i]; i++) {
       if (io.Transport[transport]
         && io.Transport[transport].check(this)
         && (!this.isXDomain() || io.Transport[transport].xdomainCheck())) {
@@ -1664,7 +1664,7 @@
       return this;
     }
 
-    var self = this;
+    let self = this;
 
     this.handshake(function (sid, heartbeat, close, transports) {
       self.sessionid = sid;
@@ -1697,7 +1697,7 @@
                     self.remainingTransports = self.transports.slice(0);
                   }
 
-                  var remaining = self.remainingTransports;
+                  let remaining = self.remainingTransports;
 
                   while (remaining.length > 0 && remaining.splice(0,1)[0] !=
                          self.transport.name) {}
@@ -1787,7 +1787,7 @@
 
   Socket.prototype.disconnectSync = function () {
     // ensure disconnection
-    var xhr = io.util.request()
+    let xhr = io.util.request()
       , uri = this.resource + '/' + io.protocol + '/' + this.sessionid;
 
     xhr.open('GET', uri, true);
@@ -1806,7 +1806,7 @@
 
   Socket.prototype.isXDomain = function () {
 
-    var port = global.location.port ||
+    let port = global.location.port ||
       ('https:' == global.location.protocol ? 443 : 80);
 
     return this.options.host !== global.location.hostname 
@@ -1885,7 +1885,7 @@
    */
 
   Socket.prototype.onDisconnect = function (reason) {
-    var wasConnected = this.connected;
+    let wasConnected = this.connected;
 
     this.connected = false;
     this.connecting = false;
@@ -1913,14 +1913,14 @@
     this.reconnectionAttempts = 0;
     this.reconnectionDelay = this.options['reconnection delay'];
 
-    var self = this
+    let self = this
       , maxAttempts = this.options['max reconnection attempts']
       , tryMultiple = this.options['try multiple transports']
       , limit = this.options['reconnection limit'];
 
     function reset () {
       if (self.connected) {
-        for (var i in self.namespaces) {
+        for (let i in self.namespaces) {
           if (self.namespaces.hasOwnProperty(i) && '' !== i) {
               self.namespaces[i].packet({ type: 'connect' });
           }
@@ -2062,7 +2062,7 @@
    */
 
   SocketNamespace.prototype.send = function (data, fn) {
-    var packet = {
+    let packet = {
         type: this.flags.json ? 'json' : 'message'
       , data: data
     };
@@ -2083,7 +2083,7 @@
    */
   
   SocketNamespace.prototype.emit = function (name) {
-    var args = Array.prototype.slice.call(arguments, 1)
+    let args = Array.prototype.slice.call(arguments, 1)
       , lastArg = args[args.length - 1]
       , packet = {
             type: 'event'
@@ -2126,7 +2126,7 @@
    */
 
   SocketNamespace.prototype.onPacket = function (packet) {
-    var self = this;
+    let self = this;
 
     function ack () {
       self.packet({
@@ -2151,7 +2151,7 @@
 
       case 'message':
       case 'json':
-        var params = ['message', packet.data];
+        let params = ['message', packet.data];
 
         if (packet.ack == 'data') {
           params.push(ack);
@@ -2163,7 +2163,7 @@
         break;
 
       case 'event':
-        var params = [packet.name].concat(packet.args);
+        let params = [packet.name].concat(packet.args);
 
         if (packet.ack == 'data')
           params.push(ack);
@@ -2282,7 +2282,7 @@
    */
 
   WS.prototype.open = function () {
-    var query = io.util.query(this.socket.options.query)
+    let query = io.util.query(this.socket.options.query)
       , self = this
       , Socket
 
@@ -2331,7 +2331,7 @@
    */
 
   WS.prototype.payload = function (arr) {
-    for (var i = 0, l = arr.length; i < l; i++) {
+    for (let i = 0, l = arr.length; i < l; i++) {
       this.packet(arr[i]);
     }
     return this;
@@ -2462,7 +2462,7 @@
    */
 
   Flashsocket.prototype.open = function () {
-    var self = this
+    let self = this
       , args = arguments;
 
     WebSocket.__addTask(function () {
@@ -2481,7 +2481,7 @@
    */
 
   Flashsocket.prototype.send = function () {
-    var self = this, args = arguments;
+    let self = this, args = arguments;
     WebSocket.__addTask(function () {
       io.Transport.websocket.prototype.send.apply(self, args);
     });
@@ -2513,7 +2513,7 @@
 
   Flashsocket.prototype.ready = function (socket, fn) {
     function init () {
-      var options = socket.options
+      let options = socket.options
         , port = options['flash policy port']
         , path = [
               'http' + (options.secure ? 's' : '') + ':/'
@@ -2542,7 +2542,7 @@
       fn.call(self);
     }
 
-    var self = this;
+    let self = this;
     if (document.body) return init();
 
     io.util.load(init);
@@ -2602,7 +2602,7 @@
 	is released under the MIT License <http://www.opensource.org/licenses/mit-license.php> 
 */
 if ('undefined' != typeof window) {
-var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="ShockwaveFlash.ShockwaveFlash",q="application/x-shockwave-flash",R="SWFObjectExprInst",x="onreadystatechange",O=window,j=document,t=navigator,T=false,U=[h],o=[],N=[],I=[],l,Q,E,B,J=false,a=false,n,G,m=true,M=function(){var aa=typeof j.getElementById!=D&&typeof j.getElementsByTagName!=D&&typeof j.createElement!=D,ah=t.userAgent.toLowerCase(),Y=t.platform.toLowerCase(),ae=Y?/win/.test(Y):/win/.test(ah),ac=Y?/mac/.test(Y):/mac/.test(ah),af=/webkit/.test(ah)?parseFloat(ah.replace(/^.*webkit\/(\d+(\.\d+)?).*$/,"$1")):false,X=!+"\v1",ag=[0,0,0],ab=null;if(typeof t.plugins!=D&&typeof t.plugins[S]==r){ab=t.plugins[S].description;if(ab&&!(typeof t.mimeTypes!=D&&t.mimeTypes[q]&&!t.mimeTypes[q].enabledPlugin)){T=true;X=false;ab=ab.replace(/^.*\s+(\S+\s+\S+$)/,"$1");ag[0]=parseInt(ab.replace(/^(.*)\..*$/,"$1"),10);ag[1]=parseInt(ab.replace(/^.*\.(.*)\s.*$/,"$1"),10);ag[2]=/[a-zA-Z]/.test(ab)?parseInt(ab.replace(/^.*[a-zA-Z]+(.*)$/,"$1"),10):0}}else{if(typeof O.ActiveXObject!=D){try{var ad=new ActiveXObject(W);if(ad){ab=ad.GetVariable("$version");if(ab){X=true;ab=ab.split(" ")[1].split(",");ag=[parseInt(ab[0],10),parseInt(ab[1],10),parseInt(ab[2],10)]}}}catch(Z){}}}return{w3:aa,pv:ag,wk:af,ie:X,win:ae,mac:ac}}(),k=function(){if(!M.w3){return}if((typeof j.readyState!=D&&j.readyState=="complete")||(typeof j.readyState==D&&(j.getElementsByTagName("body")[0]||j.body))){f()}if(!J){if(typeof j.addEventListener!=D){j.addEventListener("DOMContentLoaded",f,false)}if(M.ie&&M.win){j.attachEvent(x,function(){if(j.readyState=="complete"){j.detachEvent(x,arguments.callee);f()}});if(O==top){(function(){if(J){return}try{j.documentElement.doScroll("left")}catch(X){setTimeout(arguments.callee,0);return}f()})()}}if(M.wk){(function(){if(J){return}if(!/loaded|complete/.test(j.readyState)){setTimeout(arguments.callee,0);return}f()})()}s(f)}}();function f(){if(J){return}try{var Z=j.getElementsByTagName("body")[0].appendChild(C("span"));Z.parentNode.removeChild(Z)}catch(aa){return}J=true;var X=U.length;for(var Y=0;Y<X;Y++){U[Y]()}}function K(X){if(J){X()}else{U[U.length]=X}}function s(Y){if(typeof O.addEventListener!=D){O.addEventListener("load",Y,false)}else{if(typeof j.addEventListener!=D){j.addEventListener("load",Y,false)}else{if(typeof O.attachEvent!=D){i(O,"onload",Y)}else{if(typeof O.onload=="function"){var X=O.onload;O.onload=function(){X();Y()}}else{O.onload=Y}}}}}function h(){if(T){V()}else{H()}}function V(){var X=j.getElementsByTagName("body")[0];var aa=C(r);aa.setAttribute("type",q);var Z=X.appendChild(aa);if(Z){var Y=0;(function(){if(typeof Z.GetVariable!=D){var ab=Z.GetVariable("$version");if(ab){ab=ab.split(" ")[1].split(",");M.pv=[parseInt(ab[0],10),parseInt(ab[1],10),parseInt(ab[2],10)]}}else{if(Y<10){Y++;setTimeout(arguments.callee,10);return}}X.removeChild(aa);Z=null;H()})()}else{H()}}function H(){var ag=o.length;if(ag>0){for(var af=0;af<ag;af++){var Y=o[af].id;var ab=o[af].callbackFn;var aa={success:false,id:Y};if(M.pv[0]>0){var ae=c(Y);if(ae){if(F(o[af].swfVersion)&&!(M.wk&&M.wk<312)){w(Y,true);if(ab){aa.success=true;aa.ref=z(Y);ab(aa)}}else{if(o[af].expressInstall&&A()){var ai={};ai.data=o[af].expressInstall;ai.width=ae.getAttribute("width")||"0";ai.height=ae.getAttribute("height")||"0";if(ae.getAttribute("class")){ai.styleclass=ae.getAttribute("class")}if(ae.getAttribute("align")){ai.align=ae.getAttribute("align")}var ah={};var X=ae.getElementsByTagName("param");var ac=X.length;for(var ad=0;ad<ac;ad++){if(X[ad].getAttribute("name").toLowerCase()!="movie"){ah[X[ad].getAttribute("name")]=X[ad].getAttribute("value")}}P(ai,ah,Y,ab)}else{p(ae);if(ab){ab(aa)}}}}}else{w(Y,true);if(ab){var Z=z(Y);if(Z&&typeof Z.SetVariable!=D){aa.success=true;aa.ref=Z}ab(aa)}}}}}function z(aa){var X=null;var Y=c(aa);if(Y&&Y.nodeName=="OBJECT"){if(typeof Y.SetVariable!=D){X=Y}else{var Z=Y.getElementsByTagName(r)[0];if(Z){X=Z}}}return X}function A(){return !a&&F("6.0.65")&&(M.win||M.mac)&&!(M.wk&&M.wk<312)}function P(aa,ab,X,Z){a=true;E=Z||null;B={success:false,id:X};var ae=c(X);if(ae){if(ae.nodeName=="OBJECT"){l=g(ae);Q=null}else{l=ae;Q=X}aa.id=R;if(typeof aa.width==D||(!/%$/.test(aa.width)&&parseInt(aa.width,10)<310)){aa.width="310"}if(typeof aa.height==D||(!/%$/.test(aa.height)&&parseInt(aa.height,10)<137)){aa.height="137"}j.title=j.title.slice(0,47)+" - Flash Player Installation";var ad=M.ie&&M.win?"ActiveX":"PlugIn",ac="MMredirectURL="+O.location.toString().replace(/&/g,"%26")+"&MMplayerType="+ad+"&MMdoctitle="+j.title;if(typeof ab.flashvars!=D){ab.flashvars+="&"+ac}else{ab.flashvars=ac}if(M.ie&&M.win&&ae.readyState!=4){var Y=C("div");X+="SWFObjectNew";Y.setAttribute("id",X);ae.parentNode.insertBefore(Y,ae);ae.style.display="none";(function(){if(ae.readyState==4){ae.parentNode.removeChild(ae)}else{setTimeout(arguments.callee,10)}})()}u(aa,ab,X)}}function p(Y){if(M.ie&&M.win&&Y.readyState!=4){var X=C("div");Y.parentNode.insertBefore(X,Y);X.parentNode.replaceChild(g(Y),X);Y.style.display="none";(function(){if(Y.readyState==4){Y.parentNode.removeChild(Y)}else{setTimeout(arguments.callee,10)}})()}else{Y.parentNode.replaceChild(g(Y),Y)}}function g(ab){var aa=C("div");if(M.win&&M.ie){aa.innerHTML=ab.innerHTML}else{var Y=ab.getElementsByTagName(r)[0];if(Y){var ad=Y.childNodes;if(ad){var X=ad.length;for(var Z=0;Z<X;Z++){if(!(ad[Z].nodeType==1&&ad[Z].nodeName=="PARAM")&&!(ad[Z].nodeType==8)){aa.appendChild(ad[Z].cloneNode(true))}}}}}return aa}function u(ai,ag,Y){var X,aa=c(Y);if(M.wk&&M.wk<312){return X}if(aa){if(typeof ai.id==D){ai.id=Y}if(M.ie&&M.win){var ah="";for(var ae in ai){if(ai[ae]!=Object.prototype[ae]){if(ae.toLowerCase()=="data"){ag.movie=ai[ae]}else{if(ae.toLowerCase()=="styleclass"){ah+=' class="'+ai[ae]+'"'}else{if(ae.toLowerCase()!="classid"){ah+=" "+ae+'="'+ai[ae]+'"'}}}}}var af="";for(var ad in ag){if(ag[ad]!=Object.prototype[ad]){af+='<param name="'+ad+'" value="'+ag[ad]+'" />'}}aa.outerHTML='<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"'+ah+">"+af+"</object>";N[N.length]=ai.id;X=c(ai.id)}else{var Z=C(r);Z.setAttribute("type",q);for(var ac in ai){if(ai[ac]!=Object.prototype[ac]){if(ac.toLowerCase()=="styleclass"){Z.setAttribute("class",ai[ac])}else{if(ac.toLowerCase()!="classid"){Z.setAttribute(ac,ai[ac])}}}}for(var ab in ag){if(ag[ab]!=Object.prototype[ab]&&ab.toLowerCase()!="movie"){e(Z,ab,ag[ab])}}aa.parentNode.replaceChild(Z,aa);X=Z}}return X}function e(Z,X,Y){var aa=C("param");aa.setAttribute("name",X);aa.setAttribute("value",Y);Z.appendChild(aa)}function y(Y){var X=c(Y);if(X&&X.nodeName=="OBJECT"){if(M.ie&&M.win){X.style.display="none";(function(){if(X.readyState==4){b(Y)}else{setTimeout(arguments.callee,10)}})()}else{X.parentNode.removeChild(X)}}}function b(Z){var Y=c(Z);if(Y){for(var X in Y){if(typeof Y[X]=="function"){Y[X]=null}}Y.parentNode.removeChild(Y)}}function c(Z){var X=null;try{X=j.getElementById(Z)}catch(Y){}return X}function C(X){return j.createElement(X)}function i(Z,X,Y){Z.attachEvent(X,Y);I[I.length]=[Z,X,Y]}function F(Z){var Y=M.pv,X=Z.split(".");X[0]=parseInt(X[0],10);X[1]=parseInt(X[1],10)||0;X[2]=parseInt(X[2],10)||0;return(Y[0]>X[0]||(Y[0]==X[0]&&Y[1]>X[1])||(Y[0]==X[0]&&Y[1]==X[1]&&Y[2]>=X[2]))?true:false}function v(ac,Y,ad,ab){if(M.ie&&M.mac){return}var aa=j.getElementsByTagName("head")[0];if(!aa){return}var X=(ad&&typeof ad=="string")?ad:"screen";if(ab){n=null;G=null}if(!n||G!=X){var Z=C("style");Z.setAttribute("type","text/css");Z.setAttribute("media",X);n=aa.appendChild(Z);if(M.ie&&M.win&&typeof j.styleSheets!=D&&j.styleSheets.length>0){n=j.styleSheets[j.styleSheets.length-1]}G=X}if(M.ie&&M.win){if(n&&typeof n.addRule==r){n.addRule(ac,Y)}}else{if(n&&typeof j.createTextNode!=D){n.appendChild(j.createTextNode(ac+" {"+Y+"}"))}}}function w(Z,X){if(!m){return}var Y=X?"visible":"hidden";if(J&&c(Z)){c(Z).style.visibility=Y}else{v("#"+Z,"visibility:"+Y)}}function L(Y){var Z=/[\\\"<>\.;]/;var X=Z.exec(Y)!=null;return X&&typeof encodeURIComponent!=D?encodeURIComponent(Y):Y}var d=function(){if(M.ie&&M.win){window.attachEvent("onunload",function(){var ac=I.length;for(var ab=0;ab<ac;ab++){I[ab][0].detachEvent(I[ab][1],I[ab][2])}var Z=N.length;for(var aa=0;aa<Z;aa++){y(N[aa])}for(var Y in M){M[Y]=null}M=null;for(var X in swfobject){swfobject[X]=null}swfobject=null})}}();return{registerObject:function(ab,X,aa,Z){if(M.w3&&ab&&X){var Y={};Y.id=ab;Y.swfVersion=X;Y.expressInstall=aa;Y.callbackFn=Z;o[o.length]=Y;w(ab,false)}else{if(Z){Z({success:false,id:ab})}}},getObjectById:function(X){if(M.w3){return z(X)}},embedSWF:function(ab,ah,ae,ag,Y,aa,Z,ad,af,ac){var X={success:false,id:ah};if(M.w3&&!(M.wk&&M.wk<312)&&ab&&ah&&ae&&ag&&Y){w(ah,false);K(function(){ae+="";ag+="";var aj={};if(af&&typeof af===r){for(var al in af){aj[al]=af[al]}}aj.data=ab;aj.width=ae;aj.height=ag;var am={};if(ad&&typeof ad===r){for(var ak in ad){am[ak]=ad[ak]}}if(Z&&typeof Z===r){for(var ai in Z){if(typeof am.flashvars!=D){am.flashvars+="&"+ai+"="+Z[ai]}else{am.flashvars=ai+"="+Z[ai]}}}if(F(Y)){var an=u(aj,am,ah);if(aj.id==ah){w(ah,true)}X.success=true;X.ref=an}else{if(aa&&A()){aj.data=aa;P(aj,am,ah,ac);return}else{w(ah,true)}}if(ac){ac(X)}})}else{if(ac){ac(X)}}},switchOffAutoHideShow:function(){m=false},ua:M,getFlashPlayerVersion:function(){return{major:M.pv[0],minor:M.pv[1],release:M.pv[2]}},hasFlashPlayerVersion:F,createSWF:function(Z,Y,X){if(M.w3){return u(Z,Y,X)}else{return undefined}},showExpressInstall:function(Z,aa,X,Y){if(M.w3&&A()){P(Z,aa,X,Y)}},removeSWF:function(X){if(M.w3){y(X)}},createCSS:function(aa,Z,Y,X){if(M.w3){v(aa,Z,Y,X)}},addDomLoadEvent:K,addLoadEvent:s,getQueryParamValue:function(aa){var Z=j.location.search||j.location.hash;if(Z){if(/\?/.test(Z)){Z=Z.split("?")[1]}if(aa==null){return L(Z)}var Y=Z.split("&");for(var X=0;X<Y.length;X++){if(Y[X].substring(0,Y[X].indexOf("="))==aa){return L(Y[X].substring((Y[X].indexOf("=")+1)))}}}return""},expressInstallCallback:function(){if(a){var X=c(R);if(X&&l){X.parentNode.replaceChild(l,X);if(Q){w(Q,true);if(M.ie&&M.win){l.style.display="block"}}if(E){E(B)}}a=false}}}}();
+let swfobject=function(){let D="undefined",r="object",S="Shockwave Flash",W="ShockwaveFlash.ShockwaveFlash",q="application/x-shockwave-flash",R="SWFObjectExprInst",x="onreadystatechange",O=window,j=document,t=navigator,T=false,U=[h],o=[],N=[],I=[],l,Q,E,B,J=false,a=false,n,G,m=true,M=function(){let aa=typeof j.getElementById!=D&&typeof j.getElementsByTagName!=D&&typeof j.createElement!=D,ah=t.userAgent.toLowerCase(),Y=t.platform.toLowerCase(),ae=Y?/win/.test(Y):/win/.test(ah),ac=Y?/mac/.test(Y):/mac/.test(ah),af=/webkit/.test(ah)?parseFloat(ah.replace(/^.*webkit\/(\d+(\.\d+)?).*$/,"$1")):false,X=!+"\v1",ag=[0,0,0],ab=null;if(typeof t.plugins!=D&&typeof t.plugins[S]==r){ab=t.plugins[S].description;if(ab&&!(typeof t.mimeTypes!=D&&t.mimeTypes[q]&&!t.mimeTypes[q].enabledPlugin)){T=true;X=false;ab=ab.replace(/^.*\s+(\S+\s+\S+$)/,"$1");ag[0]=parseInt(ab.replace(/^(.*)\..*$/,"$1"),10);ag[1]=parseInt(ab.replace(/^.*\.(.*)\s.*$/,"$1"),10);ag[2]=/[a-zA-Z]/.test(ab)?parseInt(ab.replace(/^.*[a-zA-Z]+(.*)$/,"$1"),10):0}}else{if(typeof O.ActiveXObject!=D){try{let ad=new ActiveXObject(W);if(ad){ab=ad.GetVariable("$version");if(ab){X=true;ab=ab.split(" ")[1].split(",");ag=[parseInt(ab[0],10),parseInt(ab[1],10),parseInt(ab[2],10)]}}}catch(Z){}}}return{w3:aa,pv:ag,wk:af,ie:X,win:ae,mac:ac}}(),k=function(){if(!M.w3){return}if((typeof j.readyState!=D&&j.readyState=="complete")||(typeof j.readyState==D&&(j.getElementsByTagName("body")[0]||j.body))){f()}if(!J){if(typeof j.addEventListener!=D){j.addEventListener("DOMContentLoaded",f,false)}if(M.ie&&M.win){j.attachEvent(x,function(){if(j.readyState=="complete"){j.detachEvent(x,arguments.callee);f()}});if(O==top){(function(){if(J){return}try{j.documentElement.doScroll("left")}catch(X){setTimeout(arguments.callee,0);return}f()})()}}if(M.wk){(function(){if(J){return}if(!/loaded|complete/.test(j.readyState)){setTimeout(arguments.callee,0);return}f()})()}s(f)}}();function f(){if(J){return}try{let Z=j.getElementsByTagName("body")[0].appendChild(C("span"));Z.parentNode.removeChild(Z)}catch(aa){return}J=true;let X=U.length;for(let Y=0;Y<X;Y++){U[Y]()}}function K(X){if(J){X()}else{U[U.length]=X}}function s(Y){if(typeof O.addEventListener!=D){O.addEventListener("load",Y,false)}else{if(typeof j.addEventListener!=D){j.addEventListener("load",Y,false)}else{if(typeof O.attachEvent!=D){i(O,"onload",Y)}else{if(typeof O.onload=="function"){let X=O.onload;O.onload=function(){X();Y()}}else{O.onload=Y}}}}}function h(){if(T){V()}else{H()}}function V(){let X=j.getElementsByTagName("body")[0];let aa=C(r);aa.setAttribute("type",q);let Z=X.appendChild(aa);if(Z){let Y=0;(function(){if(typeof Z.GetVariable!=D){let ab=Z.GetVariable("$version");if(ab){ab=ab.split(" ")[1].split(",");M.pv=[parseInt(ab[0],10),parseInt(ab[1],10),parseInt(ab[2],10)]}}else{if(Y<10){Y++;setTimeout(arguments.callee,10);return}}X.removeChild(aa);Z=null;H()})()}else{H()}}function H(){let ag=o.length;if(ag>0){for(let af=0;af<ag;af++){let Y=o[af].id;let ab=o[af].callbackFn;let aa={success:false,id:Y};if(M.pv[0]>0){let ae=c(Y);if(ae){if(F(o[af].swfVersion)&&!(M.wk&&M.wk<312)){w(Y,true);if(ab){aa.success=true;aa.ref=z(Y);ab(aa)}}else{if(o[af].expressInstall&&A()){let ai={};ai.data=o[af].expressInstall;ai.width=ae.getAttribute("width")||"0";ai.height=ae.getAttribute("height")||"0";if(ae.getAttribute("class")){ai.styleclass=ae.getAttribute("class")}if(ae.getAttribute("align")){ai.align=ae.getAttribute("align")}let ah={};let X=ae.getElementsByTagName("param");let ac=X.length;for(let ad=0;ad<ac;ad++){if(X[ad].getAttribute("name").toLowerCase()!="movie"){ah[X[ad].getAttribute("name")]=X[ad].getAttribute("value")}}P(ai,ah,Y,ab)}else{p(ae);if(ab){ab(aa)}}}}}else{w(Y,true);if(ab){let Z=z(Y);if(Z&&typeof Z.SetVariable!=D){aa.success=true;aa.ref=Z}ab(aa)}}}}}function z(aa){let X=null;let Y=c(aa);if(Y&&Y.nodeName=="OBJECT"){if(typeof Y.SetVariable!=D){X=Y}else{let Z=Y.getElementsByTagName(r)[0];if(Z){X=Z}}}return X}function A(){return !a&&F("6.0.65")&&(M.win||M.mac)&&!(M.wk&&M.wk<312)}function P(aa,ab,X,Z){a=true;E=Z||null;B={success:false,id:X};let ae=c(X);if(ae){if(ae.nodeName=="OBJECT"){l=g(ae);Q=null}else{l=ae;Q=X}aa.id=R;if(typeof aa.width==D||(!/%$/.test(aa.width)&&parseInt(aa.width,10)<310)){aa.width="310"}if(typeof aa.height==D||(!/%$/.test(aa.height)&&parseInt(aa.height,10)<137)){aa.height="137"}j.title=j.title.slice(0,47)+" - Flash Player Installation";let ad=M.ie&&M.win?"ActiveX":"PlugIn",ac="MMredirectURL="+O.location.toString().replace(/&/g,"%26")+"&MMplayerType="+ad+"&MMdoctitle="+j.title;if(typeof ab.flashvars!=D){ab.flashvars+="&"+ac}else{ab.flashvars=ac}if(M.ie&&M.win&&ae.readyState!=4){let Y=C("div");X+="SWFObjectNew";Y.setAttribute("id",X);ae.parentNode.insertBefore(Y,ae);ae.style.display="none";(function(){if(ae.readyState==4){ae.parentNode.removeChild(ae)}else{setTimeout(arguments.callee,10)}})()}u(aa,ab,X)}}function p(Y){if(M.ie&&M.win&&Y.readyState!=4){let X=C("div");Y.parentNode.insertBefore(X,Y);X.parentNode.replaceChild(g(Y),X);Y.style.display="none";(function(){if(Y.readyState==4){Y.parentNode.removeChild(Y)}else{setTimeout(arguments.callee,10)}})()}else{Y.parentNode.replaceChild(g(Y),Y)}}function g(ab){let aa=C("div");if(M.win&&M.ie){aa.innerHTML=ab.innerHTML}else{let Y=ab.getElementsByTagName(r)[0];if(Y){let ad=Y.childNodes;if(ad){let X=ad.length;for(let Z=0;Z<X;Z++){if(!(ad[Z].nodeType==1&&ad[Z].nodeName=="PARAM")&&!(ad[Z].nodeType==8)){aa.appendChild(ad[Z].cloneNode(true))}}}}}return aa}function u(ai,ag,Y){let X,aa=c(Y);if(M.wk&&M.wk<312){return X}if(aa){if(typeof ai.id==D){ai.id=Y}if(M.ie&&M.win){let ah="";for(let ae in ai){if(ai[ae]!=Object.prototype[ae]){if(ae.toLowerCase()=="data"){ag.movie=ai[ae]}else{if(ae.toLowerCase()=="styleclass"){ah+=' class="'+ai[ae]+'"'}else{if(ae.toLowerCase()!="classid"){ah+=" "+ae+'="'+ai[ae]+'"'}}}}}let af="";for(let ad in ag){if(ag[ad]!=Object.prototype[ad]){af+='<param name="'+ad+'" value="'+ag[ad]+'" />'}}aa.outerHTML='<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"'+ah+">"+af+"</object>";N[N.length]=ai.id;X=c(ai.id)}else{let Z=C(r);Z.setAttribute("type",q);for(let ac in ai){if(ai[ac]!=Object.prototype[ac]){if(ac.toLowerCase()=="styleclass"){Z.setAttribute("class",ai[ac])}else{if(ac.toLowerCase()!="classid"){Z.setAttribute(ac,ai[ac])}}}}for(let ab in ag){if(ag[ab]!=Object.prototype[ab]&&ab.toLowerCase()!="movie"){e(Z,ab,ag[ab])}}aa.parentNode.replaceChild(Z,aa);X=Z}}return X}function e(Z,X,Y){let aa=C("param");aa.setAttribute("name",X);aa.setAttribute("value",Y);Z.appendChild(aa)}function y(Y){let X=c(Y);if(X&&X.nodeName=="OBJECT"){if(M.ie&&M.win){X.style.display="none";(function(){if(X.readyState==4){b(Y)}else{setTimeout(arguments.callee,10)}})()}else{X.parentNode.removeChild(X)}}}function b(Z){let Y=c(Z);if(Y){for(let X in Y){if(typeof Y[X]=="function"){Y[X]=null}}Y.parentNode.removeChild(Y)}}function c(Z){let X=null;try{X=j.getElementById(Z)}catch(Y){}return X}function C(X){return j.createElement(X)}function i(Z,X,Y){Z.attachEvent(X,Y);I[I.length]=[Z,X,Y]}function F(Z){let Y=M.pv,X=Z.split(".");X[0]=parseInt(X[0],10);X[1]=parseInt(X[1],10)||0;X[2]=parseInt(X[2],10)||0;return(Y[0]>X[0]||(Y[0]==X[0]&&Y[1]>X[1])||(Y[0]==X[0]&&Y[1]==X[1]&&Y[2]>=X[2]))?true:false}function v(ac,Y,ad,ab){if(M.ie&&M.mac){return}let aa=j.getElementsByTagName("head")[0];if(!aa){return}let X=(ad&&typeof ad=="string")?ad:"screen";if(ab){n=null;G=null}if(!n||G!=X){let Z=C("style");Z.setAttribute("type","text/css");Z.setAttribute("media",X);n=aa.appendChild(Z);if(M.ie&&M.win&&typeof j.styleSheets!=D&&j.styleSheets.length>0){n=j.styleSheets[j.styleSheets.length-1]}G=X}if(M.ie&&M.win){if(n&&typeof n.addRule==r){n.addRule(ac,Y)}}else{if(n&&typeof j.createTextNode!=D){n.appendChild(j.createTextNode(ac+" {"+Y+"}"))}}}function w(Z,X){if(!m){return}let Y=X?"visible":"hidden";if(J&&c(Z)){c(Z).style.visibility=Y}else{v("#"+Z,"visibility:"+Y)}}function L(Y){let Z=/[\\\"<>\.;]/;let X=Z.exec(Y)!=null;return X&&typeof encodeURIComponent!=D?encodeURIComponent(Y):Y}let d=function(){if(M.ie&&M.win){window.attachEvent("onunload",function(){let ac=I.length;for(let ab=0;ab<ac;ab++){I[ab][0].detachEvent(I[ab][1],I[ab][2])}let Z=N.length;for(let aa=0;aa<Z;aa++){y(N[aa])}for(let Y in M){M[Y]=null}M=null;for(let X in swfobject){swfobject[X]=null}swfobject=null})}}();return{registerObject:function(ab,X,aa,Z){if(M.w3&&ab&&X){let Y={};Y.id=ab;Y.swfVersion=X;Y.expressInstall=aa;Y.callbackFn=Z;o[o.length]=Y;w(ab,false)}else{if(Z){Z({success:false,id:ab})}}},getObjectById:function(X){if(M.w3){return z(X)}},embedSWF:function(ab,ah,ae,ag,Y,aa,Z,ad,af,ac){let X={success:false,id:ah};if(M.w3&&!(M.wk&&M.wk<312)&&ab&&ah&&ae&&ag&&Y){w(ah,false);K(function(){ae+="";ag+="";let aj={};if(af&&typeof af===r){for(let al in af){aj[al]=af[al]}}aj.data=ab;aj.width=ae;aj.height=ag;let am={};if(ad&&typeof ad===r){for(let ak in ad){am[ak]=ad[ak]}}if(Z&&typeof Z===r){for(let ai in Z){if(typeof am.flashvars!=D){am.flashvars+="&"+ai+"="+Z[ai]}else{am.flashvars=ai+"="+Z[ai]}}}if(F(Y)){let an=u(aj,am,ah);if(aj.id==ah){w(ah,true)}X.success=true;X.ref=an}else{if(aa&&A()){aj.data=aa;P(aj,am,ah,ac);return}else{w(ah,true)}}if(ac){ac(X)}})}else{if(ac){ac(X)}}},switchOffAutoHideShow:function(){m=false},ua:M,getFlashPlayerVersion:function(){return{major:M.pv[0],minor:M.pv[1],release:M.pv[2]}},hasFlashPlayerVersion:F,createSWF:function(Z,Y,X){if(M.w3){return u(Z,Y,X)}else{return undefined}},showExpressInstall:function(Z,aa,X,Y){if(M.w3&&A()){P(Z,aa,X,Y)}},removeSWF:function(X){if(M.w3){y(X)}},createCSS:function(aa,Z,Y,X){if(M.w3){v(aa,Z,Y,X)}},addDomLoadEvent:K,addLoadEvent:s,getQueryParamValue:function(aa){let Z=j.location.search||j.location.hash;if(Z){if(/\?/.test(Z)){Z=Z.split("?")[1]}if(aa==null){return L(Z)}let Y=Z.split("&");for(let X=0;X<Y.length;X++){if(Y[X].substring(0,Y[X].indexOf("="))==aa){return L(Y[X].substring((Y[X].indexOf("=")+1)))}}}return""},expressInstallCallback:function(){if(a){let X=c(R);if(X&&l){X.parentNode.replaceChild(l,X);if(Q){w(Q,true);if(M.ie&&M.win){l.style.display="block"}}if(E){E(B)}}a=false}}}}();
 }
 // Copyright: Hiroshi Ichikawa <http://gimite.net/en/>
 // License: New BSD License
@@ -2613,7 +2613,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
   
   if ('undefined' == typeof window || window.WebSocket) return;
 
-  var console = window.console;
+  let console = window.console;
   if (!console || !console.log || !console.error) {
     console = {log: function(){ }, error: function(){ }};
   }
@@ -2638,7 +2638,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
    * @param {string} headers
    */
   WebSocket = function(url, protocols, proxyHost, proxyPort, headers) {
-    var self = this;
+    let self = this;
     self.__id = WebSocket.__nextId++;
     WebSocket.__instances[self.__id] = self;
     self.readyState = WebSocket.CONNECTING;
@@ -2676,7 +2676,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
     // preserve all Unicode characters either e.g. "\uffff" in Firefox.
     // Note by wtritch: Hopefully this will not be necessary using ExternalInterface.  Will require
     // additional testing.
-    var result = WebSocket.__flash.send(this.__id, encodeURIComponent(data));
+    let result = WebSocket.__flash.send(this.__id, encodeURIComponent(data));
     if (result < 0) { // success
       return true;
     } else {
@@ -2721,8 +2721,8 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
    */
   WebSocket.prototype.removeEventListener = function(type, listener, useCapture) {
     if (!(type in this.__events)) return;
-    var events = this.__events[type];
-    for (var i = events.length - 1; i >= 0; --i) {
+    let events = this.__events[type];
+    for (let i = events.length - 1; i >= 0; --i) {
       if (events[i] === listener) {
         events.splice(i, 1);
         break;
@@ -2737,11 +2737,11 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
    * @return void
    */
   WebSocket.prototype.dispatchEvent = function(event) {
-    var events = this.__events[event.type] || [];
-    for (var i = 0; i < events.length; ++i) {
+    let events = this.__events[event.type] || [];
+    for (let i = 0; i < events.length; ++i) {
       events[i](event);
     }
-    var handler = this["on" + event.type];
+    let handler = this["on" + event.type];
     if (handler) handler(event);
   };
 
@@ -2757,14 +2757,14 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
       this.protocol = flashEvent.protocol;
     }
     
-    var jsEvent;
+    let jsEvent;
     if (flashEvent.type == "open" || flashEvent.type == "error") {
       jsEvent = this.__createSimpleEvent(flashEvent.type);
     } else if (flashEvent.type == "close") {
       // TODO implement jsEvent.wasClean
       jsEvent = this.__createSimpleEvent("close");
     } else if (flashEvent.type == "message") {
-      var data = decodeURIComponent(flashEvent.message);
+      let data = decodeURIComponent(flashEvent.message);
       jsEvent = this.__createMessageEvent("message", data);
     } else {
       throw "unknown event type: " + flashEvent.type;
@@ -2775,7 +2775,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
   
   WebSocket.prototype.__createSimpleEvent = function(type) {
     if (document.createEvent && window.Event) {
-      var event = document.createEvent("Event");
+      let event = document.createEvent("Event");
       event.initEvent(type, false, false);
       return event;
     } else {
@@ -2785,7 +2785,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
   
   WebSocket.prototype.__createMessageEvent = function(type, data) {
     if (document.createEvent && window.MessageEvent && !window.opera) {
-      var event = document.createEvent("MessageEvent");
+      let event = document.createEvent("MessageEvent");
       event.initMessageEvent("message", false, false, data, null, null, window, null);
       return event;
     } else {
@@ -2831,7 +2831,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
       console.error("[WebSocket] set WEB_SOCKET_SWF_LOCATION to location of WebSocketMain.swf");
       return;
     }
-    var container = document.createElement("div");
+    let container = document.createElement("div");
     container.id = "webSocketContainer";
     // Hides Flash box. We cannot use display: none or visibility: hidden because it prevents
     // Flash from loading at least in IE. So we move it out of the screen at (-100, -100).
@@ -2846,7 +2846,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
       container.style.left = "-100px";
       container.style.top = "-100px";
     }
-    var holder = document.createElement("div");
+    let holder = document.createElement("div");
     holder.id = "webSocketFlash";
     container.appendChild(holder);
     document.body.appendChild(container);
@@ -2880,7 +2880,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
       WebSocket.__flash = document.getElementById("webSocketFlash");
       WebSocket.__flash.setCallerUrl(location.href);
       WebSocket.__flash.setDebug(!!window.WEB_SOCKET_DEBUG);
-      for (var i = 0; i < WebSocket.__tasks.length; ++i) {
+      for (let i = 0; i < WebSocket.__tasks.length; ++i) {
         WebSocket.__tasks[i]();
       }
       WebSocket.__tasks = [];
@@ -2896,8 +2896,8 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
         // Gets events using receiveEvents() instead of getting it from event object
         // of Flash event. This is to make sure to keep message order.
         // It seems sometimes Flash events don't arrive in the same order as they are sent.
-        var events = WebSocket.__flash.receiveEvents();
-        for (var i = 0; i < events.length; ++i) {
+        let events = WebSocket.__flash.receiveEvents();
+        for (let i = 0; i < events.length; ++i) {
           WebSocket.__instances[events[i].webSocketId].__handleEvent(events[i]);
         }
       } catch (e) {
@@ -2933,7 +2933,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
     if (!window.navigator || !window.navigator.mimeTypes) {
       return false;
     }
-    var mimeType = window.navigator.mimeTypes["application/x-shockwave-flash"];
+    let mimeType = window.navigator.mimeTypes["application/x-shockwave-flash"];
     if (!mimeType || !mimeType.enabledPlugin || !mimeType.enabledPlugin.filename) {
       return false;
     }
@@ -3017,9 +3017,9 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
    */
 
   XHR.prototype.payload = function (payload) {
-    var msgs = [];
+    let msgs = [];
 
-    for (var i = 0, l = payload.length; i < l; i++) {
+    for (let i = 0, l = payload.length; i < l; i++) {
       msgs.push(io.parser.encodePacket(payload[i]));
     }
 
@@ -3049,7 +3049,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
   function empty () { };
 
   XHR.prototype.post = function (data) {
-    var self = this;
+    let self = this;
     this.socket.setBuffer(true);
 
     function stateChange () {
@@ -3103,7 +3103,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
    */
 
   XHR.prototype.request = function (method) {
-    var req = io.util.request(this.socket.isXDomain())
+    let req = io.util.request(this.socket.isXDomain())
       , query = io.util.query(this.socket.options.query, 't=' + +new Date);
 
     req.open(method || 'GET', this.prepareUrl() + query, true);
@@ -3225,7 +3225,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
     this.doc.close();
     this.doc.parentWindow.s = this;
 
-    var iframeC = this.doc.createElement('div');
+    let iframeC = this.doc.createElement('div');
     iframeC.className = 'socketio';
 
     this.doc.body.appendChild(iframeC);
@@ -3233,7 +3233,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
 
     iframeC.appendChild(this.iframe);
 
-    var self = this
+    let self = this
       , query = io.util.query(this.socket.options.query, 't='+ +new Date);
 
     this.iframe.src = this.prepareUrl() + query;
@@ -3256,7 +3256,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
   HTMLFile.prototype._ = function (data, doc) {
     this.onData(data);
     try {
-      var script = doc.getElementsByTagName('script')[0];
+      let script = doc.getElementsByTagName('script')[0];
       script.parentNode.removeChild(script);
     } catch (e) { }
   };
@@ -3306,7 +3306,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
   HTMLFile.check = function () {
     if ('ActiveXObject' in window){
       try {
-        var a = new ActiveXObject('htmlfile');
+        let a = new ActiveXObject('htmlfile');
         return a && io.Transport.XHR.check();
       } catch(e){}
     }
@@ -3394,7 +3394,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
    */
 
   XHRPolling.prototype.open = function () {
-    var self = this;
+    let self = this;
 
     io.Transport.XHR.prototype.open.call(self);
     return false;
@@ -3411,7 +3411,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
   XHRPolling.prototype.get = function () {
     if (!this.open) return;
 
-    var self = this;
+    let self = this;
 
     function stateChange () {
       if (this.readyState == 4) {
@@ -3473,7 +3473,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
    */
 
   XHRPolling.prototype.ready = function (socket, fn) {
-    var self = this;
+    let self = this;
 
     io.util.defer(function () {
       fn.call(self);
@@ -3509,7 +3509,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
    * @api private
    */
 
-  var indicator = global.document && "MozAppearance" in
+  let indicator = global.document && "MozAppearance" in
     global.document.documentElement.style;
 
   /**
@@ -3534,7 +3534,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
 
     this.index = io.j.length;
 
-    var self = this;
+    let self = this;
 
     io.j.push(function (msg) {
       self._(msg);
@@ -3566,14 +3566,14 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
    */
 
   JSONPPolling.prototype.post = function (data) {
-    var self = this
+    let self = this
       , query = io.util.query(
              this.socket.options.query
           , 't='+ (+new Date) + '&i=' + this.index
         );
 
     if (!this.form) {
-      var form = document.createElement('form')
+      let form = document.createElement('form')
         , area = document.createElement('textarea')
         , id = this.iframeId = 'socketio_iframe_' + this.index
         , iframe;
@@ -3650,7 +3650,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
    */
 
   JSONPPolling.prototype.get = function () {
-    var self = this
+    let self = this
       , script = document.createElement('script')
       , query = io.util.query(
              this.socket.options.query
@@ -3668,13 +3668,13 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
       self.onClose();
     };
 
-    var insertAt = document.getElementsByTagName('script')[0]
+    let insertAt = document.getElementsByTagName('script')[0]
     insertAt.parentNode.insertBefore(script, insertAt);
     this.script = script;
 
     if (indicator) {
       setTimeout(function () {
-        var iframe = document.createElement('iframe');
+        let iframe = document.createElement('iframe');
         document.body.appendChild(iframe);
         document.body.removeChild(iframe);
       }, 100);
@@ -3705,7 +3705,7 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
    */
 
   JSONPPolling.prototype.ready = function (socket, fn) {
-    var self = this;
+    let self = this;
     if (!indicator) return fn.call(this);
 
     io.util.load(function () {

@@ -45,7 +45,7 @@ WebInspector.TextEditorHighlighter._MaxLineCount = 10000;
 WebInspector.TextEditorHighlighter.prototype = {
     set mimeType(mimeType)
     {
-        var tokenizer = WebInspector.SourceTokenizer.Registry.getInstance().getTokenizer(mimeType);
+        let tokenizer = WebInspector.SourceTokenizer.Registry.getInstance().getTokenizer(mimeType);
         if (tokenizer)
             this._tokenizer = tokenizer;
     },
@@ -64,7 +64,7 @@ WebInspector.TextEditorHighlighter.prototype = {
             return;
 
         // First check if we have work to do.
-        var state = this._textModel.getAttribute(endLine - 1, "highlight");
+        let state = this._textModel.getAttribute(endLine - 1, "highlight");
         if (state && state.postConditionStringified) {
             // Last line is highlighted, just exit.
             return;
@@ -78,7 +78,7 @@ WebInspector.TextEditorHighlighter.prototype = {
         }
 
         // We will be highlighting. First rewind to the last highlighted line to gain proper highlighter context.
-        var startLine = endLine;
+        let startLine = endLine;
         while (startLine > 0) {
             state = this._textModel.getAttribute(startLine - 1, "highlight");
             if (state && state.postConditionStringified)
@@ -99,17 +99,17 @@ WebInspector.TextEditorHighlighter.prototype = {
         this._clearHighlightState(startLine);
 
         if (startLine) {
-            var state = this._textModel.getAttribute(startLine - 1, "highlight");
+            let state = this._textModel.getAttribute(startLine - 1, "highlight");
             if (!state || !state.postConditionStringified) {
                 // Highlighter did not reach this point yet, nothing to update. It will reach it on subsequent timer tick and do the job.
                 return false;
             }
         }
 
-        var restored = this._highlightLines(startLine, endLine);
+        let restored = this._highlightLines(startLine, endLine);
         if (!restored) {
-            for (var i = this._lastHighlightedLine; i < this._textModel.linesCount; ++i) {
-                var state = this._textModel.getAttribute(i, "highlight");
+            for (let i = this._lastHighlightedLine; i < this._textModel.linesCount; ++i) {
+                let state = this._textModel.getAttribute(i, "highlight");
                 if (!state && i > endLine)
                     break;
                 this._textModel.setAttribute(i, "highlight-outdated", state);
@@ -130,7 +130,7 @@ WebInspector.TextEditorHighlighter.prototype = {
         delete this._highlightTimer;
 
         // First we always check if we have work to do. Could be that user scrolled back and we can quit.
-        var state = this._textModel.getAttribute(this._requestedEndLine - 1, "highlight");
+        let state = this._textModel.getAttribute(this._requestedEndLine - 1, "highlight");
         if (state && state.postConditionStringified)
             return;
 
@@ -154,30 +154,30 @@ WebInspector.TextEditorHighlighter.prototype = {
     _highlightLines: function(startLine, endLine)
     {
         // Restore highlighter context taken from previous line.
-        var state = this._textModel.getAttribute(startLine - 1, "highlight");
-        var postConditionStringified = state ? state.postConditionStringified : JSON.stringify(this._tokenizer.createInitialCondition());
+        let state = this._textModel.getAttribute(startLine - 1, "highlight");
+        let postConditionStringified = state ? state.postConditionStringified : JSON.stringify(this._tokenizer.createInitialCondition());
 
-        var tokensCount = 0;
-        for (var lineNumber = startLine; lineNumber < endLine; ++lineNumber) {
+        let tokensCount = 0;
+        for (let lineNumber = startLine; lineNumber < endLine; ++lineNumber) {
             state = this._selectHighlightState(lineNumber, postConditionStringified);
             if (state.postConditionStringified) {
                 // This line is already highlighted.
                 postConditionStringified = state.postConditionStringified;
             } else {
-                var lastHighlightedColumn = 0;
+                let lastHighlightedColumn = 0;
                 if (state.midConditionStringified) {
                     lastHighlightedColumn = state.lastHighlightedColumn;
                     postConditionStringified = state.midConditionStringified;
                 }
 
-                var line = this._textModel.line(lineNumber);
+                let line = this._textModel.line(lineNumber);
                 this._tokenizer.line = line;
                 this._tokenizer.condition = JSON.parse(postConditionStringified);
 
                 // Highlight line.
                 do {
-                    var newColumn = this._tokenizer.nextToken(lastHighlightedColumn);
-                    var tokenType = this._tokenizer.tokenType;
+                    let newColumn = this._tokenizer.nextToken(lastHighlightedColumn);
+                    let tokenType = this._tokenizer.tokenType;
                     if (tokenType)
                         state[lastHighlightedColumn] = { length: newColumn - lastHighlightedColumn, tokenType: tokenType };
                     lastHighlightedColumn = newColumn;
@@ -199,7 +199,7 @@ WebInspector.TextEditorHighlighter.prototype = {
                 }
             }
 
-            var nextLineState = this._textModel.getAttribute(lineNumber + 1, "highlight");
+            let nextLineState = this._textModel.getAttribute(lineNumber + 1, "highlight");
             if (nextLineState && nextLineState.preConditionStringified === state.postConditionStringified) {
                 // Following lines are up to date, no need re-highlight.
                 ++lineNumber;
@@ -223,11 +223,11 @@ WebInspector.TextEditorHighlighter.prototype = {
 
     _selectHighlightState: function(lineNumber, preConditionStringified)
     {
-        var state = this._textModel.getAttribute(lineNumber, "highlight");
+        let state = this._textModel.getAttribute(lineNumber, "highlight");
         if (state && state.preConditionStringified === preConditionStringified)
             return state;
 
-        var outdatedState = this._textModel.getAttribute(lineNumber, "highlight-outdated");
+        let outdatedState = this._textModel.getAttribute(lineNumber, "highlight-outdated");
         if (outdatedState && outdatedState.preConditionStringified === preConditionStringified) {
             // Swap states.
             this._textModel.setAttribute(lineNumber, "highlight", outdatedState);

@@ -11,22 +11,22 @@
  * MIT Licensed
  */
 
-var logger = require('pomelo-logger').getLogger('bearcat-ha', 'HaClient');
-var EventEmitter = require('events').EventEmitter;
-var zooKeeper = require("node-zookeeper-client");
-var HASTATE = require('./util/haClientState');
-var Constant = require('./util/constant');
-var zkEvent = zooKeeper.Event;
-var async = require('async');
-var Util = require('util');
+let logger = require('pomelo-logger').getLogger('bearcat-ha', 'HaClient');
+let EventEmitter = require('events').EventEmitter;
+let zooKeeper = require("node-zookeeper-client");
+let HASTATE = require('./util/haClientState');
+let Constant = require('./util/constant');
+let zkEvent = zooKeeper.Event;
+let async = require('async');
+let Util = require('util');
 
-// var flag = 0;
+// let flag = 0;
 // setTimeout(function() {
 // 	logger.debug('flag set 1 ...');
 // 	flag = 1;
 // }, 5000);
 
-var HaClient = function(opts) {
+let HaClient = function(opts) {
 	EventEmitter.call(this);
 	this.indexs = {}; // slaves index
 	this.haState = {};
@@ -45,7 +45,7 @@ var HaClient = function(opts) {
 Util.inherits(HaClient, EventEmitter);
 
 HaClient.prototype.init = function() {
-	var self = this;
+	let self = this;
 
 	this.initZK(function() {});
 }
@@ -64,16 +64,16 @@ HaClient.prototype.initZK = function(cb) {
 		return;
 	}
 
-	var self = this;
-	var chroot = this.chroot;
-	var servers = this.servers;
-	var username = this.username;
-	var password = this.password;
-	var zkConnectTimeout = this.zkConnectTimeout;
+	let self = this;
+	let chroot = this.chroot;
+	let servers = this.servers;
+	let username = this.username;
+	let password = this.password;
+	let zkConnectTimeout = this.zkConnectTimeout;
 
 	this.state = HASTATE.STATE_CONNECTING;
-	var zkClient = zooKeeper.createClient(servers + chroot);
-	var timeoutId = setTimeout(function() {
+	let zkClient = zooKeeper.createClient(servers + chroot);
+	let timeoutId = setTimeout(function() {
 		logger.warn('connect to zookeeper timeout');
 		self.state = HASTATE.STATE_TIMEOUT;
 		self.emit('timeout');
@@ -123,7 +123,7 @@ HaClient.prototype.initZK = function(cb) {
 };
 
 HaClient.prototype.zkReconnect = function() {
-	var self = this;
+	let self = this;
 
 	if (self.reconnectTimer) {
 		return;
@@ -131,8 +131,8 @@ HaClient.prototype.zkReconnect = function() {
 
 	self.clearUp();
 	this.state = HASTATE.STATE_RECONNECTING;
-	var s = Math.floor(Math.random(0, 1) * 50);
-	var p = Math.floor(Math.random(0, 1) * 100);
+	let s = Math.floor(Math.random(0, 1) * 50);
+	let p = Math.floor(Math.random(0, 1) * 100);
 
 	if (!self.reconnectTimer) {
 		self.reconnectTimer = setInterval(function() {
@@ -162,7 +162,7 @@ HaClient.prototype.clearUp = function() {
 }
 
 HaClient.prototype.onChildrenChange = function(data, callback) {
-	var self = this;
+	let self = this;
 	callback = callback || function() {};
 
 	async.each(Object.keys(data), function(path, next) {
@@ -172,7 +172,7 @@ HaClient.prototype.onChildrenChange = function(data, callback) {
 };
 
 HaClient.prototype.getZKChildrenData = function(callback) {
-	var self = this;
+	let self = this;
 	self.zkClient.getChildren(self.zkPath, function(event) {
 		if (event.type == zkEvent.NODE_CHILDREN_CHANGED) {
 			self.getZKChildrenData(function(data) {
@@ -180,7 +180,7 @@ HaClient.prototype.getZKChildrenData = function(callback) {
 			});
 		}
 	}, function(err, children) {
-		var result = {};
+		let result = {};
 		if (err) {
 			logger.error('get ZooKeeper children error: %s', err.stack);
 			return callback(result);
@@ -198,7 +198,7 @@ HaClient.prototype.getZKChildrenData = function(callback) {
 };
 
 HaClient.prototype.getZKData = function(path, callback) {
-	var fullPath = this.zkPath + '/' + path;
+	let fullPath = this.zkPath + '/' + path;
 	this.zkClient.getData(fullPath, function(err, data) {
 		if (err) {
 			logger.error('get ZooKeeper path %s data error: %s', fullPath, err.stack);
@@ -223,7 +223,7 @@ HaClient.prototype.getZKData = function(path, callback) {
 };
 
 HaClient.prototype.watchZkData = function(path) {
-	var self = this;
+	let self = this;
 
 	self.zkClient.getData(self.zkPath + '/' + path, function(event) {
 		if (event.type == zkEvent.NODE_DATA_CHANGED) {
@@ -255,7 +255,7 @@ HaClient.prototype.onDataChange = function(path, state) {
 	// 	return;
 	// }
 
-	var oldState = this.haState[path];
+	let oldState = this.haState[path];
 	this.setState(path, state);
 
 	if (!oldState) {
@@ -283,7 +283,7 @@ HaClient.prototype.setState = function(name, state) {
 };
 
 HaClient.prototype.removeState = function(name) {
-	var state = this.haState[name];
+	let state = this.haState[name];
 	if (!state) return;
 
 	this.emit('nodeRemove', name, state);
@@ -292,7 +292,7 @@ HaClient.prototype.removeState = function(name) {
 };
 
 HaClient.prototype.checkValid = function(nodeName, clientName) {
-	var state = this.haState[nodeName];
+	let state = this.haState[nodeName];
 
 	if (!state) {
 		return false;
@@ -302,15 +302,15 @@ HaClient.prototype.checkValid = function(nodeName, clientName) {
 		return true;
 	}
 
-	var slaves = state.slaves;
-	for (var i = 0; i < slaves.length; i++) {
+	let slaves = state.slaves;
+	for (let i = 0; i < slaves.length; i++) {
 		if (slaves[i] == clientName) {
 			return true;
 		}
 	}
 
-	var unavailable = state.unavailable;
-	for (var j = 0; j < unavailable.length; j++) {
+	let unavailable = state.unavailable;
+	for (let j = 0; j < unavailable.length; j++) {
 		if (unavailable[j] == clientName) {
 			return true;
 		}
@@ -325,7 +325,7 @@ HaClient.prototype.getClient = function(name, role) {
 		return;
 	}
 
-	var state = this.haState[name];
+	let state = this.haState[name];
 
 	if (!state) {
 		logger.error('getClient error %s %s %j \n %s', name, role, this.haState, new Error('').stack);
@@ -333,10 +333,10 @@ HaClient.prototype.getClient = function(name, role) {
 		return;
 	}
 
-	var clientNode = null;
+	let clientNode = null;
 
 	if (role === 'slave') {
-		var index = this.indexs[name] || 0;
+		let index = this.indexs[name] || 0;
 		if (index >= state.slaves.length) {
 			index = 0;
 		}

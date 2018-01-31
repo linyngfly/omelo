@@ -2,7 +2,7 @@ Ext.onReady(function(){
 
 	Ext.BLANK_IMAGE_URL ='../ext-4.0.7-gpl/resources/themes/images/default/tree/s.gif'; 
 	
-   var sceneStore = Ext.create('Ext.data.Store', {
+   let sceneStore = Ext.create('Ext.data.Store', {
 	id:'sceneStoreId',
 	autoLoad:false,
 	pageSize:5,
@@ -18,7 +18,7 @@ Ext.onReady(function(){
 /**
  * userGrid,detail users' message
  */
-var sceneGrid=Ext.create('Ext.grid.Panel', {
+let sceneGrid=Ext.create('Ext.grid.Panel', {
 	id:'sceneGridId',
 	region:'center',
     store: sceneStore,
@@ -35,7 +35,7 @@ var sceneGrid=Ext.create('Ext.grid.Panel', {
           handler:refresh
          }]
 });
-var viewport=new Ext.Viewport({
+let viewport=new Ext.Viewport({
 	    layout:'border',
 	    items:[sceneGrid]
 	});
@@ -51,9 +51,9 @@ function refresh(){
     }
  
     // compose display data
-    var data = [];
-    for(var id in msg) {
-    	for(var i=0;i<msg[id].length;i++){
+    let data = [];
+    for(let id in msg) {
+    	for(let i=0;i<msg[id].length;i++){
     		data.push({
 		      	serverId : id,
 		      	name : msg[id][i]['name'],
@@ -62,7 +62,7 @@ function refresh(){
 		    });
     	}
     }
-    var store = Ext.getCmp('sceneGridId').getStore();
+    let store = Ext.getCmp('sceneGridId').getStore();
     store.loadData(data);
   });
 }	

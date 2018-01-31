@@ -34,16 +34,16 @@
  */
 Node.prototype.rangeOfWord = function(offset, stopCharacters, stayWithinNode, direction)
 {
-    var startNode;
-    var startOffset = 0;
-    var endNode;
-    var endOffset = 0;
+    let startNode;
+    let startOffset = 0;
+    let endNode;
+    let endOffset = 0;
 
     if (!stayWithinNode)
         stayWithinNode = this;
 
     if (!direction || direction === "backward" || direction === "both") {
-        var node = this;
+        let node = this;
         while (node) {
             if (node === stayWithinNode) {
                 if (!startNode)
@@ -52,8 +52,8 @@ Node.prototype.rangeOfWord = function(offset, stopCharacters, stayWithinNode, di
             }
 
             if (node.nodeType === Node.TEXT_NODE) {
-                var start = (node === this ? (offset - 1) : (node.nodeValue.length - 1));
-                for (var i = start; i >= 0; --i) {
+                let start = (node === this ? (offset - 1) : (node.nodeValue.length - 1));
+                for (let i = start; i >= 0; --i) {
                     if (stopCharacters.indexOf(node.nodeValue[i]) !== -1) {
                         startNode = node;
                         startOffset = i + 1;
@@ -87,8 +87,8 @@ Node.prototype.rangeOfWord = function(offset, stopCharacters, stayWithinNode, di
             }
 
             if (node.nodeType === Node.TEXT_NODE) {
-                var start = (node === this ? offset : 0);
-                for (var i = start; i < node.nodeValue.length; ++i) {
+                let start = (node === this ? offset : 0);
+                for (let i = start; i < node.nodeValue.length; ++i) {
                     if (stopCharacters.indexOf(node.nodeValue[i]) !== -1) {
                         endNode = node;
                         endOffset = i;
@@ -112,7 +112,7 @@ Node.prototype.rangeOfWord = function(offset, stopCharacters, stayWithinNode, di
         endOffset = offset;
     }
 
-    var result = this.ownerDocument.createRange();
+    let result = this.ownerDocument.createRange();
     result.setStart(startNode, startOffset);
     result.setEnd(endNode, endOffset);
 
@@ -121,7 +121,7 @@ Node.prototype.rangeOfWord = function(offset, stopCharacters, stayWithinNode, di
 
 Node.prototype.traverseNextTextNode = function(stayWithin)
 {
-    var node = this.traverseNextNode(stayWithin);
+    let node = this.traverseNextNode(stayWithin);
     if (!node)
         return;
 
@@ -133,7 +133,7 @@ Node.prototype.traverseNextTextNode = function(stayWithin)
 
 Node.prototype.rangeBoundaryForOffset = function(offset)
 {
-    var node = this.traverseNextTextNode(this);
+    let node = this.traverseNextTextNode(this);
     while (node && offset > node.nodeValue.length) {
         offset -= node.nodeValue.length;
         node = node.traverseNextTextNode(this);
@@ -150,7 +150,7 @@ Element.prototype.removeStyleClass = function(className)
 
 Element.prototype.removeMatchingStyleClasses = function(classNameRegex)
 {
-    var regex = new RegExp("(^|\\s+)" + classNameRegex + "($|\\s+)");
+    let regex = new RegExp("(^|\\s+)" + classNameRegex + "($|\\s+)");
     if (regex.test(this.className))
         this.className = this.className.replace(regex, " ");
 }
@@ -173,9 +173,9 @@ Element.prototype.positionAt = function(x, y)
 
 Element.prototype.pruneEmptyTextNodes = function()
 {
-    var sibling = this.firstChild;
+    let sibling = this.firstChild;
     while (sibling) {
-        var nextSibling = sibling.nextSibling;
+        let nextSibling = sibling.nextSibling;
         if (sibling.nodeType === this.TEXT_NODE && sibling.nodeValue === "")
             this.removeChild(sibling);
         sibling = nextSibling;
@@ -190,8 +190,8 @@ Element.prototype.isScrolledToBottom = function()
 
 Node.prototype.enclosingNodeOrSelfWithNodeNameInArray = function(nameArray)
 {
-    for (var node = this; node && node !== this.ownerDocument; node = node.parentNode)
-        for (var i = 0; i < nameArray.length; ++i)
+    for (let node = this; node && node !== this.ownerDocument; node = node.parentNode)
+        for (let i = 0; i < nameArray.length; ++i)
             if (node.nodeName.toLowerCase() === nameArray[i].toLowerCase())
                 return node;
     return null;
@@ -204,7 +204,7 @@ Node.prototype.enclosingNodeOrSelfWithNodeName = function(nodeName)
 
 Node.prototype.enclosingNodeOrSelfWithClass = function(className)
 {
-    for (var node = this; node && node !== this.ownerDocument; node = node.parentNode)
+    for (let node = this; node && node !== this.ownerDocument; node = node.parentNode)
         if (node.nodeType === Node.ELEMENT_NODE && node.hasStyleClass(className))
             return node;
     return null;
@@ -230,10 +230,10 @@ Element.prototype.removeChildren = function()
 
 Element.prototype.isInsertionCaretInside = function()
 {
-    var selection = window.getSelection();
+    let selection = window.getSelection();
     if (!selection.rangeCount || !selection.isCollapsed)
         return false;
-    var selectionRange = selection.getRangeAt(0);
+    let selectionRange = selection.getRangeAt(0);
     return selectionRange.startContainer.isSelfOrDescendant(this);
 }
 
@@ -242,7 +242,7 @@ Element.prototype.isInsertionCaretInside = function()
  */
 Element.prototype.createChild = function(elementName, className)
 {
-    var element = this.ownerDocument.createElement(elementName);
+    let element = this.ownerDocument.createElement(elementName);
     if (className)
         element.className = className;
     this.appendChild(element);
@@ -270,10 +270,10 @@ Element.prototype.totalOffsetTop = function()
 
 Element.prototype.totalOffset = function()
 {
-    var totalLeft = 0;
-    var totalTop = 0;
+    let totalLeft = 0;
+    let totalTop = 0;
 
-    for (var element = this; element; element = element.offsetParent) {
+    for (let element = this; element; element = element.offsetParent) {
         totalLeft += element.offsetLeft;
         totalTop += element.offsetTop;
         if (this !== element) {
@@ -287,9 +287,9 @@ Element.prototype.totalOffset = function()
 
 Element.prototype.scrollOffset = function()
 {
-    var curLeft = 0;
-    var curTop = 0;
-    for (var element = this; element; element = element.scrollParent) {
+    let curLeft = 0;
+    let curTop = 0;
+    for (let element = this; element; element = element.scrollParent) {
         curLeft += element.scrollLeft;
         curTop += element.scrollTop;
     }
@@ -317,9 +317,9 @@ function AnchorBox(x, y, width, height)
  */
 Element.prototype.offsetRelativeToWindow = function(targetWindow)
 {
-    var elementOffset = new AnchorBox();
-    var curElement = this;
-    var curWindow = this.ownerDocument.defaultView;
+    let elementOffset = new AnchorBox();
+    let curElement = this;
+    let curWindow = this.ownerDocument.defaultView;
     while (curWindow && curElement) {
         elementOffset.x += curElement.totalOffsetLeft();
         elementOffset.y += curElement.totalOffsetTop();
@@ -341,7 +341,7 @@ Element.prototype.boxInWindow = function(targetWindow)
 {
     targetWindow = targetWindow || this.ownerDocument.defaultView;
 
-    var anchorBox = this.offsetRelativeToWindow(window);
+    let anchorBox = this.offsetRelativeToWindow(window);
     anchorBox.width = Math.min(this.offsetWidth, window.innerWidth - anchorBox.x);
     anchorBox.height = Math.min(this.offsetHeight, window.innerHeight - anchorBox.y);
 
@@ -395,9 +395,9 @@ Text.prototype.select = function(start, end)
     if (start < 0)
         start = end + start;
 
-    var selection = this.ownerDocument.defaultView.getSelection();
+    let selection = this.ownerDocument.defaultView.getSelection();
     selection.removeAllRanges();
-    var range = this.ownerDocument.createRange();
+    let range = this.ownerDocument.createRange();
     range.setStart(this, start);
     range.setEnd(this, end);
     selection.addRange(range);
@@ -408,12 +408,12 @@ Element.prototype.selectionLeftOffset = function()
 {
     // Calculate selection offset relative to the current element.
 
-    var selection = window.getSelection();
+    let selection = window.getSelection();
     if (!selection.containsNode(this, true))
         return null;
 
-    var leftOffset = selection.anchorOffset;
-    var node = selection.anchorNode;
+    let leftOffset = selection.anchorOffset;
+    let node = selection.anchorNode;
 
     while (node !== this) {
         while (node.previousSibling) {
@@ -435,8 +435,8 @@ String.prototype.hasSubstring = function(string, caseInsensitive)
 
 String.prototype.findAll = function(string)
 {
-    var matches = [];
-    var i = this.indexOf(string);
+    let matches = [];
+    let i = this.indexOf(string);
     while (i !== -1) {
         matches.push(i);
         i = this.indexOf(string, i + string.length);
@@ -461,7 +461,7 @@ String.prototype.asParsedURL = function()
     // 3 - ?port
     // 4 - ?path
     // 5 - ?fragment
-    var match = this.match(/^([^:]+):\/\/([^\/:]*)(?::([\d]+))?(?:(\/[^#]*)(?:#(.*))?)?$/i);
+    let match = this.match(/^([^:]+):\/\/([^\/:]*)(?::([\d]+))?(?:(\/[^#]*)(?:#(.*))?)?$/i);
     if (!match) {
         if (this == "about:blank") {
             return { scheme: "about",
@@ -471,7 +471,7 @@ String.prototype.asParsedURL = function()
         }
         return null;
     }
-    var result = {};
+    let result = {};
     result.scheme = match[1].toLowerCase();
     result.host = match[2];
     result.port = match[3];
@@ -481,13 +481,13 @@ String.prototype.asParsedURL = function()
     result.lastPathComponent = "";
     if (result.path) {
         // First cut the query params.
-        var path = result.path;
-        var indexOfQuery = path.indexOf("?");
+        let path = result.path;
+        let indexOfQuery = path.indexOf("?");
         if (indexOfQuery !== -1)
             path = path.substring(0, indexOfQuery);
 
         // Then take last path component.
-        var lastSlashIndex = path.lastIndexOf("/");
+        let lastSlashIndex = path.lastIndexOf("/");
         if (lastSlashIndex !== -1) {
             result.firstPathComponents = path.substring(0, lastSlashIndex + 1);
             result.lastPathComponent = path.substring(lastSlashIndex + 1);
@@ -498,8 +498,8 @@ String.prototype.asParsedURL = function()
 
 String.prototype.escapeCharacters = function(chars)
 {
-    var foundChar = false;
-    for (var i = 0; i < chars.length; ++i) {
+    let foundChar = false;
+    for (let i = 0; i < chars.length; ++i) {
         if (this.indexOf(chars.charAt(i)) !== -1) {
             foundChar = true;
             break;
@@ -509,8 +509,8 @@ String.prototype.escapeCharacters = function(chars)
     if (!foundChar)
         return this;
 
-    var result = "";
-    for (var i = 0; i < this.length; ++i) {
+    let result = "";
+    for (let i = 0; i < this.length; ++i) {
         if (chars.indexOf(this.charAt(i)) !== -1)
             result += "\\";
         result += this.charAt(i);
@@ -538,8 +538,8 @@ String.prototype.trimMiddle = function(maxLength)
 {
     if (this.length <= maxLength)
         return this;
-    var leftHalf = maxLength >> 1;
-    var rightHalf = maxLength - leftHalf - 1;
+    let leftHalf = maxLength >> 1;
+    let rightHalf = maxLength - leftHalf - 1;
     return this.substr(0, leftHalf) + "\u2026" + this.substr(this.length - rightHalf, rightHalf);
 }
 
@@ -552,7 +552,7 @@ String.prototype.trimEnd = function(maxLength)
 
 String.prototype.trimURL = function(baseURLDomain)
 {
-    var result = this.replace(/^(https|http|file):\/\//i, "");
+    let result = this.replace(/^(https|http|file):\/\//i, "");
     if (baseURLDomain)
         result = result.replace(new RegExp("^" + baseURLDomain.escapeForRegExp(), "i"), "");
     return result;
@@ -560,7 +560,7 @@ String.prototype.trimURL = function(baseURLDomain)
 
 String.prototype.removeURLFragment = function()
 {
-    var fragmentIndex = this.indexOf("#");
+    let fragmentIndex = this.indexOf("#");
     if (fragmentIndex == -1)
         fragmentIndex = this.length;
     return this.substring(0, fragmentIndex);
@@ -571,7 +571,7 @@ Node.prototype.isAncestor = function(node)
     if (!node)
         return false;
 
-    var currentNode = node.parentNode;
+    let currentNode = node.parentNode;
     while (currentNode) {
         if (this === currentNode)
             return true;
@@ -597,7 +597,7 @@ Node.prototype.isSelfOrDescendant = function(node)
 
 Node.prototype.traverseNextNode = function(stayWithin)
 {
-    var node = this.firstChild;
+    let node = this.firstChild;
     if (node)
         return node;
 
@@ -621,7 +621,7 @@ Node.prototype.traversePreviousNode = function(stayWithin)
 {
     if (stayWithin && this === stayWithin)
         return null;
-    var node = this.previousSibling;
+    let node = this.previousSibling;
     while (node && node.lastChild)
         node = node.lastChild;
     if (node)
@@ -654,7 +654,7 @@ Date.prototype.toISO8601Compact = function()
 
 HTMLTextAreaElement.prototype.moveCursorToEnd = function()
 {
-    var length = this.value.length;
+    let length = this.value.length;
     this.setSelectionRange(length, length);
 }
 
@@ -666,14 +666,14 @@ Object.defineProperty(Array.prototype, "remove",
     value: function(value, onlyFirst)
     {
         if (onlyFirst) {
-            var index = this.indexOf(value);
+            let index = this.indexOf(value);
             if (index !== -1)
                 this.splice(index, 1);
             return;
         }
 
-        var length = this.length;
-        for (var i = 0; i < length; ++i) {
+        let length = this.length;
+        for (let i = 0; i < length; ++i) {
             if (this[i] === value)
                 this.splice(i, 1);
         }
@@ -687,8 +687,8 @@ Object.defineProperty(Array.prototype, "keySet",
      */
     value: function()
     {
-        var keys = {};
-        for (var i = 0; i < this.length; ++i)
+        let keys = {};
+        for (let i = 0; i < this.length; ++i)
             keys[this[i]] = true;
         return keys;
     }
@@ -701,11 +701,11 @@ Object.defineProperty(Array.prototype, "upperBound",
      */
     value: function(value)
     {
-        var first = 0;
-        var count = this.length;
+        let first = 0;
+        let count = this.length;
         while (count > 0) {
-          var step = count >> 1;
-          var middle = first + step;
+          let step = count >> 1;
+          let middle = first + step;
           if (value >= this[middle]) {
               first = middle + 1;
               count -= step + 1;
@@ -718,39 +718,39 @@ Object.defineProperty(Array.prototype, "upperBound",
 
 Array.diff = function(left, right)
 {
-    var o = left;
-    var n = right;
+    let o = left;
+    let n = right;
 
-    var ns = {};
-    var os = {};
+    let ns = {};
+    let os = {};
 
-    for (var i = 0; i < n.length; i++) {
+    for (let i = 0; i < n.length; i++) {
         if (ns[n[i]] == null)
             ns[n[i]] = { rows: [], o: null };
         ns[n[i]].rows.push(i);
     }
 
-    for (var i = 0; i < o.length; i++) {
+    for (let i = 0; i < o.length; i++) {
         if (os[o[i]] == null)
             os[o[i]] = { rows: [], n: null };
         os[o[i]].rows.push(i);
     }
 
-    for (var i in ns) {
+    for (let i in ns) {
         if (ns[i].rows.length == 1 && typeof(os[i]) != "undefined" && os[i].rows.length == 1) {
             n[ns[i].rows[0]] = { text: n[ns[i].rows[0]], row: os[i].rows[0] };
             o[os[i].rows[0]] = { text: o[os[i].rows[0]], row: ns[i].rows[0] };
         }
     }
 
-    for (var i = 0; i < n.length - 1; i++) {
+    for (let i = 0; i < n.length - 1; i++) {
         if (n[i].text != null && n[i + 1].text == null && n[i].row + 1 < o.length && o[n[i].row + 1].text == null && n[i + 1] == o[n[i].row + 1]) {
             n[i + 1] = { text: n[i + 1], row: n[i].row + 1 };
             o[n[i].row + 1] = { text: o[n[i].row + 1], row: i + 1 };
         }
     }
 
-    for (var i = n.length - 1; i > 0; i--) {
+    for (let i = n.length - 1; i > 0; i--) {
         if (n[i].text != null && n[i - 1].text == null && n[i].row > 0 && o[n[i].row - 1].text == null &&
             n[i - 1] == o[n[i].row - 1]) {
             n[i - 1] = { text: n[i - 1], row: n[i].row - 1 };
@@ -778,8 +778,8 @@ String.sprintf = function(format, var_arg)
 
 String.tokenizeFormatString = function(format, formatters)
 {
-    var tokens = [];
-    var substitutionIndex = 0;
+    let tokens = [];
+    let substitutionIndex = 0;
 
     function addStringToken(str)
     {
@@ -796,14 +796,14 @@ String.tokenizeFormatString = function(format, formatters)
         return !!/[0-9]/.exec(c);
     }
 
-    var index = 0;
-    for (var precentIndex = format.indexOf("%", index); precentIndex !== -1; precentIndex = format.indexOf("%", index)) {
+    let index = 0;
+    for (let precentIndex = format.indexOf("%", index); precentIndex !== -1; precentIndex = format.indexOf("%", index)) {
         addStringToken(format.substring(index, precentIndex));
         index = precentIndex + 1;
 
         if (isDigit(format[index])) {
             // The first character is a number, it might be a substitution index.
-            var number = parseInt(format.substring(index), 10);
+            let number = parseInt(format.substring(index), 10);
             while (isDigit(format[index]))
                 ++index;
 
@@ -815,7 +815,7 @@ String.tokenizeFormatString = function(format, formatters)
             }
         }
 
-        var precision = -1;
+        let precision = -1;
         if (format[index] === ".") {
             // This is a precision specifier. If no digit follows the ".",
             // then the precision should be zero.
@@ -889,12 +889,12 @@ String.format = function(format, substitutions, formatters, initialValue, append
         console.error(prettyFunctionName() + ": " + msg);
     }
 
-    var result = initialValue;
-    var tokens = String.tokenizeFormatString(format, formatters);
-    var usedSubstitutionIndexes = {};
+    let result = initialValue;
+    let tokens = String.tokenizeFormatString(format, formatters);
+    let usedSubstitutionIndexes = {};
 
-    for (var i = 0; i < tokens.length; ++i) {
-        var token = tokens[i];
+    for (let i = 0; i < tokens.length; ++i) {
+        let token = tokens[i];
 
         if (token.type === "string") {
             result = append(result, token.value);
@@ -926,8 +926,8 @@ String.format = function(format, substitutions, formatters, initialValue, append
         result = append(result, formatters[token.specifier](substitutions[token.substitutionIndex], token));
     }
 
-    var unusedSubstitutions = [];
-    for (var i = 0; i < substitutions.length; ++i) {
+    let unusedSubstitutions = [];
+    for (let i = 0; i < substitutions.length; ++i) {
         if (i in usedSubstitutionIndexes)
             continue;
         unusedSubstitutions.push(substitutions[i]);
@@ -954,7 +954,7 @@ function consumeEvent(e)
  */
 function highlightSearchResult(element, offset, length, domChanges)
 {
-    var result = highlightSearchResults(element, [{offset: offset, length: length }], domChanges);
+    let result = highlightSearchResults(element, [{offset: offset, length: length }], domChanges);
     return result.length ? result[0] : null;
 }
 
@@ -978,44 +978,44 @@ function highlightSearchResults(element, resultRanges, changes)
 function highlightRangesWithStyleClass(element, resultRanges, styleClass, changes)
 {
     changes = changes || [];
-    var highlightNodes = [];
-    var lineText = element.textContent;
-    var ownerDocument = element.ownerDocument;
-    var textNodeSnapshot = ownerDocument.evaluate(".//text()", element, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+    let highlightNodes = [];
+    let lineText = element.textContent;
+    let ownerDocument = element.ownerDocument;
+    let textNodeSnapshot = ownerDocument.evaluate(".//text()", element, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 
-    var snapshotLength = textNodeSnapshot.snapshotLength;
+    let snapshotLength = textNodeSnapshot.snapshotLength;
     if (snapshotLength === 0)
         return highlightNodes;
 
-    var nodeRanges = [];
-    var rangeEndOffset = 0;
-    for (var i = 0; i < snapshotLength; ++i) {
-        var range = {};
+    let nodeRanges = [];
+    let rangeEndOffset = 0;
+    for (let i = 0; i < snapshotLength; ++i) {
+        let range = {};
         range.offset = rangeEndOffset;
         range.length = textNodeSnapshot.snapshotItem(i).textContent.length;
         rangeEndOffset = range.offset + range.length;
         nodeRanges.push(range);
     }
 
-    var startIndex = 0;
-    for (var i = 0; i < resultRanges.length; ++i) {
-        var startOffset = resultRanges[i].offset;
-        var endOffset = startOffset + resultRanges[i].length;
+    let startIndex = 0;
+    for (let i = 0; i < resultRanges.length; ++i) {
+        let startOffset = resultRanges[i].offset;
+        let endOffset = startOffset + resultRanges[i].length;
 
         while (startIndex < snapshotLength && nodeRanges[startIndex].offset + nodeRanges[startIndex].length <= startOffset)
             startIndex++;
-        var endIndex = startIndex; 
+        let endIndex = startIndex; 
         while (endIndex < snapshotLength && nodeRanges[endIndex].offset + nodeRanges[endIndex].length < endOffset)
             endIndex++;
         if (endIndex === snapshotLength)
             break;
         
-        var highlightNode = ownerDocument.createElement("span");
+        let highlightNode = ownerDocument.createElement("span");
         highlightNode.className = styleClass;
         highlightNode.textContent = lineText.substring(startOffset, endOffset);
 
-        var lastTextNode = textNodeSnapshot.snapshotItem(endIndex);
-        var lastText = lastTextNode.textContent;
+        let lastTextNode = textNodeSnapshot.snapshotItem(endIndex);
+        let lastText = lastTextNode.textContent;
         lastTextNode.textContent = lastText.substring(endOffset - nodeRanges[endIndex].offset);
         changes.push({ node: lastTextNode, type: "changed", oldText: lastText, newText: lastTextNode.textContent });
         
@@ -1024,13 +1024,13 @@ function highlightRangesWithStyleClass(element, resultRanges, styleClass, change
             changes.push({ node: highlightNode, type: "added", nextSibling: lastTextNode, parent: lastTextNode.parentElement });
             highlightNodes.push(highlightNode);
             
-            var prefixNode = ownerDocument.createTextNode(lastText.substring(0, startOffset - nodeRanges[startIndex].offset));
+            let prefixNode = ownerDocument.createTextNode(lastText.substring(0, startOffset - nodeRanges[startIndex].offset));
             lastTextNode.parentElement.insertBefore(prefixNode, highlightNode);
             changes.push({ node: prefixNode, type: "added", nextSibling: highlightNode, parent: lastTextNode.parentElement });
         } else {
-            var firstTextNode = textNodeSnapshot.snapshotItem(startIndex);
-            var firstText = firstTextNode.textContent;
-            var anchorElement = firstTextNode.nextSibling;
+            let firstTextNode = textNodeSnapshot.snapshotItem(startIndex);
+            let firstText = firstTextNode.textContent;
+            let anchorElement = firstTextNode.nextSibling;
 
             firstTextNode.parentElement.insertBefore(highlightNode, anchorElement);
             changes.push({ node: highlightNode, type: "added", nextSibling: anchorElement, parent: firstTextNode.parentElement });
@@ -1039,9 +1039,9 @@ function highlightRangesWithStyleClass(element, resultRanges, styleClass, change
             firstTextNode.textContent = firstText.substring(0, startOffset - nodeRanges[startIndex].offset);
             changes.push({ node: firstTextNode, type: "changed", oldText: firstText, newText: firstTextNode.textContent });
 
-            for (var j = startIndex + 1; j < endIndex; j++) {
-                var textNode = textNodeSnapshot.snapshotItem(j);
-                var text = textNode.textContent;
+            for (let j = startIndex + 1; j < endIndex; j++) {
+                let textNode = textNodeSnapshot.snapshotItem(j);
+                let text = textNode.textContent;
                 textNode.textContent = "";
                 changes.push({ node: textNode, type: "changed", oldText: text, newText: textNode.textContent });
             }
@@ -1056,8 +1056,8 @@ function highlightRangesWithStyleClass(element, resultRanges, styleClass, change
 
 function applyDomChanges(domChanges)
 {
-    for (var i = 0, size = domChanges.length; i < size; ++i) {
-        var entry = domChanges[i];
+    for (let i = 0, size = domChanges.length; i < size; ++i) {
+        let entry = domChanges[i];
         switch (entry.type) {
         case "added":
             entry.parent.insertBefore(entry.node, entry.nextSibling);
@@ -1071,8 +1071,8 @@ function applyDomChanges(domChanges)
 
 function revertDomChanges(domChanges)
 {
-    for (var i = domChanges.length - 1; i >= 0; --i) {
-        var entry = domChanges[i];
+    for (let i = domChanges.length - 1; i >= 0; --i) {
+        let entry = domChanges[i];
         switch (entry.type) {
         case "added":
             if (entry.node.parentElement)
@@ -1093,8 +1093,8 @@ function revertDomChanges(domChanges)
  */
 function createSearchRegex(query, caseSensitive, isRegex)
 {
-    var regexFlags = caseSensitive ? "g" : "gi";
-    var regexObject;
+    let regexFlags = caseSensitive ? "g" : "gi";
+    let regexObject;
 
     if (isRegex) {
         try {
@@ -1118,10 +1118,10 @@ function createSearchRegex(query, caseSensitive, isRegex)
 function createPlainTextSearchRegex(query, flags)
 {
     // This should be kept the same as the one in ContentSearchUtils.cpp.
-    var regexSpecialCharacters = "[](){}+-*.,?\\^$|";
-    var regex = "";
-    for (var i = 0; i < query.length; ++i) {
-        var c = query.charAt(i);
+    let regexSpecialCharacters = "[](){}+-*.,?\\^$|";
+    let regex = "";
+    for (let i = 0; i < query.length; ++i) {
+        let c = query.charAt(i);
         if (regexSpecialCharacters.indexOf(c) != -1)
             regex += "\\";
         regex += c;
@@ -1136,9 +1136,9 @@ function createPlainTextSearchRegex(query, flags)
  */
 function countRegexMatches(regex, content)
 {
-    var text = content;
-    var result = 0;
-    var match;
+    let text = content;
+    let result = 0;
+    let match;
     while (text && (match = regex.exec(text))) {
         if (match[0].length > 0)
             ++result;
@@ -1154,9 +1154,9 @@ function countRegexMatches(regex, content)
  */
 function numberToStringWithSpacesPadding(value, symbolsCount)
 {
-    var numberString = value.toString();
-    var paddingLength = Math.max(0, symbolsCount - numberString.length);
-    var paddingString = Array(paddingLength + 1).join("\u00a0");
+    let numberString = value.toString();
+    let paddingLength = Math.max(0, symbolsCount - numberString.length);
+    let paddingString = Array(paddingLength + 1).join("\u00a0");
     return paddingString + numberString;
 }
 
@@ -1177,16 +1177,16 @@ function TextDiff()
  */
 TextDiff.compute = function(baseContent, newContent)
 {
-    var oldLines = baseContent.split(/\r?\n/);
-    var newLines = newContent.split(/\r?\n/);
+    let oldLines = baseContent.split(/\r?\n/);
+    let newLines = newContent.split(/\r?\n/);
 
-    var diff = Array.diff(oldLines, newLines);
+    let diff = Array.diff(oldLines, newLines);
 
-    var diffData = new TextDiff();
+    let diffData = new TextDiff();
 
-    var offset = 0;
-    var right = diff.right;
-    for (var i = 0; i < right.length; ++i) {
+    let offset = 0;
+    let right = diff.right;
+    for (let i = 0; i < right.length; ++i) {
         if (typeof right[i] === "string") {
             if (right.length > i + 1 && right[i + 1].row === i + 1 - offset)
                 diffData.changed.push(i);
@@ -1203,7 +1203,7 @@ TextDiff.compute = function(baseContent, newContent)
 /**
  * @constructor
  */
-var Map = function()
+let Map = function()
 {
     this._map = {};
 }
@@ -1216,7 +1216,7 @@ Map.prototype = {
      */
     put: function(key, value)
     {
-        var objectIdentifier = key.__identifier;
+        let objectIdentifier = key.__identifier;
         if (!objectIdentifier) {
             objectIdentifier = ++Map._lastObjectIdentifier;
             key.__identifier = objectIdentifier;
@@ -1234,8 +1234,8 @@ Map.prototype = {
     
     values: function()
     {
-        var result = [];
-        for (var objectIdentifier in this._map)
+        let result = [];
+        for (let objectIdentifier in this._map)
             result.push(this._map[objectIdentifier]);
         return result;
     },

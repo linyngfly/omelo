@@ -42,15 +42,15 @@ WebInspector.ScopeChainSidebarPane.prototype = {
         this.bodyElement.removeChildren();
 
         if (!callFrame) {
-            var infoElement = document.createElement("div");
+            let infoElement = document.createElement("div");
             infoElement.className = "info";
             infoElement.textContent = WebInspector.UIString("Not Paused");
             this.bodyElement.appendChild(infoElement);
             return;
         }
 
-        for (var i = 0; i < this._sections.length; ++i) {
-            var section = this._sections[i];
+        for (let i = 0; i < this._sections.length; ++i) {
+            let section = this._sections[i];
             if (!section.title)
                 continue;
             if (section.expanded)
@@ -61,14 +61,14 @@ WebInspector.ScopeChainSidebarPane.prototype = {
 
         this._sections = [];
 
-        var foundLocalScope = false;
-        var scopeChain = callFrame.scopeChain;
-        for (var i = 0; i < scopeChain.length; ++i) {
-            var scope = scopeChain[i];
-            var title = null;
-            var subtitle = scope.object.description;
-            var emptyPlaceholder = null;
-            var extraProperties = null;
+        let foundLocalScope = false;
+        let scopeChain = callFrame.scopeChain;
+        for (let i = 0; i < scopeChain.length; ++i) {
+            let scope = scopeChain[i];
+            let title = null;
+            let subtitle = scope.object.description;
+            let emptyPlaceholder = null;
+            let extraProperties = null;
 
             switch (scope.type) {
                 case "local":
@@ -79,11 +79,11 @@ WebInspector.ScopeChainSidebarPane.prototype = {
                     if (callFrame.this)
                         extraProperties = [ new WebInspector.RemoteObjectProperty("this", WebInspector.RemoteObject.fromPayload(callFrame.this)) ];
                     if (i == 0) {
-                        var details = WebInspector.debuggerModel.debuggerPausedDetails;
-                        var exception = details.reason === WebInspector.DebuggerModel.BreakReason.Exception ? details.auxData : 0;
+                        let details = WebInspector.debuggerModel.debuggerPausedDetails;
+                        let exception = details.reason === WebInspector.DebuggerModel.BreakReason.Exception ? details.auxData : 0;
                         if (exception) {
                             extraProperties = extraProperties || [];
-                            var exceptionObject = /** @type {RuntimeAgent.RemoteObject} */ exception;
+                            let exceptionObject = /** @type {RuntimeAgent.RemoteObject} */ exception;
                             extraProperties.push(new WebInspector.RemoteObjectProperty("<exception>", WebInspector.RemoteObject.fromPayload(exceptionObject)));
                         }
                     }
@@ -107,7 +107,7 @@ WebInspector.ScopeChainSidebarPane.prototype = {
             if (!title || title === subtitle)
                 subtitle = null;
 
-            var section = new WebInspector.ObjectPropertiesSection(WebInspector.RemoteObject.fromPayload(scope.object), title, subtitle, emptyPlaceholder, true, extraProperties, WebInspector.ScopeVariableTreeElement);
+            let section = new WebInspector.ObjectPropertiesSection(WebInspector.RemoteObject.fromPayload(scope.object), title, subtitle, emptyPlaceholder, true, extraProperties, WebInspector.ScopeVariableTreeElement);
             section.editInSelectedCallFrameWhenPaused = true;
             section.pane = this;
 
@@ -153,7 +153,7 @@ WebInspector.ScopeVariableTreeElement.prototype = {
     {
         if ("_propertyIdentifier" in this)
             return this._propertyIdentifier;
-        var section = this.treeOutline.section;
+        let section = this.treeOutline.section;
         this._propertyIdentifier = section.title + ":" + (section.subtitle ? section.subtitle + ":" : "") + this.propertyPath;
         return this._propertyIdentifier;
     },
@@ -163,8 +163,8 @@ WebInspector.ScopeVariableTreeElement.prototype = {
         if ("_propertyPath" in this)
             return this._propertyPath;
 
-        var current = this;
-        var result;
+        let current = this;
+        let result;
 
         do {
             if (current.property) {

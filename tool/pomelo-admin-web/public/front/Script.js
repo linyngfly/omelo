@@ -91,9 +91,9 @@ WebInspector.Script.prototype = {
         {
             if (error)
                 console.error(error);
-            var result = [];
-            for (var i = 0; i < searchMatches.length; ++i) {
-                var searchMatch = new WebInspector.ContentProvider.SearchMatch(searchMatches[i].lineNumber, searchMatches[i].lineContent);
+            let result = [];
+            for (let i = 0; i < searchMatches.length; ++i) {
+                let searchMatch = new WebInspector.ContentProvider.SearchMatch(searchMatches[i].lineNumber, searchMatches[i].lineContent);
                 result.push(searchMatch);
             }
             callback(result || []);

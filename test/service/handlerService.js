@@ -1,7 +1,7 @@
-var should = require('should');
-var HandlerService = require('../../lib/common/service/handlerService');
+let should = require('should');
+let HandlerService = require('../../lib/common/service/handlerService');
 
-var mockApp = {
+let mockApp = {
   serverType: 'connector',
 
   get: function(key) {
@@ -9,21 +9,21 @@ var mockApp = {
   }
 };
 
-var mockSession = {
+let mockSession = {
   exportSession: function() {
     return this;
   }
 };
 
-var mockMsg = {key: 'some request message'};
-var mockRouteRecord = {serverType: 'connector', handler: 'testHandler', method: 'testMethod'};
+let mockMsg = {key: 'some request message'};
+let mockRouteRecord = {serverType: 'connector', handler: 'testHandler', method: 'testMethod'};
 
 describe('handler service test', function() {
   describe('handle', function() {
     it('should dispatch the request to the handler if the route match current server type', function(done) {
-      var invoke1Count = 0, invoke2Count = 0;
+      let invoke1Count = 0, invoke2Count = 0;
       // mock datas
-      var mockHandlers = {
+      let mockHandlers = {
         testHandler: {
           testMethod: function(msg, session, next) {
             invoke1Count++;
@@ -39,9 +39,9 @@ describe('handler service test', function() {
         }
       };
 
-      var mockOpts = {};
+      let mockOpts = {};
 
-      var service = new HandlerService(mockApp, mockOpts);
+      let service = new HandlerService(mockApp, mockOpts);
       service.handlerMap = {connector: mockHandlers};
 
       service.handle(mockRouteRecord, mockMsg, mockSession, function() {
@@ -52,9 +52,9 @@ describe('handler service test', function() {
     });
 
     it('should return an error if can not find the appropriate handler locally', function(done) {
-      var mockHandlers = {};
-      var mockOpts = {};
-      var service = new HandlerService(mockApp, mockOpts);
+      let mockHandlers = {};
+      let mockOpts = {};
+      let service = new HandlerService(mockApp, mockOpts);
       service.handlerMap = {connector: mockHandlers};
 
       service.handle(mockRouteRecord, mockMsg, mockSession, function(err) {

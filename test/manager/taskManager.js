@@ -1,22 +1,22 @@
-var should = require('should');
-var taskManager = require('../../lib/common/manager/taskManager');
+let should = require('should');
+let taskManager = require('../../lib/common/manager/taskManager');
 
 // set timeout for test
 taskManager.timeout = 100;
 
-var WAIT_TIME = 200;
+let WAIT_TIME = 200;
 
 describe("#taskManager",function(){
   it("should add task and execute it",function(done){
-    var key = 'key-1';
-    var fn = function(task) {
+    let key = 'key-1';
+    let fn = function(task) {
       taskCount++;
       task.done();
     };
-    var onTimeout = function() {
+    let onTimeout = function() {
       should.fail('should not timeout.');
     };
-    var taskCount = 0;
+    let taskCount = 0;
 
     taskManager.addTask(key, fn, onTimeout);
 
@@ -27,15 +27,15 @@ describe("#taskManager",function(){
   });
 
   it("should fire timeout callback if task timeout",function(done){
-    var key = 'key-1';
-    var fn = function(task) {
+    let key = 'key-1';
+    let fn = function(task) {
       taskCount++;
     };
-    var onTimeout = function() {
+    let onTimeout = function() {
       timeoutCount++;
     };
-    var taskCount = 0;
-    var timeoutCount = 0;
+    let taskCount = 0;
+    let timeoutCount = 0;
 
     taskManager.addTask(key, fn, onTimeout);
 
@@ -47,15 +47,15 @@ describe("#taskManager",function(){
   });
 
   it("should not fire timeout after close the task",function(done){
-    var key = 'key-1';
-    var fn = function(task) {
+    let key = 'key-1';
+    let fn = function(task) {
       taskCount++;
     };
-    var onTimeout = function() {
+    let onTimeout = function() {
       timeoutCount++;
     };
-    var taskCount = 0;
-    var timeoutCount = 0;
+    let taskCount = 0;
+    let timeoutCount = 0;
 
     taskManager.addTask(key, fn, onTimeout);
 
@@ -71,7 +71,7 @@ describe("#taskManager",function(){
   });
 
   it("should be ok to remove a queue not exist",function(){
-    var key = 'key-n';
+    let key = 'key-n';
     taskManager.closeQueue(key, true);
   });
 });

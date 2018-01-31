@@ -38,7 +38,7 @@ WebInspector.TestController = function()
 WebInspector.TestController.prototype = {
     notifyDone: function(callId, result)
     {
-        var message = typeof result === "undefined" ? "\"<undefined>\"" : JSON.stringify(result);
+        let message = typeof result === "undefined" ? "\"<undefined>\"" : JSON.stringify(result);
         RuntimeAgent.evaluate("didEvaluateForTestInFrontend(" + callId + ", " + message + ")", "test");
     }
 }
@@ -48,7 +48,7 @@ WebInspector.evaluateForTestInFrontend = function(callId, script)
     function invokeMethod()
     {
         try {
-            var result = window.eval(script);
+            let result = window.eval(script);
             WebInspector.TestController.prototype.notifyDone(callId, result);
         } catch (e) {
             WebInspector.TestController.prototype.notifyDone(callId, e.toString());

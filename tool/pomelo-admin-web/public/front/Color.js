@@ -61,7 +61,7 @@ WebInspector.Color.prototype = {
         if (!this.simple)
             return "";
 
-        var hex = this.hex;
+        let hex = this.hex;
         if (hex.charAt(0) === hex.charAt(1) && hex.charAt(2) === hex.charAt(3) && hex.charAt(4) === hex.charAt(5))
             this._short = hex.charAt(0) + hex.charAt(2) + hex.charAt(4);
         else
@@ -97,7 +97,7 @@ WebInspector.Color.prototype = {
         if (this.simple)
             this._rgb = this._hexToRGB(this.hex);
         else {
-            var rgba = this.rgba;
+            let rgba = this.rgba;
             this._rgb = [rgba[0], rgba[1], rgba[2]];
         }
 
@@ -173,7 +173,7 @@ WebInspector.Color.prototype = {
      */
     hasShortHex: function()
     {
-        var shorthex = this.shorthex;
+        let shorthex = this.shorthex;
         return (!!shorthex && shorthex.length === 3);
     },
 
@@ -193,10 +193,10 @@ WebInspector.Color.prototype = {
             case "rgba":
                 return "rgba(" + this.rgba.join(", ") + ")";
             case "hsl":
-                var hsl = this.hsl;
+                let hsl = this.hsl;
                 return "hsl(" + hsl[0] + ", " + hsl[1] + "%, " + hsl[2] + "%)";
             case "hsla":
-                var hsla = this.hsla;
+                let hsla = this.hsla;
                 return "hsla(" + hsla[0] + ", " + hsla[1] + "%, " + hsla[2] + "%, " + hsla[3] + ")";
             case "hex":
                 return "#" + this.hex;
@@ -217,7 +217,7 @@ WebInspector.Color.prototype = {
         if (this._protocolRGBA)
             return this._protocolRGBA;
 
-        var components = this.rgba;
+        let components = this.rgba;
         if (components)
             this._protocolRGBA = { r: Number(components[0]), g: Number(components[1]), b: Number(components[2]), a: Number(components[3]) };
         else {
@@ -252,11 +252,11 @@ WebInspector.Color.prototype = {
             return this._clamp(rgbValue, 0, 255);
 
         if (rgbValue.indexOf("%") === -1) {
-            var intValue = parseInt(rgbValue, 10);
+            let intValue = parseInt(rgbValue, 10);
             return this._clamp(intValue, 0, 255);
         }
 
-        var percentValue = parseFloat(rgbValue);
+        let percentValue = parseFloat(rgbValue);
         return this._clamp(percentValue, 0, 100) * 2.55;
     },
 
@@ -266,8 +266,8 @@ WebInspector.Color.prototype = {
      */
     _individualRGBValueToHexValue: function(rgbValue)
     {
-        var floatValue = this._individualRGBValueToFloatValue(rgbValue);
-        var hex = Math.round(floatValue).toString(16);
+        let floatValue = this._individualRGBValueToFloatValue(rgbValue);
+        let hex = Math.round(floatValue).toString(16);
         if (hex.length === 1)
             hex = "0" + hex;
         return hex;
@@ -279,9 +279,9 @@ WebInspector.Color.prototype = {
      */
     _rgbStringsToHex: function(rgb)
     {
-        var r = this._individualRGBValueToHexValue(rgb[0]);
-        var g = this._individualRGBValueToHexValue(rgb[1]);
-        var b = this._individualRGBValueToHexValue(rgb[2]);
+        let r = this._individualRGBValueToHexValue(rgb[0]);
+        let g = this._individualRGBValueToHexValue(rgb[1]);
+        let b = this._individualRGBValueToHexValue(rgb[2]);
         return (r + g + b).toUpperCase();
     },
 
@@ -291,9 +291,9 @@ WebInspector.Color.prototype = {
      */
     _rgbToHex: function(rgb)
     {
-        var r = this._individualRGBValueToHexValue(rgb[0]);
-        var g = this._individualRGBValueToHexValue(rgb[1]);
-        var b = this._individualRGBValueToHexValue(rgb[2]);
+        let r = this._individualRGBValueToHexValue(rgb[0]);
+        let g = this._individualRGBValueToHexValue(rgb[1]);
+        let b = this._individualRGBValueToHexValue(rgb[2]);
         return (r + g + b).toUpperCase();
     },
 
@@ -303,9 +303,9 @@ WebInspector.Color.prototype = {
      */
     _hexToRGB: function(hex)
     {
-        var r = parseInt(hex.substring(0,2), 16);
-        var g = parseInt(hex.substring(2,4), 16);
-        var b = parseInt(hex.substring(4,6), 16);
+        let r = parseInt(hex.substring(0,2), 16);
+        let g = parseInt(hex.substring(2,4), 16);
+        let b = parseInt(hex.substring(4,6), 16);
 
         return [r, g, b];
     },
@@ -316,33 +316,33 @@ WebInspector.Color.prototype = {
      */
     _rgbToHSL: function(rgb)
     {
-        var r = this._individualRGBValueToFloatValue(rgb[0]) / 255;
-        var g = this._individualRGBValueToFloatValue(rgb[1]) / 255;
-        var b = this._individualRGBValueToFloatValue(rgb[2]) / 255;
-        var max = Math.max(r, g, b);
-        var min = Math.min(r, g, b);
-        var diff = max - min;
-        var add = max + min;
+        let r = this._individualRGBValueToFloatValue(rgb[0]) / 255;
+        let g = this._individualRGBValueToFloatValue(rgb[1]) / 255;
+        let b = this._individualRGBValueToFloatValue(rgb[2]) / 255;
+        let max = Math.max(r, g, b);
+        let min = Math.min(r, g, b);
+        let diff = max - min;
+        let add = max + min;
 
         if (min === max)
-            var h = 0;
+            let h = 0;
         else if (r === max)
-            var h = ((60 * (g - b) / diff) + 360) % 360;
+            let h = ((60 * (g - b) / diff) + 360) % 360;
         else if (g === max)
-            var h = (60 * (b - r) / diff) + 120;
+            let h = (60 * (b - r) / diff) + 120;
         else
-            var h = (60 * (r - g) / diff) + 240;
+            let h = (60 * (r - g) / diff) + 240;
 
-        var l = 0.5 * add;
+        let l = 0.5 * add;
 
         if (l === 0)
-            var s = 0;
+            let s = 0;
         else if (l === 1)
-            var s = 1;
+            let s = 1;
         else if (l <= 0.5)
-            var s = diff / add;
+            let s = diff / add;
         else
-            var s = diff / (2 - add);
+            let s = diff / (2 - add);
 
         h = Math.round(h);
         s = Math.round(s*100);
@@ -357,27 +357,27 @@ WebInspector.Color.prototype = {
      */
     _hslToRGB: function(hsl)
     {
-        var h = parseFloat(hsl[0]) / 360;
-        var s = parseFloat(hsl[1]) / 100;
-        var l = parseFloat(hsl[2]) / 100;
+        let h = parseFloat(hsl[0]) / 360;
+        let s = parseFloat(hsl[1]) / 100;
+        let l = parseFloat(hsl[2]) / 100;
 
         if (s < 0)
             s = 0;
 
         if (l <= 0.5)
-            var q = l * (1 + s);
+            let q = l * (1 + s);
         else
-            var q = l + s - (l * s);
+            let q = l + s - (l * s);
 
-        var p = 2 * l - q;
+        let p = 2 * l - q;
 
-        var tr = h + (1 / 3);
-        var tg = h;
-        var tb = h - (1 / 3);
+        let tr = h + (1 / 3);
+        let tg = h;
+        let tb = h - (1 / 3);
 
-        var r = Math.round(hueToRGB(p, q, tr) * 255);
-        var g = Math.round(hueToRGB(p, q, tg) * 255);
-        var b = Math.round(hueToRGB(p, q, tb) * 255);
+        let r = Math.round(hueToRGB(p, q, tr) * 255);
+        let g = Math.round(hueToRGB(p, q, tg) * 255);
+        let b = Math.round(hueToRGB(p, q, tb) * 255);
         return [r, g, b];
 
         function hueToRGB(p, q, h) {
@@ -403,7 +403,7 @@ WebInspector.Color.prototype = {
      */
     _rgbaToHSLA: function(rgba, alpha)
     {
-        var hsl = this._rgbToHSL(rgba)
+        let hsl = this._rgbToHSL(rgba)
         hsl.push(alpha);
         return hsl;
     },
@@ -415,7 +415,7 @@ WebInspector.Color.prototype = {
      */
     _hslaToRGBA: function(hsla, alpha)
     {
-        var rgb = this._hslToRGB(hsla);
+        let rgb = this._hslToRGB(hsla);
         rgb.push(alpha);
         return rgb;
     },
@@ -423,10 +423,10 @@ WebInspector.Color.prototype = {
     _parse: function()
     {
         // Special Values - Advanced but Must Be Parsed First - transparent
-        var value = this.value.toLowerCase().replace(/%|\s+/g, "");
+        let value = this.value.toLowerCase().replace(/%|\s+/g, "");
         if (value in WebInspector.Color.AdvancedNickNames) {
             this.format = "nickname";
-            var set = WebInspector.Color.AdvancedNickNames[value];
+            let set = WebInspector.Color.AdvancedNickNames[value];
             this.simple = false;
             this.rgba = set[0];
             this.hsla = set[1];
@@ -436,13 +436,13 @@ WebInspector.Color.prototype = {
         }
 
         // Simple - #hex, rgb(), nickname, hsl()
-        var simple = /^(?:#([0-9a-f]{3,6})|rgb\(([^)]+)\)|(\w+)|hsl\(([^)]+)\))$/i;
-        var match = this.value.match(simple);
+        let simple = /^(?:#([0-9a-f]{3,6})|rgb\(([^)]+)\)|(\w+)|hsl\(([^)]+)\))$/i;
+        let match = this.value.match(simple);
         if (match) {
             this.simple = true;
 
             if (match[1]) { // hex
-                var hex = match[1].toUpperCase();
+                let hex = match[1].toUpperCase();
                 if (hex.length === 3) {
                     this.format = "shorthex";
                     this.hex = hex.charAt(0) + hex.charAt(0) + hex.charAt(1) + hex.charAt(1) + hex.charAt(2) + hex.charAt(2);
@@ -452,11 +452,11 @@ WebInspector.Color.prototype = {
                 }
             } else if (match[2]) { // rgb
                 this.format = "rgb";
-                var rgb = match[2].split(/\s*,\s*/);
+                let rgb = match[2].split(/\s*,\s*/);
                 this.rgb = rgb;
                 this.hex = this._rgbStringsToHex(rgb);
             } else if (match[3]) { // nickname
-                var nickname = match[3].toLowerCase();
+                let nickname = match[3].toLowerCase();
                 if (nickname in WebInspector.Color.Nicknames) {
                     this.format = "nickname";
                     this.hex = WebInspector.Color.Nicknames[nickname];
@@ -464,16 +464,16 @@ WebInspector.Color.prototype = {
                     throw "unknown color name";
             } else if (match[4]) { // hsl
                 this.format = "hsl";
-                var hsl = match[4].replace(/%/g, "").split(/\s*,\s*/);
+                let hsl = match[4].replace(/%/g, "").split(/\s*,\s*/);
                 this.hsl = hsl;
                 this.rgb = this._hslToRGB(hsl);
                 this.hex = this._rgbToHex(this.rgb);
             }
 
             // Fill in the values if this is a known hex color
-            var hex = this.hex;
+            let hex = this.hex;
             if (hex && hex in WebInspector.Color.HexTable) {
-                var set = WebInspector.Color.HexTable[hex];
+                let set = WebInspector.Color.HexTable[hex];
                 this.rgb = set[0];
                 this.hsl = set[1];
                 this.nickname = set[2];
@@ -483,7 +483,7 @@ WebInspector.Color.prototype = {
         }
 
         // Advanced - rgba(), hsla()
-        var advanced = /^(?:rgba\(([^)]+)\)|hsla\(([^)]+)\))$/;
+        let advanced = /^(?:rgba\(([^)]+)\)|hsla\(([^)]+)\))$/;
         match = this.value.match(advanced);
         if (match) {
             this.simple = false;

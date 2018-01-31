@@ -44,7 +44,7 @@ WebInspector.ScriptFormatter = function()
  */
 WebInspector.ScriptFormatter.locationToPosition = function(lineEndings, lineNumber, columnNumber)
 {
-    var position = lineNumber ? lineEndings[lineNumber - 1] + 1 : 0;
+    let position = lineNumber ? lineEndings[lineNumber - 1] + 1 : 0;
     return position + columnNumber;
 }
 
@@ -55,11 +55,11 @@ WebInspector.ScriptFormatter.locationToPosition = function(lineEndings, lineNumb
  */
 WebInspector.ScriptFormatter.positionToLocation = function(lineEndings, position)
 {
-    var lineNumber = lineEndings.upperBound(position - 1);
+    let lineNumber = lineEndings.upperBound(position - 1);
     if (!lineNumber)
-        var columnNumber = position;
+        let columnNumber = position;
     else
-        var columnNumber = position - lineEndings[lineNumber - 1] - 1;
+        let columnNumber = position - lineEndings[lineNumber - 1] - 1;
     return [lineNumber, columnNumber];
 }
 
@@ -73,7 +73,7 @@ WebInspector.ScriptFormatter.prototype = {
     {
         content = content.replace(/\r\n?|[\n\u2028\u2029]/g, "\n").replace(/^\uFEFF/, '');
         const method = "format";
-        var parameters = { mimeType: mimeType, content: content, indentString: "    "  };
+        let parameters = { mimeType: mimeType, content: content, indentString: "    "  };
         this._tasks.push({ data: parameters, callback: callback });
         this._worker.postMessage({ method: method, params: parameters });
     },
@@ -83,11 +83,11 @@ WebInspector.ScriptFormatter.prototype = {
      */
     _didFormatContent: function(event)
     {
-        var task = this._tasks.shift();
-        var originalContent = task.data.content;
-        var formattedContent = event.data.content;
-        var mapping = event.data["mapping"];
-        var sourceMapping = new WebInspector.FormattedSourceMapping(originalContent.lineEndings(), formattedContent.lineEndings(), mapping);
+        let task = this._tasks.shift();
+        let originalContent = task.data.content;
+        let formattedContent = event.data.content;
+        let mapping = event.data["mapping"];
+        let sourceMapping = new WebInspector.FormattedSourceMapping(originalContent.lineEndings(), formattedContent.lineEndings(), mapping);
         task.callback(formattedContent, sourceMapping);
     },
 
@@ -134,8 +134,8 @@ WebInspector.FormattedSourceMapping.prototype = {
      */
     originalToFormatted: function(lineNumber, columnNumber)
     {
-        var originalPosition = WebInspector.ScriptFormatter.locationToPosition(this._originalLineEndings, lineNumber, columnNumber);
-        var formattedPosition = this._convertPosition(this._mapping.original, this._mapping.formatted, originalPosition);
+        let originalPosition = WebInspector.ScriptFormatter.locationToPosition(this._originalLineEndings, lineNumber, columnNumber);
+        let formattedPosition = this._convertPosition(this._mapping.original, this._mapping.formatted, originalPosition);
         return WebInspector.ScriptFormatter.positionToLocation(this._formattedLineEndings, formattedPosition);
     },
 
@@ -146,8 +146,8 @@ WebInspector.FormattedSourceMapping.prototype = {
      */
     formattedToOriginal: function(lineNumber, columnNumber)
     {
-        var formattedPosition = WebInspector.ScriptFormatter.locationToPosition(this._formattedLineEndings, lineNumber, columnNumber);
-        var originalPosition = this._convertPosition(this._mapping.formatted, this._mapping.original, formattedPosition);
+        let formattedPosition = WebInspector.ScriptFormatter.locationToPosition(this._formattedLineEndings, lineNumber, columnNumber);
+        let originalPosition = this._convertPosition(this._mapping.formatted, this._mapping.original, formattedPosition);
         return WebInspector.ScriptFormatter.positionToLocation(this._originalLineEndings, originalPosition);
     },
 
@@ -159,8 +159,8 @@ WebInspector.FormattedSourceMapping.prototype = {
      */
     _convertPosition: function(positions1, positions2, position)
     {
-        var index = positions1.upperBound(position) - 1;
-        var convertedPosition = positions2[index] + position - positions1[index];
+        let index = positions1.upperBound(position) - 1;
+        let convertedPosition = positions2[index] + position - positions1[index];
         if (index < positions2.length - 1 && convertedPosition > positions2[index + 1])
             convertedPosition = positions2[index + 1];
         return convertedPosition;

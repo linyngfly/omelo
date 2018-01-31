@@ -33,8 +33,8 @@
  */
 WebInspector.UserMetrics = function()
 {
-    for (var actionName in WebInspector.UserMetrics._ActionCodes) {
-        var actionCode = WebInspector.UserMetrics._ActionCodes[actionName];
+    for (let actionName in WebInspector.UserMetrics._ActionCodes) {
+        let actionCode = WebInspector.UserMetrics._ActionCodes[actionName];
         this[actionName] = new WebInspector.UserMetrics._Recorder(actionCode);
     }
 

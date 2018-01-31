@@ -42,7 +42,7 @@ WebInspector.ShortcutsScreen = function()
 WebInspector.ShortcutsScreen.prototype = {
     section: function(name)
     {
-        var section = this._sections[name];
+        let section = this._sections[name];
         if (!section)
             this._sections[name] = section = new WebInspector.ShortcutsSection(name);
         return section;
@@ -60,9 +60,9 @@ WebInspector.ShortcutsScreen.prototype = {
             return;
         this._tableReady = true;
 
-        var height = 0;
-        var orderedSections = [];
-        for (var section in this._sections) {
+        let height = 0;
+        let orderedSections = [];
+        for (let section in this._sections) {
             height += this._sections[section]._height;
             orderedSections.push(this._sections[section])
         }
@@ -73,17 +73,17 @@ WebInspector.ShortcutsScreen.prototype = {
         orderedSections = orderedSections.sort(compareSections);
 
         const wrapAfter = height / nColumns;
-        var table = document.createElement("table");
+        let table = document.createElement("table");
         table.className = "help-table";
-        var row = table.createChild("tr");
+        let row = table.createChild("tr");
 
         // This manual layout ugliness should be gone once WebKit implements
         // pagination hints for CSS columns (break-inside etc).
-        for (var section = 0; section < orderedSections.length;) {
-            var td = row.createChild("td");
+        for (let section = 0; section < orderedSections.length;) {
+            let td = row.createChild("td");
             td.style.width = (100 / nColumns) + "%";
-            var column = td.createChild("table");
-            for (var columnHeight = 0;
+            let column = td.createChild("table");
+            for (let columnHeight = 0;
                 columnHeight < wrapAfter && section < orderedSections.length;
                 columnHeight += orderedSections[section]._height, section++) {
                 orderedSections[section].renderSection(column);
@@ -138,9 +138,9 @@ WebInspector.ShortcutsSection.prototype = {
     {
         this._renderHeader(parent);
 
-        for (var line = 0; line < this._lines.length; ++line) {
-            var tr = parent.createChild("tr");
-            var td = tr.createChild("td", "help-key-cell");
+        for (let line = 0; line < this._lines.length; ++line) {
+            let tr = parent.createChild("tr");
+            let td = tr.createChild("td", "help-key-cell");
             td.appendChild(this._lines[line].key);
             td.appendChild(document.createTextNode(" : "));
             tr.createChild("td").textContent = this._lines[line].text;
@@ -149,7 +149,7 @@ WebInspector.ShortcutsSection.prototype = {
 
     _renderHeader: function(parent)
     {
-        var trHead = parent.createChild("tr");
+        let trHead = parent.createChild("tr");
 
         trHead.createChild("th");
         trHead.createChild("th").textContent = this.name;
@@ -157,13 +157,13 @@ WebInspector.ShortcutsSection.prototype = {
 
     _renderSequence: function(sequence, delimiter)
     {
-        var delimiterSpan = this._createSpan("help-key-delimiter", delimiter);
+        let delimiterSpan = this._createSpan("help-key-delimiter", delimiter);
         return this._joinNodes(sequence.map(this._renderKey.bind(this)), delimiterSpan);
     },
 
     _renderKey: function(key)
     {
-        var plus = this._createSpan("help-combine-keys", "+");
+        let plus = this._createSpan("help-combine-keys", "+");
         return this._joinNodes(key.split(" + ").map(this._createSpan.bind(this, "help-key monospace")), plus);
     },
 
@@ -174,7 +174,7 @@ WebInspector.ShortcutsSection.prototype = {
 
     _createSpan: function(className, textContent)
     {
-        var node = document.createElement("span");
+        let node = document.createElement("span");
         node.className = className;
         node.textContent = textContent;
         return node;
@@ -182,8 +182,8 @@ WebInspector.ShortcutsSection.prototype = {
 
     _joinNodes: function(nodes, delimiter)
     {
-        var result = document.createDocumentFragment();
-        for (var i = 0; i < nodes.length; ++i) {
+        let result = document.createDocumentFragment();
+        for (let i = 0; i < nodes.length; ++i) {
             if (i > 0)
                 result.appendChild(delimiter.cloneNode(true));
             result.appendChild(nodes[i]);

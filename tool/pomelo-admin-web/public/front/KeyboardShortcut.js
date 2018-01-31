@@ -105,7 +105,7 @@ WebInspector.KeyboardShortcut.makeKey = function(keyCode, modifiers)
 
 WebInspector.KeyboardShortcut.makeKeyFromEvent = function(keyboardEvent)
 {
-    var modifiers = WebInspector.KeyboardShortcut.Modifiers.None;
+    let modifiers = WebInspector.KeyboardShortcut.Modifiers.None;
     if (keyboardEvent.shiftKey)
         modifiers |= WebInspector.KeyboardShortcut.Modifiers.Shift;
     if (keyboardEvent.ctrlKey)
@@ -162,8 +162,8 @@ WebInspector.KeyboardShortcut._modifiersToString = function(modifiers)
     const shiftKey = "\u21e7";
     const ctrlKey = "\u2303";
 
-    var isMac = WebInspector.isMac();
-    var res = "";
+    let isMac = WebInspector.isMac();
+    let res = "";
     if (modifiers & WebInspector.KeyboardShortcut.Modifiers.Ctrl)
         res += isMac ? ctrlKey : "<Ctrl> + ";
     if (modifiers & WebInspector.KeyboardShortcut.Modifiers.Alt)

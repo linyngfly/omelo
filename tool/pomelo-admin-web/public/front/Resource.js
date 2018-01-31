@@ -196,7 +196,7 @@ WebInspector.Resource._resourceRevisionRegistry = function()
 {
     if (!WebInspector.Resource._resourceRevisionRegistryObject) {
         if (window.localStorage) {
-            var resourceHistory = window.localStorage["resource-history"];
+            let resourceHistory = window.localStorage["resource-history"];
             try {
                 WebInspector.Resource._resourceRevisionRegistryObject = resourceHistory ? JSON.parse(resourceHistory) : {};
             } catch (e) {
@@ -210,15 +210,15 @@ WebInspector.Resource._resourceRevisionRegistry = function()
 
 WebInspector.Resource.restoreRevisions = function()
 {
-    var registry = WebInspector.Resource._resourceRevisionRegistry();
-    var filteredRegistry = {};
-    for (var url in registry) {
-        var historyItems = registry[url];
-        var resource = WebInspector.resourceForURL(url);
+    let registry = WebInspector.Resource._resourceRevisionRegistry();
+    let filteredRegistry = {};
+    for (let url in registry) {
+        let historyItems = registry[url];
+        let resource = WebInspector.resourceForURL(url);
 
-        var filteredHistoryItems = [];
-        for (var i = 0; historyItems && i < historyItems.length; ++i) {
-            var historyItem = historyItems[i];
+        let filteredHistoryItems = [];
+        for (let i = 0; historyItems && i < historyItems.length; ++i) {
+            let historyItem = historyItems[i];
             if (resource && historyItem.loaderId === resource.loaderId) {
                 resource.addRevision(window.localStorage[historyItem.key], new Date(historyItem.timestamp), true);
                 filteredHistoryItems.push(historyItem);
@@ -246,15 +246,15 @@ WebInspector.Resource.persistRevision = function(resource)
     if (!window.localStorage)
         return;
 
-    var url = resource.url;
-    var loaderId = resource.loaderId;
-    var timestamp = resource._contentTimestamp.getTime();
-    var key = "resource-history|" + url + "|" + loaderId + "|" + timestamp;
-    var content = resource._content;
+    let url = resource.url;
+    let loaderId = resource.loaderId;
+    let timestamp = resource._contentTimestamp.getTime();
+    let key = "resource-history|" + url + "|" + loaderId + "|" + timestamp;
+    let content = resource._content;
 
-    var registry = WebInspector.Resource._resourceRevisionRegistry();
+    let registry = WebInspector.Resource._resourceRevisionRegistry();
 
-    var historyItems = registry[resource.url];
+    let historyItems = registry[resource.url];
     if (!historyItems) {
         historyItems = [];
         registry[resource.url] = historyItems;
@@ -294,7 +294,7 @@ WebInspector.Resource.prototype = {
         this._url = x;
         delete this._parsedQueryParameters;
 
-        var parsedURL = x.asParsedURL();
+        let parsedURL = x.asParsedURL();
         this.domain = parsedURL ? parsedURL.host : "";
         this.path = parsedURL ? parsedURL.path : "";
         this.urlFragment = parsedURL ? parsedURL.fragment : "";
@@ -337,11 +337,11 @@ WebInspector.Resource.prototype = {
      */
     get folder()
     {
-        var path = this.path;
-        var indexOfQuery = path.indexOf("?");
+        let path = this.path;
+        let indexOfQuery = path.indexOf("?");
         if (indexOfQuery !== -1)
             path = path.substring(0, indexOfQuery);
-        var lastSlashIndex = path.lastIndexOf("/");
+        let lastSlashIndex = path.lastIndexOf("/");
         return lastSlashIndex !== -1 ? path.substring(0, lastSlashIndex) : "";
     },
 
@@ -467,7 +467,7 @@ WebInspector.Resource.prototype = {
         // resourceSize when we don't have Content-Length. This still won't
         // work for chunks with non-trivial encodings. We need a way to
         // get actual transfer size from the network stack.
-        var bodySize = Number(this.responseHeaders["Content-Length"] || this.resourceSize);
+        let bodySize = Number(this.responseHeaders["Content-Length"] || this.resourceSize);
         return this.responseHeadersSize + bodySize;
     },
 
@@ -672,7 +672,7 @@ WebInspector.Resource.prototype = {
     {
         if (this._requestHeadersText === undefined) {
             this._requestHeadersText = this.requestMethod + " " + this.url + " HTTP/1.1\r\n";
-            for (var key in this.requestHeaders)
+            for (let key in this.requestHeaders)
                 this._requestHeadersText += key + ": " + this.requestHeaders[key] + "\r\n";
         }
         return this._requestHeadersText;
@@ -702,7 +702,7 @@ WebInspector.Resource.prototype = {
             return this._sortedRequestHeaders;
 
         this._sortedRequestHeaders = [];
-        for (var key in this.requestHeaders)
+        for (let key in this.requestHeaders)
             this._sortedRequestHeaders.push({header: key, value: this.requestHeaders[key]});
         this._sortedRequestHeaders.sort(function(a,b) { return a.header.localeCompare(b.header) });
 
@@ -747,8 +747,8 @@ WebInspector.Resource.prototype = {
      */
     get requestHttpVersion()
     {
-        var firstLine = this.requestHeadersText.split(/\r\n/)[0];
-        var match = firstLine.match(/(HTTP\/\d+\.\d+)$/);
+        let firstLine = this.requestHeadersText.split(/\r\n/)[0];
+        let match = firstLine.match(/(HTTP\/\d+\.\d+)$/);
         return match ? match[1] : undefined;
     },
 
@@ -776,7 +776,7 @@ WebInspector.Resource.prototype = {
     {
         if (this._responseHeadersText === undefined) {
             this._responseHeadersText = "HTTP/1.1 " + this.statusCode + " " + this.statusText + "\r\n";
-            for (var key in this.responseHeaders)
+            for (let key in this.responseHeaders)
                 this._responseHeadersText += key + ": " + this.responseHeaders[key] + "\r\n";
         }
         return this._responseHeadersText;
@@ -806,7 +806,7 @@ WebInspector.Resource.prototype = {
             return this._sortedResponseHeaders;
 
         this._sortedResponseHeaders = [];
-        for (var key in this.responseHeaders)
+        for (let key in this.responseHeaders)
             this._sortedResponseHeaders.push({header: key, value: this.responseHeaders[key]});
         this._sortedResponseHeaders.sort(function(a,b) { return a.header.localeCompare(b.header) });
 
@@ -839,7 +839,7 @@ WebInspector.Resource.prototype = {
     {
         if (this._parsedQueryParameters)
             return this._parsedQueryParameters;
-        var queryString = this.url.split("?", 2)[1];
+        let queryString = this.url.split("?", 2)[1];
         if (!queryString)
             return null;
         queryString = queryString.split("#", 2)[0];
@@ -856,7 +856,7 @@ WebInspector.Resource.prototype = {
             return this._parsedFormParameters;
         if (!this.requestFormData)
             return null;
-        var requestContentType = this.requestContentType();
+        let requestContentType = this.requestContentType();
         if (!requestContentType || !requestContentType.match(/^application\/x-www-form-urlencoded\s*(;.*)?$/i))
             return null;
         this._parsedFormParameters = this._parseParameters(this.requestFormData);
@@ -868,7 +868,7 @@ WebInspector.Resource.prototype = {
      */
     get responseHttpVersion()
     {
-        var match = this.responseHeadersText.match(/^(HTTP\/\d+\.\d+)/);
+        let match = this.responseHeadersText.match(/^(HTTP\/\d+\.\d+)/);
         return match ? match[1] : undefined;
     },
 
@@ -880,8 +880,8 @@ WebInspector.Resource.prototype = {
     {
         function parseNameValue(pair)
         {
-            var parameter = {};
-            var splitPair = pair.split("=", 2);
+            let parameter = {};
+            let splitPair = pair.split("=", 2);
 
             parameter.name = splitPair[0];
             if (splitPair.length === 1)
@@ -901,7 +901,7 @@ WebInspector.Resource.prototype = {
     _headerValue: function(headers, headerName)
     {
         headerName = headerName.toLowerCase();
-        for (var header in headers) {
+        for (let header in headers) {
             if (header.toLowerCase() === headerName)
                 return headers[header];
         }
@@ -994,7 +994,7 @@ WebInspector.Resource.prototype = {
     {
         if (this._actualResource)
             return false;
-        var binding = WebInspector.Resource._domainModelBindings[this.type];
+        let binding = WebInspector.Resource._domainModelBindings[this.type];
         return binding && binding.canSetContent(this);
     },
 
@@ -1010,7 +1010,7 @@ WebInspector.Resource.prototype = {
                 callback("Resource is not editable");
             return;
         }
-        var binding = WebInspector.Resource._domainModelBindings[this.type];
+        let binding = WebInspector.Resource._domainModelBindings[this.type];
         binding.setContent(this, newContent, majorChange, callback);
     },
 
@@ -1021,7 +1021,7 @@ WebInspector.Resource.prototype = {
      */
     addRevision: function(newContent, timestamp, restoringHistory)
     {
-        var revision = new WebInspector.ResourceRevision(this, this._content, this._contentTimestamp);
+        let revision = new WebInspector.ResourceRevision(this, this._content, this._contentTimestamp);
         this.history.push(revision);
 
         this._content = newContent;
@@ -1151,8 +1151,8 @@ WebInspector.Resource.prototype = {
             this._contentEncoded = contentEncoded;
             this._content = data;
             this._originalContent = data;
-            var callbacks = this._pendingContentCallbacks.slice();
-            for (var i = 0; i < callbacks.length; ++i)
+            let callbacks = this._pendingContentCallbacks.slice();
+            for (let i = 0; i < callbacks.length; ++i)
                 callbacks[i](this._content, this._contentEncoded);
             this._pendingContentCallbacks.length = 0;
             delete this._contentRequested;

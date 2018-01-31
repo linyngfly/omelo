@@ -54,14 +54,14 @@ WebInspector.FontView.prototype = {
         if (this.fontPreviewElement)
             return;
 
-        var uniqueFontName = "WebInspectorFontPreview" + (++WebInspector.FontView._fontId);
+        let uniqueFontName = "WebInspectorFontPreview" + (++WebInspector.FontView._fontId);
 
         this.fontStyleElement = document.createElement("style");
         this.fontStyleElement.textContent = "@font-face { font-family: \"" + uniqueFontName + "\"; src: url(" + this.resource.url + "); }";
         document.head.appendChild(this.fontStyleElement);
 
-        var fontPreview = document.createElement("div");
-        for (var i = 0; i < WebInspector.FontView._fontPreviewLines.length; ++i) {
+        let fontPreview = document.createElement("div");
+        for (let i = 0; i < WebInspector.FontView._fontPreviewLines.length; ++i) {
             if (i > 0)
                 fontPreview.appendChild(document.createElement("br"));
             fontPreview.appendChild(document.createTextNode(WebInspector.FontView._fontPreviewLines[i]));
@@ -104,7 +104,7 @@ WebInspector.FontView.prototype = {
     _measureElement: function()
     {
         this.element.appendChild(this._dummyElement);
-        var result = { width: this._dummyElement.offsetWidth, height: this._dummyElement.offsetHeight };
+        let result = { width: this._dummyElement.offsetWidth, height: this._dummyElement.offsetHeight };
         this.element.removeChild(this._dummyElement);
 
         return result;
@@ -116,7 +116,7 @@ WebInspector.FontView.prototype = {
             return;
 
         this.fontPreviewElement.style.removeProperty("visibility");
-        var dimension = this._measureElement();
+        let dimension = this._measureElement();
 
         const height = dimension.height;
         const width = dimension.width;
@@ -130,9 +130,9 @@ WebInspector.FontView.prototype = {
             return;
         }
 
-        var widthRatio = containerWidth / width;
-        var heightRatio = containerHeight / height;
-        var finalFontSize = Math.floor(WebInspector.FontView._measureFontSize * Math.min(widthRatio, heightRatio)) - 2;
+        let widthRatio = containerWidth / width;
+        let heightRatio = containerHeight / height;
+        let finalFontSize = Math.floor(WebInspector.FontView._measureFontSize * Math.min(widthRatio, heightRatio)) - 2;
 
         this.fontPreviewElement.style.setProperty("font-size", finalFontSize + "px", null);
     }

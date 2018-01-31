@@ -11,15 +11,15 @@
  * MIT Licensed
  */
 
-var logger = require('pomelo-logger').getLogger('bearcat-ha', 'ZookeeperClient');
-var WatcherLock = require('../watcher/watcherLock');
-var ZooKeeper = require("node-zookeeper-client");
-var zkCreateMode = ZooKeeper.CreateMode;
-var crypto = require('crypto');
-var zkEvent = ZooKeeper.Event;
-var async = require('async');
+let logger = require('pomelo-logger').getLogger('bearcat-ha', 'ZookeeperClient');
+let WatcherLock = require('../watcher/watcherLock');
+let ZooKeeper = require("node-zookeeper-client");
+let zkCreateMode = ZooKeeper.CreateMode;
+let crypto = require('crypto');
+let zkEvent = ZooKeeper.Event;
+let async = require('async');
 
-var WATCHER_SESSION_TIMEOUT = 5000;
+let WATCHER_SESSION_TIMEOUT = 5000;
 
 function ZookeeperClient(opts, callback) {
   this.servers = opts.servers;
@@ -34,21 +34,21 @@ function ZookeeperClient(opts, callback) {
 ZookeeperClient.prototype.init = function(callback) {
   callback = callback || function() {};
 
-  var chroot = this.chroot;
-  var servers = this.servers;
-  var username = this.username;
-  var password = this.password;
-  var sessionTimeout = this.sessionTimeout;
+  let chroot = this.chroot;
+  let servers = this.servers;
+  let username = this.username;
+  let password = this.password;
+  let sessionTimeout = this.sessionTimeout;
 
   this.client = ZooKeeper.createClient(servers + chroot, {
     sessionTimeout: sessionTimeout
   });
 
-  var timeout = setTimeout(function() {
+  let timeout = setTimeout(function() {
     logger.error('connect to zookeeper timeout!');
   }, 15000);
 
-  var self = this;
+  let self = this;
 
   this.client.once('connected', function() {
     clearTimeout(timeout);
@@ -90,7 +90,7 @@ ZookeeperClient.prototype.watchNode = function(path, watcher) {
 };
 
 ZookeeperClient.prototype.setData = function(path, value, callback) {
-  var str = '';
+  let str = '';
   try {
     str = JSON.stringify(value);
   } catch (error) {
@@ -104,7 +104,7 @@ ZookeeperClient.prototype.getData = function(path, watcher, callback) {
 };
 
 ZookeeperClient.prototype.watchData = function(path, watcher) {
-  var self = this;
+  let self = this;
   this.client.getData(path, function(event) {
     if (event.type == zkEvent.NODE_DATA_CHANGED) {
       self.getData(path, function(err, data) {
@@ -134,8 +134,8 @@ ZookeeperClient.prototype.getACL = function() {
     return null;
   }
 
-  var authentication = this.username + ':' + this.password;
-  var shaDigest = crypto.createHash('sha1').update(authentication).digest('base64');
+  let authentication = this.username + ':' + this.password;
+  let shaDigest = crypto.createHash('sha1').update(authentication).digest('base64');
   return [new ZooKeeper.ACL(ZooKeeper.Permission.ALL, new ZooKeeper.Id('digest', this.username + ':' + shaDigest))];
 }
 
@@ -148,7 +148,7 @@ ZookeeperClient.prototype.createEphemeral = function(path, callback) {
 };
 
 ZookeeperClient.prototype.createPathBatch = function(paths, callback) {
-  var self = this;
+  let self = this;
   async.eachSeries(paths, function(item, next) {
     self.client.mkdirp(item, self.getACL(), zkCreateMode.PERSISTENT, function(err) {
       if (err) {
@@ -163,13 +163,13 @@ ZookeeperClient.prototype.createPathBatch = function(paths, callback) {
 };
 
 ZookeeperClient.prototype.getChildrenData = function(path, callback) {
-  var self = this;
+  let self = this;
   self.client.getChildren(path, function(err, children) {
     if (err) {
       return callback(err);
     }
 
-    var data = [];
+    let data = [];
     async.each(children, function(item, next) {
       self.client.getData(path + "/" + item, function(err, result) {
         if (err) {
@@ -189,7 +189,7 @@ ZookeeperClient.prototype.getChildrenData = function(path, callback) {
 };
 
 // module.exports = ZookeeperClient;
-var instance = null;
+let instance = null;
 
 exports.createClient = function(opts, callback) {
   if (!instance) {

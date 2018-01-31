@@ -120,7 +120,7 @@ WebInspector.TimelineModel.prototype = {
 
     _loadNextChunk: function(data, index)
     {
-        for (var i = 0; i < 20 && index < data.length; ++i, ++index)
+        for (let i = 0; i < 20 && index < data.length; ++i, ++index)
             this._addRecord(data[index]);
 
         if (index !== data.length)
@@ -131,7 +131,7 @@ WebInspector.TimelineModel.prototype = {
     {
         function onLoad(e)
         {
-            var data = JSON.parse(e.target.result);
+            let data = JSON.parse(e.target.result);
             this.reset();
             this._loadNextChunk(data, 1);
         }
@@ -152,7 +152,7 @@ WebInspector.TimelineModel.prototype = {
             }
         }
 
-        var reader = new FileReader();
+        let reader = new FileReader();
         reader.onload = onLoad.bind(this);
         reader.onerror = onError;
         reader.readAsText(file);
@@ -160,14 +160,14 @@ WebInspector.TimelineModel.prototype = {
 
     saveToFile: function()
     {
-        var records = ['[' + JSON.stringify(new String(window.navigator.appVersion))];
-        for (var i = 0; i < this._records.length; ++i)
+        let records = ['[' + JSON.stringify(new String(window.navigator.appVersion))];
+        for (let i = 0; i < this._records.length; ++i)
             records.push(JSON.stringify(this._records[i]));
 
         records[records.length - 1] = records[records.length - 1] + "]";
 
-        var now = new Date();
-        var suggestedFileName = "TimelineRawData-" + now.toISO8601Compact() + ".json";
+        let now = new Date();
+        let suggestedFileName = "TimelineRawData-" + now.toISO8601Compact() + ".json";
         InspectorFrontendHost.saveAs(suggestedFileName, records.join(",\n"));
     },
 

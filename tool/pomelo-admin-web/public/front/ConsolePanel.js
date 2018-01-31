@@ -83,8 +83,8 @@ WebInspector.ConsolePanel.prototype = {
         this._searchRegex = createPlainTextSearchRegex(query, "gi");
 
         this._searchResults = [];
-        var messages = WebInspector.consoleView.messages;
-        for (var i = 0; i < messages.length; i++) {
+        let messages = WebInspector.consoleView.messages;
+        for (let i = 0; i < messages.length; i++) {
             if (messages[i].matchesRegex(this._searchRegex)) {
                 this._searchResults.push(messages[i]);
                 this._searchRegex.lastIndex = 0;
@@ -107,7 +107,7 @@ WebInspector.ConsolePanel.prototype = {
     {
         if (!this._searchResults || !this._searchResults.length)
             return;
-        var index = this._currentSearchResultIndex - 1;
+        let index = this._currentSearchResultIndex - 1;
         if (index === -1)
             index = this._searchResults.length - 1;
         this._jumpToSearchResult(index);
@@ -117,7 +117,7 @@ WebInspector.ConsolePanel.prototype = {
     {
         if (!this._searchResults)
             return;
-        var highlightedMessage = this._searchResults[this._currentSearchResultIndex];
+        let highlightedMessage = this._searchResults[this._currentSearchResultIndex];
         if (highlightedMessage)
             highlightedMessage.clearHighlight();
         this._currentSearchResultIndex = -1;
@@ -134,7 +134,7 @@ WebInspector.ConsolePanel.prototype = {
     {
         if (!this._searchRegex || !this.isShowing())
             return;
-        var message = event.data;
+        let message = event.data;
         this._searchRegex.lastIndex = 0;
         if (message.matchesRegex(this._searchRegex)) {
             this._searchResults.push(message);

@@ -56,7 +56,7 @@ WebInspector.ApplicationCacheModel.EventTypes = {
 WebInspector.ApplicationCacheModel.prototype = {
     _frameNavigated: function(event)
     {
-        var frame = /** @type {WebInspector.ResourceTreeFrame} */ event.data;
+        let frame = /** @type {WebInspector.ResourceTreeFrame} */ event.data;
         if (frame.isMainFrame()) {
             this._mainFrameNavigated();
             return;
@@ -70,7 +70,7 @@ WebInspector.ApplicationCacheModel.prototype = {
      */
     _frameDetached: function(event)
     {
-        var frame = /** @type {WebInspector.ResourceTreeFrame} */ event.data;
+        let frame = /** @type {WebInspector.ResourceTreeFrame} */ event.data;
         this._frameManifestRemoved(frame.id);
     },
     
@@ -106,7 +106,7 @@ WebInspector.ApplicationCacheModel.prototype = {
             return;
         }
 
-        for (var i = 0; i < framesWithManifests.length; ++i)
+        for (let i = 0; i < framesWithManifests.length; ++i)
             this._frameManifestUpdated(framesWithManifests[i].frameId, framesWithManifests[i].manifestURL, framesWithManifests[i].status);
     },
     
@@ -128,7 +128,7 @@ WebInspector.ApplicationCacheModel.prototype = {
         if (this._manifestURLsByFrame[frameId] && manifestURL !== this._manifestURLsByFrame[frameId])
             this._frameManifestRemoved(frameId);
         
-        var statusChanged = this._statuses[frameId] !== status;
+        let statusChanged = this._statuses[frameId] !== status;
         this._statuses[frameId] = status;
         
         if (!this._manifestURLsByFrame[frameId]) {
@@ -148,7 +148,7 @@ WebInspector.ApplicationCacheModel.prototype = {
         if (!this._manifestURLsByFrame[frameId])
             return;
 
-        var manifestURL = this._manifestURLsByFrame[frameId];
+        let manifestURL = this._manifestURLsByFrame[frameId];
         delete this._manifestURLsByFrame[frameId];
         delete this._statuses[frameId];
         

@@ -139,7 +139,7 @@ WebInspector.DebuggerModel.prototype = {
      */
     setBreakpointByScriptLocation: function(location, condition, callback)
     {
-        var script = this.scriptForSourceID(location.scriptId);
+        let script = this.scriptForSourceID(location.scriptId);
         if (script.sourceURL)
             this.setBreakpoint(script.sourceURL, location.lineNumber, location.columnNumber, condition, callback);
         else
@@ -156,9 +156,9 @@ WebInspector.DebuggerModel.prototype = {
     setBreakpoint: function(url, lineNumber, columnNumber, condition, callback)
     {
         // Adjust column if needed.
-        var minColumnNumber = 0;
-        for (var id in this._scripts) {
-            var script = this._scripts[id];
+        let minColumnNumber = 0;
+        for (let id in this._scripts) {
+            let script = this._scripts[id];
             if (url === script.sourceURL && lineNumber === script.lineOffset)
                 minColumnNumber = minColumnNumber ? Math.min(minColumnNumber, script.columnOffset) : script.columnOffset;
         }
@@ -311,7 +311,7 @@ WebInspector.DebuggerModel.prototype = {
      */
     _parsedScriptSource: function(scriptId, sourceURL, startLine, startColumn, endLine, endColumn, isContentScript, sourceMapURL)
     {
-        var script = new WebInspector.Script(scriptId, sourceURL, startLine, startColumn, endLine, endColumn, isContentScript, sourceMapURL);
+        let script = new WebInspector.Script(scriptId, sourceURL, startLine, startColumn, endLine, endColumn, isContentScript, sourceMapURL);
         this._scripts[scriptId] = script;
         this.dispatchEventToListeners(WebInspector.DebuggerModel.Events.ParsedScriptSource, script);
     },
@@ -325,7 +325,7 @@ WebInspector.DebuggerModel.prototype = {
      */
     _failedToParseScriptSource: function(sourceURL, source, startingLine, errorLine, errorMessage)
     {
-        var script = new WebInspector.Script("", sourceURL, startingLine, 0, 0, 0, false);
+        let script = new WebInspector.Script("", sourceURL, startingLine, 0, 0, 0, false);
         this.dispatchEventToListeners(WebInspector.DebuggerModel.Events.FailedToParseScriptSource, script);
     },
 
@@ -350,9 +350,9 @@ WebInspector.DebuggerModel.prototype = {
      */
     createRawLocationByURL: function(sourceURL, lineNumber, columnNumber)
     {
-        var closestScript = null;
-        for (var scriptId in this._scripts) {
-            var script = this._scripts[scriptId];
+        let closestScript = null;
+        for (let scriptId in this._scripts) {
+            let script = this._scripts[scriptId];
             if (script.sourceURL !== sourceURL)
                 continue;
             if (!closestScript)

@@ -41,7 +41,7 @@ WebInspector.CookiesTable = function(cookieDomain, expandable, deleteCallback, r
 
     this._cookieDomain = cookieDomain;
 
-    var columns = { 0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {} };
+    let columns = { 0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {} };
     columns[0].title = WebInspector.UIString("Name");
     columns[0].sortable = true;
     columns[0].disclosure = expandable;
@@ -100,18 +100,18 @@ WebInspector.CookiesTable.prototype = {
 
     get selectedCookie()
     {
-        var node = this._dataGrid.selectedNode;
+        let node = this._dataGrid.selectedNode;
         return node ? node.cookie : null;
     },
 
     _rebuildTable: function()
     {
         this._dataGrid.removeChildren();
-        for (var i = 0; i < this._data.length; ++i) {
-            var item = this._data[i];
+        for (let i = 0; i < this._data.length; ++i) {
+            let item = this._data[i];
             if (item.folderName) {
-                var groupData = [ item.folderName, "", "", "", "", this._totalSize(item.cookies), "", "" ];
-                var groupNode = new WebInspector.DataGridNode(groupData);
+                let groupData = [ item.folderName, "", "", "", "", this._totalSize(item.cookies), "", "" ];
+                let groupNode = new WebInspector.DataGridNode(groupData);
                 groupNode.selectable = true;
                 this._dataGrid.appendChild(groupNode);
                 groupNode.element.addStyleClass("row-group");
@@ -124,14 +124,14 @@ WebInspector.CookiesTable.prototype = {
 
     _populateNode: function(parentNode, cookies)
     {
-        var selectedCookie = this.selectedCookie;
+        let selectedCookie = this.selectedCookie;
         parentNode.removeChildren();
         if (!cookies)
             return;
 
         this._sortCookies(cookies);
-        for (var i = 0; i < cookies.length; ++i) {
-            var cookieNode = this._createGridNode(cookies[i]);
+        for (let i = 0; i < cookies.length; ++i) {
+            let cookieNode = this._createGridNode(cookies[i]);
             parentNode.appendChild(cookieNode);
             if (selectedCookie === cookies[i])
                 cookieNode.selected = true;
@@ -140,15 +140,15 @@ WebInspector.CookiesTable.prototype = {
 
     _totalSize: function(cookies)
     {
-        var totalSize = 0;
-        for (var i = 0; cookies && i < cookies.length; ++i)
+        let totalSize = 0;
+        for (let i = 0; cookies && i < cookies.length; ++i)
             totalSize += cookies[i].size;
         return totalSize;
     },
 
     _sortCookies: function(cookies)
     {
-        var sortDirection = this._dataGrid.sortOrder === "ascending" ? 1 : -1;
+        let sortDirection = this._dataGrid.sortOrder === "ascending" ? 1 : -1;
 
         function localeCompare(field, cookie1, cookie2)
         {
@@ -171,7 +171,7 @@ WebInspector.CookiesTable.prototype = {
             return sortDirection * (cookie1.expires - cookie2.expires);
         }
 
-        var comparator;
+        let comparator;
         switch (parseInt(this._dataGrid.sortColumnIdentifier, 10)) {
             case 0: comparator = localeCompare.bind(this, "name"); break;
             case 1: comparator = localeCompare.bind(this, "value"); break;
@@ -192,7 +192,7 @@ WebInspector.CookiesTable.prototype = {
      */
     _createGridNode: function(cookie)
     {
-        var data = {};
+        let data = {};
         data[0] = cookie.name;
         data[1] = cookie.value;
         data[2] = cookie.domain || "";
@@ -204,7 +204,7 @@ WebInspector.CookiesTable.prototype = {
         data[6] = (cookie.httpOnly ? checkmark : "");
         data[7] = (cookie.secure ? checkmark : "");
 
-        var node = new WebInspector.DataGridNode(data);
+        let node = new WebInspector.DataGridNode(data);
         node.cookie = cookie;
         node.selectable = true;
         return node;

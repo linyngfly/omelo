@@ -218,9 +218,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <div id="drawer"></div>
 </body>
 <script type="text/javascript">
-var selectServer = document.getElementById('serverType');
+let selectServer = document.getElementById('serverType');
 
-var list = function() {
+let list = function() {
     window.parent.client.request('profiler', {action: 'list'}, function(err, msg) {
         if(err) {
             alert(err);
@@ -230,14 +230,14 @@ var list = function() {
         msg.sort(function(o1, o2) {
             return o1.localeCompare(o2);
         });
-        var i, l;
-        for (var i=0, l=msg.length; i<l; i++){
+        let i, l;
+        for (let i=0, l=msg.length; i<l; i++){
             selectServer.add(new Option(msg[i], msg[i]));       
         }
     });
 };
 
-var loading = function(){
+let loading = function(){
 	selectServer.remove(0);
     list();
     /*
@@ -246,9 +246,9 @@ var loading = function(){
 		socket.emit('webMessage', { method : 'getNodes'});
 		socket.on('getNodes', function(msg) {
             selectServer.options.length = 0;
-			for (var index = 0;index<msg.serverArray.length;index++){
-				var server = msg.serverArray[index];
-				var option = new Option(server.name,server.serverId);
+			for (let index = 0;index<msg.serverArray.length;index++){
+				let server = msg.serverArray[index];
+				let option = new Option(server.name,server.serverId);
 				selectServer.add(option);		
 			}
 		});

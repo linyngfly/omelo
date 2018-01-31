@@ -117,7 +117,7 @@ WebInspector.ResourceHeadersView.prototype = {
      */
     _formatHeader: function(name, value)
     {
-        var fragment = document.createDocumentFragment();
+        let fragment = document.createDocumentFragment();
         fragment.createChild("div", "header-name").textContent = name + ":";
         fragment.createChild("div", "header-value source-code").textContent = value;
 
@@ -131,7 +131,7 @@ WebInspector.ResourceHeadersView.prototype = {
      */
     _formatParameter: function(value, className, decodeParameters)
     {
-        var errorDecoding = false;
+        let errorDecoding = false;
 
         if (decodeParameters) {
             value = value.replace(/\+/g, " ");
@@ -143,7 +143,7 @@ WebInspector.ResourceHeadersView.prototype = {
                 }
             }
         }
-        var div = document.createElement("div");
+        let div = document.createElement("div");
         div.className = className;
         if (errorDecoding)
             div.createChild("span", "error-message").textContent = WebInspector.UIString("(unable to decode value)");
@@ -159,7 +159,7 @@ WebInspector.ResourceHeadersView.prototype = {
 
     _refreshQueryString: function()
     {
-        var queryParameters = this._resource.queryParameters;
+        let queryParameters = this._resource.queryParameters;
         this._queryStringTreeElement.hidden = !queryParameters;
         if (queryParameters)
             this._refreshParms(WebInspector.UIString("Query String Parameters"), queryParameters, this._queryStringTreeElement);
@@ -167,19 +167,19 @@ WebInspector.ResourceHeadersView.prototype = {
 
     _refreshUrlFragment: function()
     {
-        var urlFragment = this._resource.urlFragment;
+        let urlFragment = this._resource.urlFragment;
         this._urlFragmentTreeElement.hidden = !urlFragment;
 
         if (!urlFragment)
             return;
 
-        var sectionTitle = WebInspector.UIString("URL fragment");
+        let sectionTitle = WebInspector.UIString("URL fragment");
 
         this._urlFragmentTreeElement.removeChildren();
         this._urlFragmentTreeElement.listItemElement.removeChildren();
         this._urlFragmentTreeElement.listItemElement.appendChild(document.createTextNode(sectionTitle));
 
-        var fragmentTreeElement = new TreeElement(null, null, false);
+        let fragmentTreeElement = new TreeElement(null, null, false);
         fragmentTreeElement.title = this._formatHeader("#", urlFragment);
         fragmentTreeElement.selectable = false;
         this._urlFragmentTreeElement.appendChild(fragmentTreeElement);
@@ -190,11 +190,11 @@ WebInspector.ResourceHeadersView.prototype = {
         this._formDataTreeElement.hidden = true;
         this._requestPayloadTreeElement.hidden = true;
 
-        var formData = this._resource.requestFormData;
+        let formData = this._resource.requestFormData;
         if (!formData)
             return;
 
-        var formParameters = this._resource.formParameters;
+        let formParameters = this._resource.formParameters;
         if (formParameters) {
             this._formDataTreeElement.hidden = false;
             this._refreshParms(WebInspector.UIString("Form Data"), formParameters, this._formDataTreeElement);
@@ -208,11 +208,11 @@ WebInspector.ResourceHeadersView.prototype = {
     {
         this._requestPayloadTreeElement.removeChildren();
 
-        var title = document.createElement("div");
+        let title = document.createElement("div");
         title.className = "raw-form-data header-value source-code";
         title.textContent = formData;
 
-        var parmTreeElement = new TreeElement(title, null, false);
+        let parmTreeElement = new TreeElement(title, null, false);
         parmTreeElement.selectable = false;
         this._requestPayloadTreeElement.appendChild(parmTreeElement);
     },
@@ -224,25 +224,25 @@ WebInspector.ResourceHeadersView.prototype = {
         parmsTreeElement.listItemElement.removeChildren();
         parmsTreeElement.listItemElement.appendChild(document.createTextNode(title));
 
-        var headerCount = document.createElement("span");
+        let headerCount = document.createElement("span");
         headerCount.addStyleClass("header-count");
         headerCount.textContent = WebInspector.UIString(" (%d)", parms.length);
         parmsTreeElement.listItemElement.appendChild(headerCount);
 
-        var toggleTitle = this._decodeRequestParameters ? WebInspector.UIString("view URL encoded") : WebInspector.UIString("view decoded");
-        var toggleButton = this._createToggleButton(toggleTitle);
+        let toggleTitle = this._decodeRequestParameters ? WebInspector.UIString("view URL encoded") : WebInspector.UIString("view decoded");
+        let toggleButton = this._createToggleButton(toggleTitle);
         toggleButton.addEventListener("click", this._toggleURLdecoding.bind(this));
         parmsTreeElement.listItemElement.appendChild(toggleButton);
 
 
-        for (var i = 0; i < parms.length; ++i) {
-            var paramNameValue = document.createDocumentFragment();
-            var name = this._formatParameter(parms[i].name + ":", "header-name", this._decodeRequestParameters);
-            var value = this._formatParameter(parms[i].value, "header-value source-code", this._decodeRequestParameters);
+        for (let i = 0; i < parms.length; ++i) {
+            let paramNameValue = document.createDocumentFragment();
+            let name = this._formatParameter(parms[i].name + ":", "header-name", this._decodeRequestParameters);
+            let value = this._formatParameter(parms[i].value, "header-value source-code", this._decodeRequestParameters);
             paramNameValue.appendChild(name);
             paramNameValue.appendChild(value);
 
-            var parmTreeElement = new TreeElement(paramNameValue, null, false);
+            let parmTreeElement = new TreeElement(paramNameValue, null, false);
             parmTreeElement.selectable = false;
             parmsTreeElement.appendChild(parmTreeElement);
         }
@@ -257,8 +257,8 @@ WebInspector.ResourceHeadersView.prototype = {
 
     _getHeaderValue: function(headers, key)
     {
-        var lowerKey = key.toLowerCase();
-        for (var testKey in headers) {
+        let lowerKey = key.toLowerCase();
+        for (let testKey in headers) {
             if (testKey.toLowerCase() === lowerKey)
                 return headers[testKey];
         }
@@ -266,7 +266,7 @@ WebInspector.ResourceHeadersView.prototype = {
 
     _refreshRequestHeaders: function()
     {
-        var additionalRow = null;
+        let additionalRow = null;
         if (typeof this._resource.webSocketRequestKey3 !== "undefined")
             additionalRow = {header: "(Key3)", value: this._resource.webSocketRequestKey3};
         if (this._showRequestHeadersText)
@@ -275,7 +275,7 @@ WebInspector.ResourceHeadersView.prototype = {
             this._refreshHeaders(WebInspector.UIString("Request Headers"), this._resource.sortedRequestHeaders, additionalRow, this._requestHeadersTreeElement);
 
         if (this._resource.requestHeadersText) {
-            var toggleButton = this._createHeadersToggleButton(this._showRequestHeadersText);
+            let toggleButton = this._createHeadersToggleButton(this._showRequestHeadersText);
             toggleButton.addEventListener("click", this._toggleRequestHeadersText.bind(this));
             this._requestHeadersTreeElement.listItemElement.appendChild(toggleButton);
         }
@@ -285,7 +285,7 @@ WebInspector.ResourceHeadersView.prototype = {
 
     _refreshResponseHeaders: function()
     {
-        var additionalRow = null;
+        let additionalRow = null;
         if (typeof this._resource.webSocketChallengeResponse !== "undefined")
             additionalRow = {header: "(Challenge Response)", value: this._resource.webSocketChallengeResponse};
         if (this._showResponseHeadersText)
@@ -294,7 +294,7 @@ WebInspector.ResourceHeadersView.prototype = {
             this._refreshHeaders(WebInspector.UIString("Response Headers"), this._resource.sortedResponseHeaders, additionalRow, this._responseHeadersTreeElement);
 
         if (this._resource.responseHeadersText) {
-            var toggleButton = this._createHeadersToggleButton(this._showResponseHeadersText);
+            let toggleButton = this._createHeadersToggleButton(this._showResponseHeadersText);
             toggleButton.addEventListener("click", this._toggleResponseHeadersText.bind(this));
             this._responseHeadersTreeElement.listItemElement.appendChild(toggleButton);
         }
@@ -302,13 +302,13 @@ WebInspector.ResourceHeadersView.prototype = {
 
     _refreshHTTPInformation: function()
     {
-        var requestMethodElement = this._requestMethodTreeElement;
+        let requestMethodElement = this._requestMethodTreeElement;
         requestMethodElement.hidden = !this._resource.statusCode;
-        var statusCodeElement = this._statusCodeTreeElement;
+        let statusCodeElement = this._statusCodeTreeElement;
         statusCodeElement.hidden = !this._resource.statusCode;
 
         if (this._resource.statusCode) {
-            var statusImageSource = "";
+            let statusImageSource = "";
             if (this._resource.statusCode < 300 || this._resource.statusCode === 304)
                 statusImageSource = "Images/successGreenDot.png";
             else if (this._resource.statusCode < 400)
@@ -318,13 +318,13 @@ WebInspector.ResourceHeadersView.prototype = {
 
             requestMethodElement.title = this._formatHeader(WebInspector.UIString("Request Method"), this._resource.requestMethod);
 
-            var statusCodeFragment = document.createDocumentFragment();
+            let statusCodeFragment = document.createDocumentFragment();
             statusCodeFragment.createChild("div", "header-name").textContent = WebInspector.UIString("Status Code") + ":";
 
-            var statusCodeImage = statusCodeFragment.createChild("img", "resource-status-image");
+            let statusCodeImage = statusCodeFragment.createChild("img", "resource-status-image");
             statusCodeImage.src = statusImageSource;
             statusCodeImage.title = this._resource.statusCode + " " + this._resource.statusText;
-            var value = statusCodeFragment.createChild("div", "header-value source-code");
+            let value = statusCodeFragment.createChild("div", "header-value source-code");
             value.textContent = this._resource.statusCode + " " + this._resource.statusText;
             if (this._resource.cached)
                 value.createChild("span", "status-from-cache").textContent = " " + WebInspector.UIString("(from cache)");
@@ -338,7 +338,7 @@ WebInspector.ResourceHeadersView.prototype = {
         headersTreeElement.listItemElement.removeChildren();
         headersTreeElement.listItemElement.appendChild(document.createTextNode(title));
 
-        var headerCount = document.createElement("span");
+        let headerCount = document.createElement("span");
         headerCount.addStyleClass("header-count");
         headerCount.textContent = WebInspector.UIString(" (%d)", headersLength);
         headersTreeElement.listItemElement.appendChild(headerCount);
@@ -348,18 +348,18 @@ WebInspector.ResourceHeadersView.prototype = {
     {
         headersTreeElement.removeChildren();
 
-        var length = headers.length;
+        let length = headers.length;
         this._refreshHeadersTitle(title, headersTreeElement, length);
         headersTreeElement.hidden = !length;
-        for (var i = 0; i < length; ++i) {
-            var headerTreeElement = new TreeElement(null, null, false);
+        for (let i = 0; i < length; ++i) {
+            let headerTreeElement = new TreeElement(null, null, false);
             headerTreeElement.title = this._formatHeader(headers[i].header, headers[i].value);
             headerTreeElement.selectable = false;
             headersTreeElement.appendChild(headerTreeElement);
         }
 
         if (additionalRow) {
-            var headerTreeElement = new TreeElement(null, null, false);
+            let headerTreeElement = new TreeElement(null, null, false);
             headerTreeElement.title = this._formatHeader(additionalRow.header, additionalRow.value);
             headerTreeElement.selectable = false;
             headersTreeElement.appendChild(headerTreeElement);
@@ -371,11 +371,11 @@ WebInspector.ResourceHeadersView.prototype = {
         headersTreeElement.removeChildren();
 
         this._refreshHeadersTitle(title, headersTreeElement, headers.length);
-        var headerTreeElement = new TreeElement(null, null, false);
+        let headerTreeElement = new TreeElement(null, null, false);
         headerTreeElement.selectable = false;
         headersTreeElement.appendChild(headerTreeElement);
 
-        var headersTextElement = document.createElement("span");
+        let headersTextElement = document.createElement("span");
         headersTextElement.addStyleClass("header-value");
         headersTextElement.addStyleClass("source-code");
         headersTextElement.textContent = String(headersText).trim();
@@ -396,7 +396,7 @@ WebInspector.ResourceHeadersView.prototype = {
 
     _createToggleButton: function(title)
     {
-        var button = document.createElement("span");
+        let button = document.createElement("span");
         button.addStyleClass("header-toggle");
         button.textContent = title;
         return button;
@@ -404,7 +404,7 @@ WebInspector.ResourceHeadersView.prototype = {
 
     _createHeadersToggleButton: function(isHeadersTextShown)
     {
-        var toggleTitle = isHeadersTextShown ? WebInspector.UIString("view parsed") : WebInspector.UIString("view source");
+        let toggleTitle = isHeadersTextShown ? WebInspector.UIString("view parsed") : WebInspector.UIString("view source");
         return this._createToggleButton(toggleTitle);
     }
 }

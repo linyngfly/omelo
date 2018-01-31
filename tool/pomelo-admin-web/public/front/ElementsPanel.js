@@ -85,7 +85,7 @@ WebInspector.ElementsPanel = function()
     this.sidebarPanes.styles.addEventListener("style property toggled", this._stylesPaneEdited, this);
     this.sidebarPanes.metrics.addEventListener("metrics edited", this._metricsPaneEdited, this);
 
-    for (var pane in this.sidebarPanes) {
+    for (let pane in this.sidebarPanes) {
         this.sidebarElement.appendChild(this.sidebarPanes[pane].element);
         if (this.sidebarPanes[pane].onattach)
             this.sidebarPanes[pane].onattach();
@@ -154,7 +154,7 @@ WebInspector.ElementsPanel.prototype = {
         // Detach heavy component on hide
         this.contentElement.removeChild(this.treeOutline.element);
 
-        for (var pane in this.sidebarPanes) {
+        for (let pane in this.sidebarPanes) {
             if (this.sidebarPanes[pane].willHide)
                 this.sidebarPanes[pane].willHide();
         }
@@ -170,7 +170,7 @@ WebInspector.ElementsPanel.prototype = {
 
     _selectedNodeChanged: function()
     {
-        var selectedNode = this.selectedDOMNode();
+        let selectedNode = this.selectedDOMNode();
         if (!selectedNode && this._lastValidSelectedNode)
             this._selectedPathOnReset = this._lastValidSelectedNode.path();
 
@@ -186,7 +186,7 @@ WebInspector.ElementsPanel.prototype = {
 
     _updateSidebars: function()
     {
-        for (var pane in this.sidebarPanes)
+        for (let pane in this.sidebarPanes)
            this.sidebarPanes[pane].needsUpdate = true;
 
         this.updateStyles(true);
@@ -202,7 +202,7 @@ WebInspector.ElementsPanel.prototype = {
 
     _documentUpdated: function(event)
     {
-        var inspectedRootDocument = event.data;
+        let inspectedRootDocument = event.data;
 
         this._reset();
         this.searchCanceled();
@@ -241,7 +241,7 @@ WebInspector.ElementsPanel.prototype = {
                 // Focused node has been explicitly set while reaching out for the last selected node.
                 return;
             }
-            var node = nodeId ? WebInspector.domAgent.nodeForId(nodeId) : null;
+            let node = nodeId ? WebInspector.domAgent.nodeForId(nodeId) : null;
             selectNode.call(this, node);
         }
 
@@ -298,8 +298,8 @@ WebInspector.ElementsPanel.prototype = {
             WebInspector.settings.domWordWrap.set(!WebInspector.settings.domWordWrap.get());
         }
 
-        var contextMenu = new WebInspector.ContextMenu();
-        var populated = this.treeOutline.populateContextMenu(contextMenu, event);
+        let contextMenu = new WebInspector.ContextMenu();
+        let populated = this.treeOutline.populateContextMenu(contextMenu, event);
         if (populated)
             contextMenu.appendSeparator();
         contextMenu.appendCheckboxItem(WebInspector.UIString(WebInspector.useLowerCaseMenuTitles() ? "Word wrap" : "Word Wrap"), toggleWordWrap.bind(this), WebInspector.settings.domWordWrap.get());
@@ -314,11 +314,11 @@ WebInspector.ElementsPanel.prototype = {
         else
             this.contentElement.addStyleClass("nowrap");
 
-        var selectedNode = this.selectedDOMNode();
+        let selectedNode = this.selectedDOMNode();
         if (!selectedNode)
             return;
 
-        var treeElement = this.treeOutline.findTreeElement(selectedNode);
+        let treeElement = this.treeOutline.findTreeElement(selectedNode);
         if (treeElement)
             treeElement.updateSelection(); // Recalculate selection highlight dimensions.
     },
@@ -336,19 +336,19 @@ WebInspector.ElementsPanel.prototype = {
         if (Capabilities.nativeInstrumentationEnabled) {
             // Add debbuging-related actions
             contextMenu.appendSeparator();
-            var pane = this.sidebarPanes.domBreakpoints;
+            let pane = this.sidebarPanes.domBreakpoints;
             pane.populateNodeContextMenu(node, contextMenu);
         }
     },
 
     _getPopoverAnchor: function(element)
     {
-        var anchor = element.enclosingNodeOrSelfWithClass("webkit-html-resource-link");
+        let anchor = element.enclosingNodeOrSelfWithClass("webkit-html-resource-link");
         if (anchor) {
             if (!anchor.href)
                 return null;
 
-            var resource = WebInspector.resourceTreeModel.resourceForURL(anchor.href);
+            let resource = WebInspector.resourceTreeModel.resourceForURL(anchor.href);
             if (!resource || resource.type !== WebInspector.Resource.Type.Image)
                 return null;
 
@@ -365,7 +365,7 @@ WebInspector.ElementsPanel.prototype = {
             return;
         }
         
-        var node = /** @type {WebInspector.DOMNode} */ treeElement.representedObject;
+        let node = /** @type {WebInspector.DOMNode} */ treeElement.representedObject;
 
         if (!node.nodeName() || node.nodeName().toLowerCase() !== "img") {
             callback();
@@ -397,7 +397,7 @@ WebInspector.ElementsPanel.prototype = {
      */
     _showPopover: function(anchor, popover)
     {
-        var listItem = anchor.enclosingNodeOrSelfWithNodeNameInArray(["li"]);
+        let listItem = anchor.enclosingNodeOrSelfWithNodeNameInArray(["li"]);
         if (listItem && listItem.treeElement)
             this._loadDimensionsForNode(listItem.treeElement, dimensionsCallback);
         else
@@ -408,9 +408,9 @@ WebInspector.ElementsPanel.prototype = {
          */
         function dimensionsCallback(dimensions)
         {
-            var imageElement = document.createElement("img");
+            let imageElement = document.createElement("img");
             imageElement.addEventListener("load", showPopover.bind(null, imageElement, dimensions), false);
-            var resource = WebInspector.resourceTreeModel.resourceForURL(anchor.href);
+            let resource = WebInspector.resourceTreeModel.resourceForURL(anchor.href);
             if (!resource)
                 return;
     
@@ -422,7 +422,7 @@ WebInspector.ElementsPanel.prototype = {
          */
         function showPopover(imageElement, dimensions)
         {
-            var contents = buildPopoverContents(imageElement, dimensions);
+            let contents = buildPopoverContents(imageElement, dimensions);
             popover.setCanShrink(false);
             popover.show(contents, anchor);
         }
@@ -434,13 +434,13 @@ WebInspector.ElementsPanel.prototype = {
         {
             const maxImageWidth = 100;
             const maxImageHeight = 100;
-            var container = document.createElement("table");
+            let container = document.createElement("table");
             container.className = "image-preview-container";
-            var naturalWidth = nodeDimensions ? nodeDimensions.naturalWidth : imageElement.naturalWidth;
-            var naturalHeight = nodeDimensions ? nodeDimensions.naturalHeight : imageElement.naturalHeight;
-            var offsetWidth = nodeDimensions ? nodeDimensions.offsetWidth : naturalWidth;
-            var offsetHeight = nodeDimensions ? nodeDimensions.offsetHeight : naturalHeight;
-            var description;
+            let naturalWidth = nodeDimensions ? nodeDimensions.naturalWidth : imageElement.naturalWidth;
+            let naturalHeight = nodeDimensions ? nodeDimensions.naturalHeight : imageElement.naturalHeight;
+            let offsetWidth = nodeDimensions ? nodeDimensions.offsetWidth : naturalWidth;
+            let offsetHeight = nodeDimensions ? nodeDimensions.offsetHeight : naturalHeight;
+            let description;
             if (offsetHeight === naturalHeight && offsetWidth === naturalWidth)
                 description = WebInspector.UIString("%d \xd7 %d pixels", offsetWidth, offsetHeight);
             else
@@ -489,9 +489,9 @@ WebInspector.ElementsPanel.prototype = {
 
     _highlightCurrentSearchResult: function()
     {
-        var index = this._currentSearchResultIndex;
-        var searchResults = this._searchResults;
-        var searchResult = searchResults[index];
+        let index = this._currentSearchResultIndex;
+        let searchResults = this._searchResults;
+        let searchResult = searchResults[index];
 
         if (searchResult === null) {
             WebInspector.searchController.updateCurrentMatchIndex(index, this);
@@ -511,7 +511,7 @@ WebInspector.ElementsPanel.prototype = {
 
         WebInspector.searchController.updateCurrentMatchIndex(index, this);
 
-        var treeElement = this.treeOutline.findTreeElement(searchResult);
+        let treeElement = this.treeOutline.findTreeElement(searchResult);
         if (treeElement) {
             treeElement.highlightSearchResults(this._searchQuery);
             treeElement.reveal();
@@ -522,10 +522,10 @@ WebInspector.ElementsPanel.prototype = {
     {
         if (!this._searchResults)
             return;
-        var searchResult = this._searchResults[this._currentSearchResultIndex];
+        let searchResult = this._searchResults[this._currentSearchResultIndex];
         if (!searchResult)
             return;
-        var treeElement = this.treeOutline.findTreeElement(searchResult);
+        let treeElement = this.treeOutline.findTreeElement(searchResult);
         if (treeElement)
             treeElement.hideSearchHighlights();
     },
@@ -548,8 +548,8 @@ WebInspector.ElementsPanel.prototype = {
         if (!this.isShowing())
             return;
 
-        var crumbs = this.crumbsElement;
-        for (var crumb = crumbs.firstChild; crumb; crumb = crumb.nextSibling) {
+        let crumbs = this.crumbsElement;
+        for (let crumb = crumbs.firstChild; crumb; crumb = crumb.nextSibling) {
             if (crumb.representedObject === event.data.node) {
                 this.updateBreadcrumb(true);
                 return;
@@ -573,8 +573,8 @@ WebInspector.ElementsPanel.prototype = {
 
     _mouseMovedInCrumbs: function(event)
     {
-        var nodeUnderMouse = document.elementFromPoint(event.pageX, event.pageY);
-        var crumbElement = nodeUnderMouse.enclosingNodeOrSelfWithClass("crumb");
+        let nodeUnderMouse = document.elementFromPoint(event.pageX, event.pageY);
+        let crumbElement = nodeUnderMouse.enclosingNodeOrSelfWithClass("crumb");
 
         WebInspector.domAgent.highlightDOMNode(crumbElement ? crumbElement.representedObject.id : 0);
 
@@ -586,7 +586,7 @@ WebInspector.ElementsPanel.prototype = {
 
     _mouseMovedOutOfCrumbs: function(event)
     {
-        var nodeUnderMouse = document.elementFromPoint(event.pageX, event.pageY);
+        let nodeUnderMouse = document.elementFromPoint(event.pageX, event.pageY);
         if (nodeUnderMouse && nodeUnderMouse.isDescendant(this.crumbsElement))
             return;
 
@@ -603,11 +603,11 @@ WebInspector.ElementsPanel.prototype = {
         if (!this.isShowing())
             return;
 
-        var crumbs = this.crumbsElement;
+        let crumbs = this.crumbsElement;
 
-        var handled = false;
-        var foundRoot = false;
-        var crumb = crumbs.firstChild;
+        let handled = false;
+        let foundRoot = false;
+        let crumb = crumbs.firstChild;
         while (crumb) {
             if (crumb.representedObject === this.treeOutline.rootDOMNode)
                 foundRoot = true;
@@ -636,20 +636,20 @@ WebInspector.ElementsPanel.prototype = {
 
         crumbs.removeChildren();
 
-        var panel = this;
+        let panel = this;
 
         function selectCrumbFunction(event)
         {
-            var crumb = event.currentTarget;
+            let crumb = event.currentTarget;
             if (crumb.hasStyleClass("collapsed")) {
                 // Clicking a collapsed crumb will expose the hidden crumbs.
                 if (crumb === panel.crumbsElement.firstChild) {
                     // If the focused crumb is the first child, pick the farthest crumb
                     // that is still hidden. This allows the user to expose every crumb.
-                    var currentCrumb = crumb;
+                    let currentCrumb = crumb;
                     while (currentCrumb) {
-                        var hidden = currentCrumb.hasStyleClass("hidden");
-                        var collapsed = currentCrumb.hasStyleClass("collapsed");
+                        let hidden = currentCrumb.hasStyleClass("hidden");
+                        let collapsed = currentCrumb.hasStyleClass("collapsed");
                         if (!hidden && !collapsed)
                             break;
                         crumb = currentCrumb;
@@ -665,7 +665,7 @@ WebInspector.ElementsPanel.prototype = {
         }
 
         foundRoot = false;
-        for (var current = this.selectedDOMNode(); current; current = current.parentNode) {
+        for (let current = this.selectedDOMNode(); current; current = current.parentNode) {
             if (current.nodeType() === Node.DOCUMENT_NODE)
                 continue;
 
@@ -677,7 +677,7 @@ WebInspector.ElementsPanel.prototype = {
             crumb.representedObject = current;
             crumb.addEventListener("mousedown", selectCrumbFunction, false);
 
-            var crumbTitle;
+            let crumbTitle;
             switch (current.nodeType()) {
                 case Node.ELEMENT_NODE:
                     WebInspector.DOMPresentationUtils.decorateNodeLabel(current, crumb);
@@ -700,7 +700,7 @@ WebInspector.ElementsPanel.prototype = {
             }
 
             if (!crumb.childNodes.length) {
-                var nameElement = document.createElement("span");
+                let nameElement = document.createElement("span");
                 nameElement.textContent = crumbTitle;
                 crumb.appendChild(nameElement);
                 crumb.title = crumbTitle;
@@ -736,17 +736,17 @@ WebInspector.ElementsPanel.prototype = {
             return;
         }
 
-        var crumbs = this.crumbsElement;
+        let crumbs = this.crumbsElement;
         if (!crumbs.childNodes.length || crumbs.offsetWidth <= 0)
             return; // No crumbs, do nothing.
 
         // A Zero index is the right most child crumb in the breadcrumb.
-        var selectedIndex = 0;
-        var focusedIndex = 0;
-        var selectedCrumb;
+        let selectedIndex = 0;
+        let focusedIndex = 0;
+        let selectedCrumb;
 
-        var i = 0;
-        var crumb = crumbs.firstChild;
+        let i = 0;
+        let crumb = crumbs.firstChild;
         while (crumb) {
             // Find the selected crumb and index.
             if (!selectedCrumb && crumb.hasStyleClass("selected")) {
@@ -780,8 +780,8 @@ WebInspector.ElementsPanel.prototype = {
 
         function crumbsAreSmallerThanContainer()
         {
-            var rightPadding = 20;
-            var errorWarningElement = document.getElementById("error-warning-count");
+            let rightPadding = 20;
+            let errorWarningElement = document.getElementById("error-warning-count");
             if (!WebInspector.drawer.visible && errorWarningElement)
                 rightPadding += errorWarningElement.offsetWidth;
             return ((crumbs.totalOffsetLeft() + crumbs.offsetWidth + rightPadding) < window.innerWidth);
@@ -790,9 +790,9 @@ WebInspector.ElementsPanel.prototype = {
         if (crumbsAreSmallerThanContainer())
             return; // No need to compact the crumbs, they all fit at full size.
 
-        var BothSides = 0;
-        var AncestorSide = -1;
-        var ChildSide = 1;
+        let BothSides = 0;
+        let AncestorSide = -1;
+        let ChildSide = 1;
 
         /**
          * @param {boolean=} significantCrumb
@@ -803,12 +803,12 @@ WebInspector.ElementsPanel.prototype = {
                 significantCrumb = (focusedCrumb || selectedCrumb);
 
             if (significantCrumb === selectedCrumb)
-                var significantIndex = selectedIndex;
+                let significantIndex = selectedIndex;
             else if (significantCrumb === focusedCrumb)
-                var significantIndex = focusedIndex;
+                let significantIndex = focusedIndex;
             else {
-                var significantIndex = 0;
-                for (var i = 0; i < crumbs.childNodes.length; ++i) {
+                let significantIndex = 0;
+                for (let i = 0; i < crumbs.childNodes.length; ++i) {
                     if (crumbs.childNodes[i] === significantCrumb) {
                         significantIndex = i;
                         break;
@@ -818,7 +818,7 @@ WebInspector.ElementsPanel.prototype = {
 
             function shrinkCrumbAtIndex(index)
             {
-                var shrinkCrumb = crumbs.childNodes[index];
+                let shrinkCrumb = crumbs.childNodes[index];
                 if (shrinkCrumb && shrinkCrumb !== significantCrumb)
                     shrinkingFunction(shrinkCrumb);
                 if (crumbsAreSmallerThanContainer())
@@ -830,7 +830,7 @@ WebInspector.ElementsPanel.prototype = {
             // fit in the container or we run out of crumbs to shrink.
             if (direction) {
                 // Crumbs are shrunk on only one side (based on direction) of the signifcant crumb.
-                var index = (direction > 0 ? 0 : crumbs.childNodes.length - 1);
+                let index = (direction > 0 ? 0 : crumbs.childNodes.length - 1);
                 while (index !== significantIndex) {
                     if (shrinkCrumbAtIndex(index))
                         return true;
@@ -839,15 +839,15 @@ WebInspector.ElementsPanel.prototype = {
             } else {
                 // Crumbs are shrunk in order of descending distance from the signifcant crumb,
                 // with a tie going to child crumbs.
-                var startIndex = 0;
-                var endIndex = crumbs.childNodes.length - 1;
+                let startIndex = 0;
+                let endIndex = crumbs.childNodes.length - 1;
                 while (startIndex != significantIndex || endIndex != significantIndex) {
-                    var startDistance = significantIndex - startIndex;
-                    var endDistance = endIndex - significantIndex;
+                    let startDistance = significantIndex - startIndex;
+                    let endDistance = endIndex - significantIndex;
                     if (startDistance >= endDistance)
-                        var index = startIndex++;
+                        let index = startIndex++;
                     else
-                        var index = endIndex--;
+                        let index = endIndex--;
                     if (shrinkCrumbAtIndex(index))
                         return true;
                 }
@@ -859,14 +859,14 @@ WebInspector.ElementsPanel.prototype = {
 
         function coalesceCollapsedCrumbs()
         {
-            var crumb = crumbs.firstChild;
-            var collapsedRun = false;
-            var newStartNeeded = false;
-            var newEndNeeded = false;
+            let crumb = crumbs.firstChild;
+            let collapsedRun = false;
+            let newStartNeeded = false;
+            let newEndNeeded = false;
             while (crumb) {
-                var hidden = crumb.hasStyleClass("hidden");
+                let hidden = crumb.hasStyleClass("hidden");
                 if (!hidden) {
-                    var collapsed = crumb.hasStyleClass("collapsed");
+                    let collapsed = crumb.hasStyleClass("collapsed");
                     if (collapsedRun && collapsed) {
                         crumb.addStyleClass("hidden");
                         crumb.removeStyleClass("compact");
@@ -980,8 +980,8 @@ WebInspector.ElementsPanel.prototype = {
 
     updateStyles: function(forceUpdate)
     {
-        var stylesSidebarPane = this.sidebarPanes.styles;
-        var computedStylePane = this.sidebarPanes.computedStyle;
+        let stylesSidebarPane = this.sidebarPanes.styles;
+        let computedStylePane = this.sidebarPanes.computedStyle;
         if ((!stylesSidebarPane.expanded && !computedStylePane.expanded) || !stylesSidebarPane.needsUpdate)
             return;
 
@@ -991,7 +991,7 @@ WebInspector.ElementsPanel.prototype = {
 
     updateMetrics: function()
     {
-        var metricsSidebarPane = this.sidebarPanes.metrics;
+        let metricsSidebarPane = this.sidebarPanes.metrics;
         if (!metricsSidebarPane.expanded || !metricsSidebarPane.needsUpdate)
             return;
 
@@ -1001,7 +1001,7 @@ WebInspector.ElementsPanel.prototype = {
 
     updateProperties: function()
     {
-        var propertiesSidebarPane = this.sidebarPanes.properties;
+        let propertiesSidebarPane = this.sidebarPanes.properties;
         if (!propertiesSidebarPane.expanded || !propertiesSidebarPane.needsUpdate)
             return;
 
@@ -1011,7 +1011,7 @@ WebInspector.ElementsPanel.prototype = {
 
     updateEventListeners: function()
     {
-        var eventListenersSidebarPane = this.sidebarPanes.eventListeners;
+        let eventListenersSidebarPane = this.sidebarPanes.eventListeners;
         if (!eventListenersSidebarPane.expanded || !eventListenersSidebarPane.needsUpdate)
             return;
 
@@ -1021,9 +1021,9 @@ WebInspector.ElementsPanel.prototype = {
 
     _registerShortcuts: function()
     {
-        var shortcut = WebInspector.KeyboardShortcut;
-        var section = WebInspector.shortcutsScreen.section(WebInspector.UIString("Elements Panel"));
-        var keys = [
+        let shortcut = WebInspector.KeyboardShortcut;
+        let section = WebInspector.shortcutsScreen.section(WebInspector.UIString("Elements Panel"));
+        let keys = [
             shortcut.shortcutToString(shortcut.Keys.Up),
             shortcut.shortcutToString(shortcut.Keys.Down)
         ];
@@ -1046,9 +1046,9 @@ WebInspector.ElementsPanel.prototype = {
         // This shortcut matches Firebug.
         if (event.keyIdentifier === "U+0043") { // C key
             if (WebInspector.isMac())
-                var isNodeSearchKey = event.metaKey && !event.ctrlKey && !event.altKey && event.shiftKey;
+                let isNodeSearchKey = event.metaKey && !event.ctrlKey && !event.altKey && event.shiftKey;
             else
-                var isNodeSearchKey = event.ctrlKey && !event.metaKey && !event.altKey && event.shiftKey;
+                let isNodeSearchKey = event.ctrlKey && !event.metaKey && !event.altKey && event.shiftKey;
 
             if (isNodeSearchKey) {
                 this.toggleSearchingForNode();
@@ -1064,7 +1064,7 @@ WebInspector.ElementsPanel.prototype = {
             return;
         }
 
-        var isRedoKey = WebInspector.isMac() ? event.metaKey && event.shiftKey && event.keyIdentifier === "U+005A" : // Z key
+        let isRedoKey = WebInspector.isMac() ? event.metaKey && event.shiftKey && event.keyIdentifier === "U+005A" : // Z key
                                                event.ctrlKey && event.keyIdentifier === "U+0059"; // Y key
         if (isRedoKey) {
             DOMAgent.redo(this._updateSidebars.bind(this));
@@ -1092,7 +1092,7 @@ WebInspector.ElementsPanel.prototype = {
 
     _inspectElementRequested: function(event)
     {
-        var node = event.data;
+        let node = event.data;
         this.revealAndSelectNode(node.id);
     },
 
@@ -1100,7 +1100,7 @@ WebInspector.ElementsPanel.prototype = {
     {
         WebInspector.inspectorView.setCurrentPanel(this);
 
-        var node = WebInspector.domAgent.nodeForId(nodeId);
+        let node = WebInspector.domAgent.nodeForId(nodeId);
         if (!node)
             return;
 

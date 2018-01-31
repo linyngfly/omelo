@@ -63,10 +63,10 @@ WebInspector.SearchController.prototype = {
 
     updateSearchLabel: function()
     {
-        var panelName = WebInspector.inspectorView.currentPanel() && WebInspector.inspectorView.currentPanel().toolbarItemLabel;
+        let panelName = WebInspector.inspectorView.currentPanel() && WebInspector.inspectorView.currentPanel().toolbarItemLabel;
         if (!panelName)
             return;
-        var newLabel = WebInspector.UIString("Search %s", panelName);
+        let newLabel = WebInspector.UIString("Search %s", panelName);
         if (WebInspector.isCompactMode())
             this.element.setAttribute("placeholder", newLabel);
         else {
@@ -88,14 +88,14 @@ WebInspector.SearchController.prototype = {
 
     handleShortcut: function(event)
     {
-        var isMac = WebInspector.isMac();
+        let isMac = WebInspector.isMac();
 
         switch (event.keyIdentifier) {
             case "U+0046": // F key
                 if (isMac)
-                    var isFindKey = event.metaKey && !event.ctrlKey && !event.altKey && !event.shiftKey;
+                    let isFindKey = event.metaKey && !event.ctrlKey && !event.altKey && !event.shiftKey;
                 else
-                    var isFindKey = event.ctrlKey && !event.metaKey && !event.altKey && !event.shiftKey;
+                    let isFindKey = event.ctrlKey && !event.metaKey && !event.altKey && !event.shiftKey;
 
                 if (isFindKey) {
                     this.focusSearchField();
@@ -112,7 +112,7 @@ WebInspector.SearchController.prototype = {
                 break;
 
             case "U+0047": // G key
-                var currentPanel = WebInspector.inspectorView.currentPanel();
+                let currentPanel = WebInspector.inspectorView.currentPanel();
 
                 if (isMac && event.metaKey && !event.ctrlKey && !event.altKey) {
                     if (event.shiftKey) {
@@ -133,7 +133,7 @@ WebInspector.SearchController.prototype = {
         if (!this._currentQuery)
             return;
 
-        var panel = WebInspector.inspectorView.currentPanel();
+        let panel = WebInspector.inspectorView.currentPanel();
         if (panel.performSearch) {
             function performPanelSearch()
             {
@@ -165,17 +165,17 @@ WebInspector.SearchController.prototype = {
         if (matches) {
             if (matches === 1) {
                 if (currentMatchIndex === 0)
-                    var matchesString = WebInspector.UIString("1 of 1 match");
+                    let matchesString = WebInspector.UIString("1 of 1 match");
                 else
-                    var matchesString = WebInspector.UIString("1 match");
+                    let matchesString = WebInspector.UIString("1 match");
             } else {
                 if (typeof currentMatchIndex === "number")
-                    var matchesString = WebInspector.UIString("%d of %d matches", currentMatchIndex + 1, matches);
+                    let matchesString = WebInspector.UIString("%d of %d matches", currentMatchIndex + 1, matches);
                 else
-                    var matchesString = WebInspector.UIString("%d matches", matches);
+                    let matchesString = WebInspector.UIString("%d matches", matches);
             }
         } else
-            var matchesString = WebInspector.UIString("Not Found");
+            let matchesString = WebInspector.UIString("Not Found");
 
         this._matchesElement.removeStyleClass("hidden");
         this._matchesElement.textContent = matchesString;
@@ -230,7 +230,7 @@ WebInspector.SearchController.prototype = {
 
     _onSearch: function(event)
     {
-        var forceSearch = event.keyIdentifier === "Enter";
+        let forceSearch = event.keyIdentifier === "Enter";
         this._performSearch(event.target.value, forceSearch, event.shiftKey, false);
     },
 
@@ -241,7 +241,7 @@ WebInspector.SearchController.prototype = {
      */
     _performSearch: function(query, forceSearch, isBackwardSearch, repeatSearch)
     {
-        var isShortSearch = (query.length < 3);
+        let isShortSearch = (query.length < 3);
 
         // Clear a leftover short search flag due to a non-conflicting forced search.
         if (isShortSearch && this._shortSearchWasForcedByKeyEvent && this._currentQuery !== query)
@@ -260,9 +260,9 @@ WebInspector.SearchController.prototype = {
 
             delete this._currentQuery;
 
-            for (var panelName in WebInspector.panels) {
-                var panel = WebInspector.panels[panelName];
-                var hadCurrentQuery = !!panel.currentQuery;
+            for (let panelName in WebInspector.panels) {
+                let panel = WebInspector.panels[panelName];
+                let hadCurrentQuery = !!panel.currentQuery;
                 delete panel.currentQuery;
                 if (hadCurrentQuery && panel.searchCanceled)
                     panel.searchCanceled();
@@ -273,7 +273,7 @@ WebInspector.SearchController.prototype = {
             return;
         }
 
-        var currentPanel = WebInspector.inspectorView.currentPanel();
+        let currentPanel = WebInspector.inspectorView.currentPanel();
         if (!repeatSearch && query === currentPanel.currentQuery && currentPanel.currentQuery === this._currentQuery) {
             // When this is the same query and a forced search, jump to the next
             // search result for a good user experience.

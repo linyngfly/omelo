@@ -43,6 +43,6 @@ WebInspector.InspectorExtensionRegistryStub.prototype = {
     }
 }
 
-var InspectorExtensionRegistry = new WebInspector.InspectorExtensionRegistryStub();
+let InspectorExtensionRegistry = new WebInspector.InspectorExtensionRegistryStub();
 
 }

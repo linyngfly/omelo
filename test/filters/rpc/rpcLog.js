@@ -1,7 +1,7 @@
-var should = require('should');
-var rpcLogFilter = require('../../../lib/filters/rpc/rpcLog');
+let should = require('should');
+let rpcLogFilter = require('../../../lib/filters/rpc/rpcLog');
 
-var mockData = {
+let mockData = {
   serverId : "connector-server-1",
   msg : "hello",
   opts : {}

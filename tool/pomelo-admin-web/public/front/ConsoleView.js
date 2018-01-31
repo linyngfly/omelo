@@ -74,14 +74,14 @@ WebInspector.ConsoleView = function(hideContextSelector)
     this._filterBarElement.className = "scope-bar status-bar-item";
 
     function createDividerElement() {
-        var dividerElement = document.createElement("div");
+        let dividerElement = document.createElement("div");
         dividerElement.addStyleClass("scope-bar-divider");
         this._filterBarElement.appendChild(dividerElement);
     }
 
-    var updateFilterHandler = this._updateFilter.bind(this);
+    let updateFilterHandler = this._updateFilter.bind(this);
     function createFilterElement(category, label) {
-        var categoryElement = document.createElement("li");
+        let categoryElement = document.createElement("li");
         categoryElement.category = category;
         categoryElement.className = category;
         categoryElement.addEventListener("click", updateFilterHandler, false);
@@ -132,7 +132,7 @@ WebInspector.ConsoleView.prototype = {
 
     addContext: function(context)
     {
-        var option = document.createElement("option");
+        let option = document.createElement("option");
         option.text = context.displayName;
         option.title = context.url;
         option._context = context;
@@ -148,8 +148,8 @@ WebInspector.ConsoleView.prototype = {
 
     _contextUpdated: function(event)
     {
-        var context = event.data;
-        var option= context._consoleOption;
+        let context = event.data;
+        let option= context._consoleOption;
         option.text = context.displayName;
         option.title = context.url;
     },
@@ -163,8 +163,8 @@ WebInspector.ConsoleView.prototype = {
 
     _updateFilter: function(e)
     {
-        var isMac = WebInspector.isMac();
-        var selectMultiple = false;
+        let isMac = WebInspector.isMac();
+        let selectMultiple = false;
         if (isMac && e.metaKey && !e.ctrlKey && !e.altKey && !e.shiftKey)
             selectMultiple = true;
         if (!isMac && e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey)
@@ -188,7 +188,7 @@ WebInspector.ConsoleView.prototype = {
             this.messagesElement.removeStyleClass("filter-logs");
         }
 
-        var targetFilterClass = "filter-" + target.category;
+        let targetFilterClass = "filter-" + target.category;
 
         if (target.category === "all") {
             if (target.hasStyleClass("selected")) {
@@ -313,12 +313,12 @@ WebInspector.ConsoleView.prototype = {
         this.messages.push(msg);
 
         if (msg.type === WebInspector.ConsoleMessage.MessageType.EndGroup) {
-            var parentGroup = this.currentGroup.parentGroup
+            let parentGroup = this.currentGroup.parentGroup
             if (parentGroup)
                 this.currentGroup = parentGroup;
         } else {
             if (msg.type === WebInspector.ConsoleMessage.MessageType.StartGroup || msg.type === WebInspector.ConsoleMessage.MessageType.StartGroupCollapsed) {
-                var group = new WebInspector.ConsoleGroup(this.currentGroup);
+                let group = new WebInspector.ConsoleGroup(this.currentGroup);
                 this.currentGroup.messagesElement.appendChild(group.element);
                 this.currentGroup = group;
             }
@@ -345,18 +345,18 @@ WebInspector.ConsoleView.prototype = {
     completionsForTextPrompt: function(textPrompt, wordRange, force, completionsReadyCallback)
     {
         // Pass less stop characters to rangeOfWord so the range will be a more complete expression.
-        var expressionRange = wordRange.startContainer.rangeOfWord(wordRange.startOffset, ExpressionStopCharacters, textPrompt.proxyElement, "backward");
-        var expressionString = expressionRange.toString();
-        var prefix = wordRange.toString();
+        let expressionRange = wordRange.startContainer.rangeOfWord(wordRange.startOffset, ExpressionStopCharacters, textPrompt.proxyElement, "backward");
+        let expressionString = expressionRange.toString();
+        let prefix = wordRange.toString();
         this.completionsForExpression(expressionString, prefix, force, completionsReadyCallback);
     },
 
     completionsForExpression: function(expressionString, prefix, force, completionsReadyCallback)
     {
-        var lastIndex = expressionString.length - 1;
+        let lastIndex = expressionString.length - 1;
 
-        var dotNotation = (expressionString[lastIndex] === ".");
-        var bracketNotation = (expressionString[lastIndex] === "[");
+        let dotNotation = (expressionString[lastIndex] === ".");
+        let bracketNotation = (expressionString[lastIndex] === "[");
 
         if (dotNotation || bracketNotation)
             expressionString = expressionString.substr(0, lastIndex);
@@ -386,7 +386,7 @@ WebInspector.ConsoleView.prototype = {
 
             function getCompletions(primitiveType)
             {
-                var object;
+                let object;
                 if (primitiveType === "string")
                     object = new String("");
                 else if (primitiveType === "number")
@@ -396,11 +396,11 @@ WebInspector.ConsoleView.prototype = {
                 else
                     object = this;
 
-                var resultSet = {};
-                for (var o = object; o; o = o.__proto__) {
+                let resultSet = {};
+                for (let o = object; o; o = o.__proto__) {
                     try {
-                        var names = Object.getOwnPropertyNames(o);
-                        for (var i = 0; i < names.length; ++i)
+                        let names = Object.getOwnPropertyNames(o);
+                        for (let i = 0; i < names.length; ++i)
                             resultSet[names[i]] = true;
                     } catch (e) {
                     }
@@ -429,10 +429,10 @@ WebInspector.ConsoleView.prototype = {
                 completionsReadyCallback([]);
                 return;
             }
-            var includeCommandLineAPI = (!dotNotation && !bracketNotation);
+            let includeCommandLineAPI = (!dotNotation && !bracketNotation);
             if (includeCommandLineAPI) {
                 const commandLineAPI = ["dir", "dirxml", "keys", "values", "profile", "profileEnd", "monitorEvents", "unmonitorEvents", "inspect", "copy", "clear"];
-                for (var i = 0; i < commandLineAPI.length; ++i)
+                for (let i = 0; i < commandLineAPI.length; ++i)
                     propertyNames[commandLineAPI[i]] = true;
             }
             this._reportCompletions(completionsReadyCallback, dotNotation, bracketNotation, expressionString, prefix, Object.keys(propertyNames));
@@ -442,23 +442,23 @@ WebInspector.ConsoleView.prototype = {
     _reportCompletions: function(completionsReadyCallback, dotNotation, bracketNotation, expressionString, prefix, properties) {
         if (bracketNotation) {
             if (prefix.length && prefix[0] === "'")
-                var quoteUsed = "'";
+                let quoteUsed = "'";
             else
-                var quoteUsed = "\"";
+                let quoteUsed = "\"";
         }
 
-        var results = [];
+        let results = [];
 
         if (!expressionString) {
             const keywords = ["break", "case", "catch", "continue", "default", "delete", "do", "else", "finally", "for", "function", "if", "in",
-                              "instanceof", "new", "return", "switch", "this", "throw", "try", "typeof", "var", "void", "while", "with"];
+                              "instanceof", "new", "return", "switch", "this", "throw", "try", "typeof", "let", "void", "while", "with"];
             properties = properties.concat(keywords);
         }
 
         properties.sort();
 
-        for (var i = 0; i < properties.length; ++i) {
-            var property = properties[i];
+        for (let i = 0; i < properties.length; ++i) {
+            let property = properties[i];
 
             if (dotNotation && !/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(property))
                 continue;
@@ -487,7 +487,7 @@ WebInspector.ConsoleView.prototype = {
             return;
         }
 
-        var contextMenu = new WebInspector.ContextMenu();
+        let contextMenu = new WebInspector.ContextMenu();
 
         if (WebInspector.populateHrefContextMenu(contextMenu, null, event))
             contextMenu.appendSeparator();
@@ -524,21 +524,21 @@ WebInspector.ConsoleView.prototype = {
     {
         this._shortcuts = {};
 
-        var shortcut = WebInspector.KeyboardShortcut;
+        let shortcut = WebInspector.KeyboardShortcut;
 
         if (WebInspector.isMac()) {
-            var shortcutK = shortcut.makeDescriptor("k", WebInspector.KeyboardShortcut.Modifiers.Meta);
+            let shortcutK = shortcut.makeDescriptor("k", WebInspector.KeyboardShortcut.Modifiers.Meta);
             this._shortcuts[shortcutK.key] = this._requestClearMessages.bind(this);
         }
 
-        var shortcutL = shortcut.makeDescriptor("l", WebInspector.KeyboardShortcut.Modifiers.Ctrl);
+        let shortcutL = shortcut.makeDescriptor("l", WebInspector.KeyboardShortcut.Modifiers.Ctrl);
         this._shortcuts[shortcutL.key] = this._requestClearMessages.bind(this);
 
-        var shortcutM = shortcut.makeDescriptor("m", WebInspector.KeyboardShortcut.Modifiers.CtrlOrMeta | WebInspector.KeyboardShortcut.Modifiers.Shift);
+        let shortcutM = shortcut.makeDescriptor("m", WebInspector.KeyboardShortcut.Modifiers.CtrlOrMeta | WebInspector.KeyboardShortcut.Modifiers.Shift);
         this._shortcuts[shortcutM.key] = this._dumpMemory.bind(this);
 
-        var section = WebInspector.shortcutsScreen.section(WebInspector.UIString("Console"));
-        var keys = WebInspector.isMac() ? [ shortcutK.name, shortcutL.name ] : [ shortcutL.name ];
+        let section = WebInspector.shortcutsScreen.section(WebInspector.UIString("Console"));
+        let keys = WebInspector.isMac() ? [ shortcutK.name, shortcutL.name ] : [ shortcutL.name ];
         section.addAlternateKeys(keys, WebInspector.UIString("Clear console"));
 
         keys = [
@@ -573,8 +573,8 @@ WebInspector.ConsoleView.prototype = {
             return;
         }
 
-        var shortcut = WebInspector.KeyboardShortcut.makeKeyFromEvent(event);
-        var handler = this._shortcuts[shortcut];
+        let shortcut = WebInspector.KeyboardShortcut.makeKeyFromEvent(event);
+        let handler = this._shortcuts[shortcut];
         if (handler) {
             handler();
             event.preventDefault();
@@ -632,7 +632,7 @@ WebInspector.ConsoleView.prototype = {
 
         this.prompt.clearAutoComplete(true);
 
-        var str = this.prompt.text;
+        let str = this.prompt.text;
         if (!str.length)
             return;
         this._appendCommand(str, "", true, false);
@@ -641,7 +641,7 @@ WebInspector.ConsoleView.prototype = {
     _appendCommand: function(text, newPromptText, useCommandLineAPI, showResultOnly)
     {
         if (!showResultOnly) {
-            var commandMessage = new WebInspector.ConsoleCommand(text);
+            let commandMessage = new WebInspector.ConsoleCommand(text);
             WebInspector.console.interruptRepeatCount();
             this._appendConsoleMessage(commandMessage);
         }
@@ -682,17 +682,17 @@ WebInspector.ConsoleView.prototype = {
 
         function callback(error, groups)
         {
-            var titles = [];
+            let titles = [];
             groups.sort(comparator);
-            for (var i = 0; i < groups.length; ++i) {
-                var suffix = groups[i].size > 0 ? " [" + groups[i].size + "]" : "";
+            for (let i = 0; i < groups.length; ++i) {
+                let suffix = groups[i].size > 0 ? " [" + groups[i].size + "]" : "";
                 titles.push(groups[i].title + suffix + (groups[i].documentURI ? " (" + groups[i].documentURI + ")" : ""));
             }
 
-            var counter = 1;
-            var previousTitle = null;
-            for (var i = 0; i < titles.length; ++i) {
-                 var title = titles[i];
+            let counter = 1;
+            let previousTitle = null;
+            for (let i = 0; i < titles.length; ++i) {
+                 let title = titles[i];
                  if (title === previousTitle) {
                      counter++;
                      continue;
@@ -721,7 +721,7 @@ WebInspector.ConsoleCommand = function(command)
 WebInspector.ConsoleCommand.prototype = {
     clearHighlight: function()
     {
-        var highlightedMessage = this._formattedCommand;
+        let highlightedMessage = this._formattedCommand;
         delete this._formattedCommand;
         this._formatCommand();
         this._element.replaceChild(this._formattedCommand, highlightedMessage);
@@ -730,10 +730,10 @@ WebInspector.ConsoleCommand.prototype = {
     highlightSearchResults: function(regexObject)
     {
         regexObject.lastIndex = 0;
-        var text = this.command;
-        var match = regexObject.exec(text);
-        var offset = 0;
-        var matchRanges = [];
+        let text = this.command;
+        let match = regexObject.exec(text);
+        let offset = 0;
+        let matchRanges = [];
         while (match) {
             matchRanges.push({ offset: match.index, length: match[0].length });
             match = regexObject.exec(text);
@@ -775,7 +775,7 @@ WebInspector.ConsoleCommand.prototype = {
  */
 WebInspector.ConsoleCommandResult = function(result, wasThrown, originatingCommand, linkifier)
 {
-    var level = (wasThrown ? WebInspector.ConsoleMessage.MessageLevel.Error : WebInspector.ConsoleMessage.MessageLevel.Log);
+    let level = (wasThrown ? WebInspector.ConsoleMessage.MessageLevel.Error : WebInspector.ConsoleMessage.MessageLevel.Log);
     this.originatingCommand = originatingCommand;
     WebInspector.ConsoleMessageImpl.call(this, WebInspector.ConsoleMessage.MessageSource.JS, level, "", linkifier, WebInspector.ConsoleMessage.MessageType.Result, undefined, undefined, undefined, [result]);
 }
@@ -783,7 +783,7 @@ WebInspector.ConsoleCommandResult = function(result, wasThrown, originatingComma
 WebInspector.ConsoleCommandResult.prototype = {
     toMessageElement: function()
     {
-        var element = WebInspector.ConsoleMessageImpl.prototype.toMessageElement.call(this);
+        let element = WebInspector.ConsoleMessageImpl.prototype.toMessageElement.call(this);
         element.addStyleClass("console-user-command-result");
         return element;
     }
@@ -798,18 +798,18 @@ WebInspector.ConsoleGroup = function(parentGroup)
 {
     this.parentGroup = parentGroup;
 
-    var element = document.createElement("div");
+    let element = document.createElement("div");
     element.className = "console-group";
     element.group = this;
     this.element = element;
 
     if (parentGroup) {
-        var bracketElement = document.createElement("div");
+        let bracketElement = document.createElement("div");
         bracketElement.className = "console-group-bracket";
         element.appendChild(bracketElement);
     }
 
-    var messagesElement = document.createElement("div");
+    let messagesElement = document.createElement("div");
     messagesElement.className = "console-group-messages";
     element.appendChild(messagesElement);
     this.messagesElement = messagesElement;
@@ -818,12 +818,12 @@ WebInspector.ConsoleGroup = function(parentGroup)
 WebInspector.ConsoleGroup.prototype = {
     addMessage: function(msg)
     {
-        var element = msg.toMessageElement();
+        let element = msg.toMessageElement();
 
         if (msg.type === WebInspector.ConsoleMessage.MessageType.StartGroup || msg.type === WebInspector.ConsoleMessage.MessageType.StartGroupCollapsed) {
             this.messagesElement.parentNode.insertBefore(element, this.messagesElement);
             element.addEventListener("click", this._titleClicked.bind(this), false);
-            var groupElement = element.enclosingNodeOrSelfWithClass("console-group");
+            let groupElement = element.enclosingNodeOrSelfWithClass("console-group");
             if (groupElement && msg.type === WebInspector.ConsoleMessage.MessageType.StartGroupCollapsed)
                 groupElement.addStyleClass("collapsed");
         } else
@@ -835,9 +835,9 @@ WebInspector.ConsoleGroup.prototype = {
 
     _titleClicked: function(event)
     {
-        var groupTitleElement = event.target.enclosingNodeOrSelfWithClass("console-group-title");
+        let groupTitleElement = event.target.enclosingNodeOrSelfWithClass("console-group-title");
         if (groupTitleElement) {
-            var groupElement = groupTitleElement.enclosingNodeOrSelfWithClass("console-group");
+            let groupElement = groupTitleElement.enclosingNodeOrSelfWithClass("console-group");
             if (groupElement)
                 if (groupElement.hasStyleClass("collapsed"))
                     groupElement.removeStyleClass("collapsed");

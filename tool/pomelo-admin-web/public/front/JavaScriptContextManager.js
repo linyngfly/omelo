@@ -44,24 +44,24 @@ WebInspector.JavaScriptContextManager = function(resourceTreeModel, consoleView)
 WebInspector.JavaScriptContextManager.prototype = {
     _frameAdded: function(event)
     {
-        var frame = event.data;
-        var context = new WebInspector.FrameEvaluationContext(frame);
+        let frame = event.data;
+        let context = new WebInspector.FrameEvaluationContext(frame);
         this._frameIdToContext[frame.id] = context;
         this._consoleView.addContext(context);
     },
 
     _frameNavigated: function(event)
     {
-        var frame = event.data;
-        var context = this._frameIdToContext[frame.id];
+        let frame = event.data;
+        let context = this._frameIdToContext[frame.id];
         if (context)
             context._frameNavigated(frame);
     },
 
     _frameDetached: function(event)
     {
-        var frame = event.data;
-        var context = this._frameIdToContext[frame.id];
+        let frame = event.data;
+        let context = this._frameIdToContext[frame.id];
         if (!context)
             return;
         this._consoleView.removeContext(context);
@@ -106,8 +106,8 @@ WebInspector.FrameEvaluationContext.prototype =
     {
         if (!this._frame.parentFrame)
             return "<top frame>";
-        var name = this._frame.name || "";
-        var subtitle = WebInspector.Resource.displayName(this._frame.url);
+        let name = this._frame.name || "";
+        let subtitle = WebInspector.Resource.displayName(this._frame.url);
         if (subtitle) {
             if (!name)
                 return subtitle;

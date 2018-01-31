@@ -124,7 +124,7 @@ WebInspector.DebuggerPresentationModel.prototype = {
      */
     _parsedScriptSource: function(event)
     {
-        var script = /** @type {WebInspector.Script} */ event.data;
+        let script = /** @type {WebInspector.Script} */ event.data;
         this._scriptMapping.addScript(script);
         this._addPendingConsoleMessagesToScript(script);
     },
@@ -150,22 +150,22 @@ WebInspector.DebuggerPresentationModel.prototype = {
      */
     _handleUISourceCodeListChanged: function(event)
     {
-        var removedItems = /** @type {Array.<WebInspector.UISourceCode>} */ event.data["removedItems"];
-        var addedItems = /** @type {Array.<WebInspector.UISourceCode>} */ event.data["addedItems"];
+        let removedItems = /** @type {Array.<WebInspector.UISourceCode>} */ event.data["removedItems"];
+        let addedItems = /** @type {Array.<WebInspector.UISourceCode>} */ event.data["addedItems"];
 
-        for (var i = 0; i < removedItems.length; ++i)
+        for (let i = 0; i < removedItems.length; ++i)
             this._breakpointManager.uiSourceCodeRemoved(removedItems[i]);
-        for (var i = 0; i < addedItems.length; ++i)
+        for (let i = 0; i < addedItems.length; ++i)
             this._breakpointManager.uiSourceCodeAdded(addedItems[i]);
 
         if (!removedItems.length) {
-            for (var i = 0; i < addedItems.length; ++i)
+            for (let i = 0; i < addedItems.length; ++i)
                 this.dispatchEventToListeners(WebInspector.DebuggerPresentationModel.Events.UISourceCodeAdded, addedItems[i]);
         } else if (!addedItems.length) {
-            for (var i = 0; i < addedItems.length; ++i)
+            for (let i = 0; i < addedItems.length; ++i)
                 this.dispatchEventToListeners(WebInspector.DebuggerPresentationModel.Events.UISourceCodeRemoved, removedItems[i]);
         } else {
-            var eventData = { uiSourceCodeList: addedItems, oldUISourceCodeList: removedItems };
+            let eventData = { uiSourceCodeList: addedItems, oldUISourceCodeList: removedItems };
             this.dispatchEventToListeners(WebInspector.DebuggerPresentationModel.Events.UISourceCodeReplaced, eventData);
         }
     },
@@ -186,8 +186,8 @@ WebInspector.DebuggerPresentationModel.prototype = {
      */
     setScriptSource: function(uiSourceCode, newSource, callback)
     {
-        var rawLocation = this.uiLocationToRawLocation(uiSourceCode, 0, 0);
-        var script = WebInspector.debuggerModel.scriptForSourceID(rawLocation.scriptId);
+        let rawLocation = this.uiLocationToRawLocation(uiSourceCode, 0, 0);
+        let script = WebInspector.debuggerModel.scriptForSourceID(rawLocation.scriptId);
 
         /**
          * @this {WebInspector.DebuggerPresentationModel}
@@ -199,7 +199,7 @@ WebInspector.DebuggerPresentationModel.prototype = {
             if (error)
                 return;
 
-            var resource = WebInspector.resourceForURL(script.sourceURL);
+            let resource = WebInspector.resourceForURL(script.sourceURL);
             if (resource)
                 resource.addRevision(newSource);
 
@@ -218,23 +218,23 @@ WebInspector.DebuggerPresentationModel.prototype = {
      */
     _updateBreakpointsAfterLiveEdit: function(uiSourceCode, oldSource, newSource)
     {
-        var breakpoints = uiSourceCode.breakpoints();
+        let breakpoints = uiSourceCode.breakpoints();
 
         // Clear and re-create breakpoints according to text diff.
-        var diff = Array.diff(oldSource.split("\n"), newSource.split("\n"));
-        for (var lineNumber in breakpoints) {
-            var breakpoint = breakpoints[lineNumber];
+        let diff = Array.diff(oldSource.split("\n"), newSource.split("\n"));
+        for (let lineNumber in breakpoints) {
+            let breakpoint = breakpoints[lineNumber];
 
             this.removeBreakpoint(uiSourceCode, parseInt(lineNumber, 10));
 
-            var newLineNumber = diff.left[lineNumber].row;
+            let newLineNumber = diff.left[lineNumber].row;
             if (newLineNumber === undefined) {
-                for (var i = lineNumber - 1; i >= 0; --i) {
+                for (let i = lineNumber - 1; i >= 0; --i) {
                     if (diff.left[i].row === undefined)
                         continue;
-                    var shiftedLineNumber = diff.left[i].row + lineNumber - i;
+                    let shiftedLineNumber = diff.left[i].row + lineNumber - i;
                     if (shiftedLineNumber < diff.right.length) {
-                        var originalLineNumber = diff.right[shiftedLineNumber].row;
+                        let originalLineNumber = diff.right[shiftedLineNumber].row;
                         if (originalLineNumber === lineNumber || originalLineNumber === undefined)
                             newLineNumber = shiftedLineNumber;
                     }
@@ -260,11 +260,11 @@ WebInspector.DebuggerPresentationModel.prototype = {
      */
     _consoleMessageAdded: function(event)
     {
-        var message = /** @type {WebInspector.ConsoleMessage} */ event.data;
+        let message = /** @type {WebInspector.ConsoleMessage} */ event.data;
         if (!message.url || !message.isErrorOrWarning())
             return;
 
-        var rawLocation = message.location();
+        let rawLocation = message.location();
         if (rawLocation)
             this._addConsoleMessageToScript(message, rawLocation);
         else
@@ -279,11 +279,11 @@ WebInspector.DebuggerPresentationModel.prototype = {
     {
         function updateLocation(uiLocation)
         {
-            var presentationMessage = new WebInspector.PresentationConsoleMessage(uiLocation.uiSourceCode, uiLocation.lineNumber, message);
+            let presentationMessage = new WebInspector.PresentationConsoleMessage(uiLocation.uiSourceCode, uiLocation.lineNumber, message);
             this._presentationConsoleMessages.push(presentationMessage);
             this.dispatchEventToListeners(WebInspector.DebuggerPresentationModel.Events.ConsoleMessageAdded, presentationMessage);
         }
-        var liveLocation = this.createLiveLocation(rawLocation, updateLocation.bind(this));
+        let liveLocation = this.createLiveLocation(rawLocation, updateLocation.bind(this));
         liveLocation.init();
         this._consoleMessageLiveLocations.push(liveLocation);
     },
@@ -303,14 +303,14 @@ WebInspector.DebuggerPresentationModel.prototype = {
      */
     _addPendingConsoleMessagesToScript: function(script)
     {
-        var messages = this._pendingConsoleMessages[script.sourceURL];
+        let messages = this._pendingConsoleMessages[script.sourceURL];
         if (!messages)
             return;
 
-        var pendingMessages = [];
-        for (var i = 0; i < messages.length; i++) {
-            var message = messages[i];
-            var rawLocation = message.location();
+        let pendingMessages = [];
+        for (let i = 0; i < messages.length; i++) {
+            let message = messages[i];
+            let rawLocation = message.location();
             if (script.scriptId === rawLocation.scriptId)
                 this._addConsoleMessageToScript(messages, rawLocation);
             else
@@ -326,7 +326,7 @@ WebInspector.DebuggerPresentationModel.prototype = {
     _consoleCleared: function()
     {
         this._pendingConsoleMessages = {};
-        for (var i = 0; i < this._consoleMessageLiveLocations.length; ++i)
+        for (let i = 0; i < this._consoleMessageLiveLocations.length; ++i)
             this._consoleMessageLiveLocations[i].dispose();
         this._consoleMessageLiveLocations = [];
         this._presentationConsoleMessages = [];
@@ -339,7 +339,7 @@ WebInspector.DebuggerPresentationModel.prototype = {
      */
     continueToLine: function(uiSourceCode, lineNumber)
     {
-        var rawLocation = this.uiLocationToRawLocation(uiSourceCode, lineNumber, 0);
+        let rawLocation = this.uiLocationToRawLocation(uiSourceCode, lineNumber, 0);
         WebInspector.debuggerModel.continueToLocation(rawLocation);
     },
 
@@ -349,9 +349,9 @@ WebInspector.DebuggerPresentationModel.prototype = {
      */
     breakpointsForUISourceCode: function(uiSourceCode)
     {
-        var breakpointsMap = uiSourceCode.breakpoints();
-        var breakpointsList = [];
-        for (var lineNumber in breakpointsMap)
+        let breakpointsMap = uiSourceCode.breakpoints();
+        let breakpointsList = [];
+        for (let lineNumber in breakpointsMap)
             breakpointsList.push(breakpointsMap[lineNumber]);
         return breakpointsList;
     },
@@ -362,9 +362,9 @@ WebInspector.DebuggerPresentationModel.prototype = {
      */
     messagesForUISourceCode: function(uiSourceCode)
     {
-        var messages = [];
-        for (var i = 0; i < this._presentationConsoleMessages.length; ++i) {
-            var message = this._presentationConsoleMessages[i];
+        let messages = [];
+        for (let i = 0; i < this._presentationConsoleMessages.length; ++i) {
+            let message = this._presentationConsoleMessages[i];
             if (message.uiSourceCode === uiSourceCode)
                 messages.push(message);
         }
@@ -389,7 +389,7 @@ WebInspector.DebuggerPresentationModel.prototype = {
      */
     setBreakpointEnabled: function(uiSourceCode, lineNumber, enabled)
     {
-        var breakpoint = this.findBreakpoint(uiSourceCode, lineNumber);
+        let breakpoint = this.findBreakpoint(uiSourceCode, lineNumber);
         if (!breakpoint)
             return;
         this._breakpointManager.removeBreakpoint(uiSourceCode, lineNumber);
@@ -436,14 +436,14 @@ WebInspector.DebuggerPresentationModel.prototype = {
 
     _debuggerPaused: function()
     {
-        var callFrames = WebInspector.debuggerModel.callFrames;
+        let callFrames = WebInspector.debuggerModel.callFrames;
         this._presentationCallFrames = [];
-        for (var i = 0; i < callFrames.length; ++i) {
-            var callFrame = callFrames[i];
+        for (let i = 0; i < callFrames.length; ++i) {
+            let callFrame = callFrames[i];
             if (WebInspector.debuggerModel.scriptForSourceID(callFrame.location.scriptId))
                 this._presentationCallFrames.push(new WebInspector.PresentationCallFrame(callFrame, i, this));
         }
-        var details = WebInspector.debuggerModel.debuggerPausedDetails;
+        let details = WebInspector.debuggerModel.debuggerPausedDetails;
         this.dispatchEventToListeners(WebInspector.DebuggerPresentationModel.Events.DebuggerPaused, { callFrames: this._presentationCallFrames, details: details });
         this.selectedCallFrame = this._presentationCallFrames[0];
     },
@@ -514,25 +514,25 @@ WebInspector.DebuggerPresentationModel.prototype = {
      */
     getSelectedCallFrameVariables: function(callback)
     {
-        var result = { this: true };
+        let result = { this: true };
 
-        var selectedCallFrame = this.selectedCallFrame;
+        let selectedCallFrame = this.selectedCallFrame;
         if (!selectedCallFrame)
             callback(result);
 
-        var pendingRequests = 0;
+        let pendingRequests = 0;
 
         function propertiesCollected(properties)
         {
-            for (var i = 0; properties && i < properties.length; ++i)
+            for (let i = 0; properties && i < properties.length; ++i)
                 result[properties[i].name] = true;
             if (--pendingRequests == 0)
                 callback(result);
         }
 
-        for (var i = 0; i < selectedCallFrame.scopeChain.length; ++i) {
-            var scope = selectedCallFrame.scopeChain[i];
-            var object = WebInspector.RemoteObject.fromPayload(scope.object);
+        for (let i = 0; i < selectedCallFrame.scopeChain.length; ++i) {
+            let scope = selectedCallFrame.scopeChain[i];
+            let object = WebInspector.RemoteObject.fromPayload(scope.object);
             pendingRequests++;
             object.getAllProperties(propertiesCollected);
         }
@@ -585,7 +585,7 @@ WebInspector.UISourceCodeImpl.prototype = {
 
     breakpointRemoved: function(lineNumber)
     {
-        var breakpoint = this._breakpoints[lineNumber];
+        let breakpoint = this._breakpoints[lineNumber];
         delete this._breakpoints[lineNumber];
         this.dispatchEventToListeners(WebInspector.UISourceCode.Events.BreakpointRemoved, breakpoint);
     },
@@ -689,7 +689,7 @@ WebInspector.PresentationCallFrame.prototype = {
             callback(uiLocation);
             liveLocation.dispose();
         }
-        var liveLocation = this._model.createLiveLocation(this._callFrame.location, locationUpdated.bind(this));
+        let liveLocation = this._model.createLiveLocation(this._callFrame.location, locationUpdated.bind(this));
         liveLocation.init();
     }
 }
@@ -738,7 +738,7 @@ WebInspector.DebuggerPresentationModelResourceBinding.prototype = {
      */
     canSetContent: function(resource)
     {
-        var uiSourceCode = this._uiSourceCodeForResource(resource);
+        let uiSourceCode = this._uiSourceCodeForResource(resource);
         return uiSourceCode && this._presentationModel.canEditScriptSource(uiSourceCode);
     },
 
@@ -753,7 +753,7 @@ WebInspector.DebuggerPresentationModelResourceBinding.prototype = {
         if (!majorChange)
             return;
 
-        var uiSourceCode = this._uiSourceCodeForResource(resource);
+        let uiSourceCode = this._uiSourceCodeForResource(resource);
         if (!uiSourceCode) {
             userCallback("Resource is not editable");
             return;
@@ -768,10 +768,10 @@ WebInspector.DebuggerPresentationModelResourceBinding.prototype = {
      */
     _uiSourceCodeForResource: function(resource)
     {
-        var rawLocation = WebInspector.debuggerModel.createRawLocationByURL(resource.url, 0, 0);
+        let rawLocation = WebInspector.debuggerModel.createRawLocationByURL(resource.url, 0, 0);
         if (!rawLocation)
             return null;
-        var uiLocation = this._presentationModel.rawLocationToUILocation(rawLocation);
+        let uiLocation = this._presentationModel.rawLocationToUILocation(rawLocation);
         return uiLocation ? uiLocation.uiSourceCode : null;
     },
 
@@ -835,7 +835,7 @@ WebInspector.DebuggerPresentationModel.DefaultLinkifierFormatter.prototype = {
     {
         anchor.textContent = WebInspector.formatLinkText(uiLocation.uiSourceCode.url, uiLocation.lineNumber);
 
-        var text = WebInspector.formatLinkText(uiLocation.uiSourceCode.url, uiLocation.lineNumber);
+        let text = WebInspector.formatLinkText(uiLocation.uiSourceCode.url, uiLocation.lineNumber);
         if (this._maxLength)
             text = text.trimMiddle(this._maxLength);
         anchor.textContent = text;
@@ -865,7 +865,7 @@ WebInspector.DebuggerPresentationModel.Linkifier.prototype = {
      */
     linkifyLocation: function(sourceURL, lineNumber, columnNumber, classes)
     {
-        var rawLocation = WebInspector.debuggerModel.createRawLocationByURL(sourceURL, lineNumber, columnNumber || 0);
+        let rawLocation = WebInspector.debuggerModel.createRawLocationByURL(sourceURL, lineNumber, columnNumber || 0);
         if (!rawLocation)
             return WebInspector.linkifyResourceAsNode(sourceURL, lineNumber, classes);
         return this.linkifyRawLocation(rawLocation, classes);
@@ -879,8 +879,8 @@ WebInspector.DebuggerPresentationModel.Linkifier.prototype = {
     {
         if (!WebInspector.debuggerModel.scriptForSourceID(rawLocation.scriptId))
             return null;
-        var anchor = WebInspector.linkifyURLAsNode("", "", classes, false);
-        var liveLocation = this._model.createLiveLocation(rawLocation, this._updateAnchor.bind(this, anchor));
+        let anchor = WebInspector.linkifyURLAsNode("", "", classes, false);
+        let liveLocation = this._model.createLiveLocation(rawLocation, this._updateAnchor.bind(this, anchor));
         liveLocation.init();
         this._liveLocations.push(liveLocation);
         return anchor;
@@ -888,7 +888,7 @@ WebInspector.DebuggerPresentationModel.Linkifier.prototype = {
 
     reset: function()
     {
-        for (var i = 0; i < this._liveLocations.length; ++i)
+        for (let i = 0; i < this._liveLocations.length; ++i)
             this._liveLocations[i].dispose();
         this._liveLocations = [];
     },

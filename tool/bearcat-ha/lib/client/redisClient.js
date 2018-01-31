@@ -11,13 +11,13 @@
  * MIT Licensed
  */
 
-var logger = require('pomelo-logger').getLogger('bearcat-ha', 'RedisClient');
-var EventEmitter = require('events').EventEmitter;
-var Constant = require('../util/constant');
-var redis = require('redis');
-var Util = require('util');
+let logger = require('pomelo-logger').getLogger('bearcat-ha', 'RedisClient');
+let EventEmitter = require('events').EventEmitter;
+let Constant = require('../util/constant');
+let redis = require('redis');
+let Util = require('util');
 
-var RedisClient = function(opts) {
+let RedisClient = function(opts) {
 	EventEmitter.call(this);
 	this.opts = opts;
 	this.host = opts.host;
@@ -42,7 +42,7 @@ var RedisClient = function(opts) {
 
 Util.inherits(RedisClient, EventEmitter);
 
-var num = 1;
+let num = 1;
 
 /**
  * redisClient init.
@@ -50,9 +50,9 @@ var num = 1;
  * @api private
  */
 RedisClient.prototype.init = function() {
-	var self = this;
-	var retryMaxDelay = this.retryMaxDelay;
-	var options = {
+	let self = this;
+	let retryMaxDelay = this.retryMaxDelay;
+	let options = {
 		retry_max_delay: retryMaxDelay
 	};
 
@@ -105,9 +105,9 @@ RedisClient.prototype.close = function() {
 };
 
 RedisClient.prototype.slaveOf = function(master, callback) {
-	var self = this;
+	let self = this;
 	this.updateInfo(function() {
-		var masterName = master.host + ':' + master.port;
+		let masterName = master.host + ':' + master.port;
 		if (self.name === masterName || self.master === masterName) return callback();
 
 		self.client.slaveof(master.host, master.port, function(err) {
@@ -126,7 +126,7 @@ RedisClient.prototype.makeMaster = function(callback) {
 };
 
 RedisClient.prototype.updateInfo = function(callback) {
-	var self = this;
+	let self = this;
 	this.getInfo(function(info) {
 		if (!info) {
 			return callback && callback();
@@ -224,12 +224,12 @@ RedisClient.prototype.fail = function() {
 };
 
 RedisClient.prototype.ping = function() {
-	var self = this;
+	let self = this;
 	// TEST USE
 	// this.fail();
 	// logger.warn('%s redis ping timeout %s failures %s', self.name, self.pingTimeout, self.failures);
 	// return;
-	var timeout = setTimeout(function() {
+	let timeout = setTimeout(function() {
 		logger.warn('%s redis ping timeout %s failures %s', self.name, self.pingTimeout, self.failures);
 		self.fail();
 	}, self.pingTimeout);
@@ -244,7 +244,7 @@ RedisClient.prototype.ping = function() {
 };
 
 RedisClient.prototype.watch = function() {
-	var self = this;
+	let self = this;
 	if (this.interval) {
 		this.stopWatch();
 	}
@@ -258,9 +258,9 @@ RedisClient.prototype.stopWatch = function() {
 };
 
 RedisClient.prototype.getInfo = function(callback) {
-	var self = this;
+	let self = this;
 
-	var timeout = setTimeout(function() {
+	let timeout = setTimeout(function() {
 		logger.error('%s redis query timeout %s', self.name, self.queryTimeout);
 		return callback(new Error('redis query timeout'));
 	}, self.queryTimeout);
@@ -272,10 +272,10 @@ RedisClient.prototype.getInfo = function(callback) {
 			return callback();
 		}
 
-		var obj = {};
-		var lines = info.toString().split("\r\n");
+		let obj = {};
+		let lines = info.toString().split("\r\n");
 		lines.forEach(function(line) {
-			var parts = line.split(':');
+			let parts = line.split(':');
 			if (parts[1]) {
 				obj[parts[0]] = parts[1];
 			}
@@ -287,15 +287,15 @@ RedisClient.prototype.getInfo = function(callback) {
 
 RedisClient.prototype.getSlaves = function(redisVersion, info) {
 	redisVersion = parseFloat(redisVersion);
-	var slavesCount = parseInt(info['connected_slaves']) || 0;
-	var slaves = [];
+	let slavesCount = parseInt(info['connected_slaves']) || 0;
+	let slaves = [];
 
-	for (var i = 0; i < slavesCount; i++) {
-		var ary = info['slave' + i].split(',');
-		var obj = {};
+	for (let i = 0; i < slavesCount; i++) {
+		let ary = info['slave' + i].split(',');
+		let obj = {};
 		if (redisVersion >= 2.8) {
 			ary.map(function(item) {
-				var k = item.split('=');
+				let k = item.split('=');
 				obj[k[0]] = k[1];
 			});
 		} else {

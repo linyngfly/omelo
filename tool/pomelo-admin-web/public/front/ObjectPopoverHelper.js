@@ -67,9 +67,9 @@ WebInspector.ObjectPopoverHelper.prototype = {
                 return;
             }
 
-            var anchorElement = anchorOverride || element;
+            let anchorElement = anchorOverride || element;
 
-            var popoverContentElement = null;
+            let popoverContentElement = null;
             if (result.type !== "object") {
                 popoverContentElement = document.createElement("span");
                 popoverContentElement.className = "monospace console-formatted-" + result.type;
@@ -82,15 +82,15 @@ WebInspector.ObjectPopoverHelper.prototype = {
                             console.error(error);
                             return;
                         }
-                        var container = document.createElement("div");
+                        let container = document.createElement("div");
                         container.style.display = "inline-block";
 
-                        var title = container.createChild("div", "function-popover-title source-code");
-                        var functionName = title.createChild("span", "function-name");
+                        let title = container.createChild("div", "function-popover-title source-code");
+                        let functionName = title.createChild("span", "function-name");
                         functionName.textContent = response.name || response.inferredName || response.displayName || WebInspector.UIString("(anonymous function)");
 
                         this._linkifier = WebInspector.debuggerPresentationModel.createLinkifier();
-                        var link = this._linkifier.linkifyRawLocation(response.location, "function-location-link");
+                        let link = this._linkifier.linkifyRawLocation(response.location, "function-location-link");
                         if (link)
                             title.appendChild(link);
 
@@ -112,7 +112,7 @@ WebInspector.ObjectPopoverHelper.prototype = {
                 this._titleElement.textContent = result.description;
                 popoverContentElement.appendChild(this._titleElement);
 
-                var section = new WebInspector.ObjectPropertiesSection(result);
+                let section = new WebInspector.ObjectPropertiesSection(result);
                 // For HTML DOM wrappers, append "#id" to title, if not empty.
                 if (result.description.substr(0, 4) === "HTML") {
                     this._sectionUpdateProperties = section.updateProperties.bind(section);
@@ -144,7 +144,7 @@ WebInspector.ObjectPopoverHelper.prototype = {
 
     _updateHTMLId: function(properties, rootTreeElementConstructor, rootPropertyComparer)
     {
-        for (var i = 0; i < properties.length; ++i) {
+        for (let i = 0; i < properties.length; ++i) {
             if (properties[i].name === "id") {
                 if (properties[i].value.description)
                     this._titleElement.textContent += "#" + properties[i].value.description;

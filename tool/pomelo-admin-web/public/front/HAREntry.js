@@ -49,7 +49,7 @@ WebInspector.HAREntry.prototype = {
      */
     build: function()
     {
-        var entry =  {
+        let entry =  {
             startedDateTime: new Date(this._resource.startTime * 1000),
             time: WebInspector.HAREntry._toMilliseconds(this._resource.duration),
             request: this._buildRequest(),
@@ -57,7 +57,7 @@ WebInspector.HAREntry.prototype = {
             cache: { }, // Not supported yet.
             timings: this._buildTimings()
         };
-        var page = WebInspector.networkLog.pageLoadForResource(this._resource);
+        let page = WebInspector.networkLog.pageLoadForResource(this._resource);
         if (page)
             entry.pageref = "page_" + page.id;
         return entry;
@@ -68,7 +68,7 @@ WebInspector.HAREntry.prototype = {
      */
     _buildRequest: function()
     {
-        var res = {
+        let res = {
             method: this._resource.requestMethod,
             url: this._buildRequestURL(this._resource.url),
             httpVersion: this._resource.requestHttpVersion,
@@ -107,12 +107,12 @@ WebInspector.HAREntry.prototype = {
      */
     _buildContent: function()
     {
-        var content = {
+        let content = {
             size: this._resource.resourceSize,
             mimeType: this._resource.mimeType,
             // text: this._resource.content // TODO: pull out into a boolean flag, as content can be huge (and needs to be requested with an async call)
         };
-        var compression = this.responseCompression;
+        let compression = this.responseCompression;
         if (typeof compression === "number")
             content.compression = compression;
         return content;
@@ -123,12 +123,12 @@ WebInspector.HAREntry.prototype = {
      */
     _buildTimings: function()
     {
-        var waitForConnection = this._interval("connectStart", "connectEnd");
-        var blocked;
-        var connect;
-        var dns = this._interval("dnsStart", "dnsEnd");
-        var send = this._interval("sendStart", "sendEnd");
-        var ssl = this._interval("sslStart", "sslEnd");
+        let waitForConnection = this._interval("connectStart", "connectEnd");
+        let blocked;
+        let connect;
+        let dns = this._interval("dnsStart", "dnsEnd");
+        let send = this._interval("sendStart", "sendEnd");
+        let ssl = this._interval("sslStart", "sslEnd");
 
         if (ssl !== -1 && send !== -1)
             send -= ssl;
@@ -159,8 +159,8 @@ WebInspector.HAREntry.prototype = {
      */
     _buildHeaders: function(headers)
     {
-        var result = [];
-        for (var name in headers)
+        let result = [];
+        for (let name in headers)
             result.push({ name: name, value: headers[name] });
         return result;
     },
@@ -170,7 +170,7 @@ WebInspector.HAREntry.prototype = {
      */
     _buildPostData: function()
     {
-        var res = {
+        let res = {
             mimeType: this._resource.requestHeaderValue("Content-Type"),
             text: this._resource.requestFormData
         };
@@ -230,10 +230,10 @@ WebInspector.HAREntry.prototype = {
      */
     _interval: function(start, end)
     {
-        var timing = this._resource.timing;
+        let timing = this._resource.timing;
         if (!timing)
             return -1;
-        var startTime = timing[start];
+        let startTime = timing[start];
         return typeof startTime !== "number" || startTime === -1 ? -1 : Math.round(timing[end] - startTime);
     },
 
@@ -290,7 +290,7 @@ WebInspector.HARLog.prototype = {
      */
     build: function()
     {
-        var webKitVersion = /AppleWebKit\/([^ ]+)/.exec(window.navigator.userAgent);
+        let webKitVersion = /AppleWebKit\/([^ ]+)/.exec(window.navigator.userAgent);
 
         return {
             version: "1.2",
@@ -308,10 +308,10 @@ WebInspector.HARLog.prototype = {
      */
     _buildPages: function()
     {
-        var seenIdentifiers = {};
-        var pages = [];
-        for (var i = 0; i < this._resources.length; ++i) {
-            var page = WebInspector.networkLog.pageLoadForResource(this._resources[i]);
+        let seenIdentifiers = {};
+        let pages = [];
+        for (let i = 0; i < this._resources.length; ++i) {
+            let page = WebInspector.networkLog.pageLoadForResource(this._resources[i]);
             if (!page || seenIdentifiers[page.id])
                 continue;
             seenIdentifiers[page.id] = true;
@@ -353,7 +353,7 @@ WebInspector.HARLog.prototype = {
      */
     _pageEventTime: function(page, time)
     {
-        var startTime = page.startTime;
+        let startTime = page.startTime;
         if (time === -1 || startTime === -1)
             return -1;
         return WebInspector.HAREntry._toMilliseconds(time - startTime);

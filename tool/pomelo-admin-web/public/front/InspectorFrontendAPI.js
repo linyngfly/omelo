@@ -103,7 +103,7 @@ InspectorFrontendAPI = {
     dispatch: function(signature)
     {
         if (WebInspector.panels) {
-            var methodName = signature.shift();
+            let methodName = signature.shift();
             return InspectorFrontendAPI[methodName].apply(InspectorFrontendAPI, signature);
         }
         InspectorFrontendAPI._pendingCommands.push(signature);
@@ -111,7 +111,7 @@ InspectorFrontendAPI = {
 
     loadCompleted: function()
     {
-        for (var i = 0; i < InspectorFrontendAPI._pendingCommands.length; ++i)
+        for (let i = 0; i < InspectorFrontendAPI._pendingCommands.length; ++i)
             InspectorFrontendAPI.dispatch(InspectorFrontendAPI._pendingCommands[i]);
         InspectorFrontendAPI._pendingCommands = [];
     }

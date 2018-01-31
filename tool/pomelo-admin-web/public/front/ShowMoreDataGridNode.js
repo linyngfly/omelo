@@ -36,7 +36,7 @@ WebInspector.ShowMoreDataGridNode = function(callback, nextCount, allCount)
 {
     function populate(count)
     {
-        var index = this.parent.children.indexOf(this);
+        let index = this.parent.children.indexOf(this);
         this.parent.removeChild(this);
         callback(count, index);
     }
@@ -60,7 +60,7 @@ WebInspector.ShowMoreDataGridNode = function(callback, nextCount, allCount)
 WebInspector.ShowMoreDataGridNode.prototype = {
     createCells: function()
     {
-        var cell = document.createElement("td");
+        let cell = document.createElement("td");
         if (this.depth)
             cell.style.setProperty("padding-left", (this.depth * this.dataGrid.indentWidth) + "px");
         cell.appendChild(this.showNext);
@@ -68,9 +68,9 @@ WebInspector.ShowMoreDataGridNode.prototype = {
             cell.appendChild(this.showAll);
         this._element.appendChild(cell);
 
-        var columns = this.dataGrid.columns;
-        var count = 0;
-        for (var c in columns)
+        let columns = this.dataGrid.columns;
+        let count = 0;
+        for (let c in columns)
             ++count;
         while (--count > 0) {
             cell = document.createElement("td");

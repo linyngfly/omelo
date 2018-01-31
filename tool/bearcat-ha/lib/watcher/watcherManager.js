@@ -11,23 +11,23 @@
  * MIT Licensed
  */
 
-var logger = require('pomelo-logger').getLogger('bearcat-ha', 'WatcherManager');
-var ZookeeperClient = require('../client/zookeeperClient');
-var WatcherStrategy = require('./watcherStrategy');
-var EventEmitter = require('events').EventEmitter;
-var Constant = require('../util/constant');
-var Utils = require('../util/utils');
-var async = require('async');
-var Util = require('util');
+let logger = require('pomelo-logger').getLogger('bearcat-ha', 'WatcherManager');
+let ZookeeperClient = require('../client/zookeeperClient');
+let WatcherStrategy = require('./watcherStrategy');
+let EventEmitter = require('events').EventEmitter;
+let Constant = require('../util/constant');
+let Utils = require('../util/utils');
+let async = require('async');
+let Util = require('util');
 
-var ADD_NODE_DELAY_TIME = Constant.ADD_NODE_DELAY_TIME;
-var ADD_NODES_DELAY_TIME = Constant.ADD_NODES_DELAY_TIME;
-var MASTER_CHECK_NODE_TIME = Constant.MASTER_CHECK_NODE_TIME;
+let ADD_NODE_DELAY_TIME = Constant.ADD_NODE_DELAY_TIME;
+let ADD_NODES_DELAY_TIME = Constant.ADD_NODES_DELAY_TIME;
+let MASTER_CHECK_NODE_TIME = Constant.MASTER_CHECK_NODE_TIME;
 
-var HOST_NAME = Utils.getHostName();
-var PROCESS_PID = process.pid;
+let HOST_NAME = Utils.getHostName();
+let PROCESS_PID = process.pid;
 
-var WatcherManager = function(opts) {
+let WatcherManager = function(opts) {
     EventEmitter.call(this);
     this.opts = opts;
     this.haState = null;
@@ -54,7 +54,7 @@ var WatcherManager = function(opts) {
 Util.inherits(WatcherManager, EventEmitter);
 
 WatcherManager.prototype.init = function() {
-    var opts = this.opts;
+    let opts = this.opts;
 
     if (opts.addNodeDelayTime) {
         ADD_NODE_DELAY_TIME = opts.addNodeDelayTime;
@@ -68,7 +68,7 @@ WatcherManager.prototype.init = function() {
         MASTER_CHECK_NODE_TIME = opts.masterCheckNodeTime;
     }
 
-    var watcherType = this.watcherType;
+    let watcherType = this.watcherType;
     if (watcherType !== Constant.WATCHER_TYPE_REDIS && watcherType !== Constant.WATCHER_TYPE_MYSQL) {
         logger.error('invalid watcherType %s', watcherType);
         return;
@@ -78,11 +78,11 @@ WatcherManager.prototype.init = function() {
 };
 
 WatcherManager.prototype.initZKClient = function() {
-    var self = this;
-    var opts = this.opts;
+    let self = this;
+    let opts = this.opts;
 
     this.zkClient = ZookeeperClient.createClient(opts.zooKeeper);
-    var paths = [self.locksPath, self.watchersPath];
+    let paths = [self.locksPath, self.watchersPath];
     self.zkClient.createPathBatch(paths, function(err) {
         if (err) {
             logger.error('init createPathBatch error: ' + err.stack);
@@ -101,7 +101,7 @@ WatcherManager.prototype.initZKClient = function() {
 }
 
 WatcherManager.prototype.ready = function() {
-    var self = this;
+    let self = this;
     this.getLock(function() {
         self.initWatcherNodes();
 
@@ -113,7 +113,7 @@ WatcherManager.prototype.ready = function() {
 
 WatcherManager.prototype.startCollect = function() {
     logger.info('startCollect watcher monitor data from slave watchers ...');
-    var self = this;
+    let self = this;
     if (self.intervalId) {
         clearInterval(self.intervalId);
     }
@@ -130,7 +130,7 @@ WatcherManager.prototype.collectData = function() {
         return;
     }
 
-    var self = this;
+    let self = this;
     self.zkClient.getChildrenData(self.watchersPath, function(err, data) {
         if (err) {
             logger.error('collectData getChildrenData error ' + err.stack);
@@ -141,7 +141,7 @@ WatcherManager.prototype.collectData = function() {
             return;
         }
 
-        var result = WatcherStrategy.elect(data);
+        let result = WatcherStrategy.elect(data);
         // master unavailable
         if (!self.masterNode || result.unavailable.indexOf(self.masterNode.name) > -1) {
             logger.error('master node unavailable, will promote a new one in %j ...', result.available);
@@ -167,8 +167,8 @@ WatcherManager.prototype.onPromote = function() {
 
 // node available
 WatcherManager.prototype.onAvailable = function(availableNode) {
-    var self = this;
-    var availableNodeName = availableNode.name;
+    let self = this;
+    let availableNodeName = availableNode.name;
 
     logger.warn('[OnAvailable] watcherNode %j', availableNode);
 
@@ -177,8 +177,8 @@ WatcherManager.prototype.onAvailable = function(availableNode) {
         return this.updateData();
     }
 
-    var masterNode = this.masterNode;
-    var masterNodeName = "";
+    let masterNode = this.masterNode;
+    let masterNodeName = "";
     if (masterNode) {
         masterNodeName = masterNode.name;
     }
@@ -202,7 +202,7 @@ WatcherManager.prototype.onAvailable = function(availableNode) {
         self.setMasterNode(masterNode);
         // self.masterNode = availableNode;
         async.eachSeries(self.isolatedNodes, function(n, next) {
-            var isolatedNode = self.watcherNodes[n];
+            let isolatedNode = self.watcherNodes[n];
             if (!isolatedNode || isolatedNode.master == masterNode.name) {
                 return next();
             }
@@ -231,7 +231,7 @@ WatcherManager.prototype.onAvailable = function(availableNode) {
 
 // node unavailable
 WatcherManager.prototype.onUnavailable = function(unavailableNode) {
-    var unavailableNodeName = unavailableNode.name;
+    let unavailableNodeName = unavailableNode.name;
     logger.warn('[OnUnavailable] watcherNode %j', unavailableNode);
 
     this.removeWatcherNode(unavailableNodeName);
@@ -245,8 +245,8 @@ WatcherManager.prototype.onUnavailable = function(unavailableNode) {
 };
 
 WatcherManager.prototype.addWatcherNode = function(opts) {
-    var watcherNode = this.getWatcherClient(opts);
-    var watcherNodeName = watcherNode.name;
+    let watcherNode = this.getWatcherClient(opts);
+    let watcherNodeName = watcherNode.name;
 
     watcherNode.on('available', this.onAvailable.bind(this));
     watcherNode.on('unavailable', this.onUnavailable.bind(this));
@@ -258,21 +258,21 @@ WatcherManager.prototype.addWatcherNode = function(opts) {
 
 WatcherManager.prototype.removeWatcherNode = function(name) {
     logger.info('[RemoveWatcherNode] %s', name);
-    var watcherNode = this.getWatcherNode(name);
+    let watcherNode = this.getWatcherNode(name);
     watcherNode.close();
     watcherNode = null;
     delete this.watcherNodes[name];
 };
 
 WatcherManager.prototype.initWatcherNodes = function() {
-    var self = this;
-    var watcherServers = this.opts.servers.split(',');
+    let self = this;
+    let watcherServers = this.opts.servers.split(',');
 
     async.eachSeries(watcherServers, function(server, next) {
-        var serverData = server.split(':');
-        var host = serverData[0];
-        var port = serverData[1];
-        var opts = self.getClonedOpts(self.opts);
+        let serverData = server.split(':');
+        let host = serverData[0];
+        let port = serverData[1];
+        let opts = self.getClonedOpts(self.opts);
         opts['host'] = host;
         opts['port'] = port;
         opts['name'] = server;
@@ -288,7 +288,7 @@ WatcherManager.prototype.initWatcherNodes = function() {
 };
 
 WatcherManager.prototype.close = function() {
-    for (var name in this.watcherNodes) {
+    for (let name in this.watcherNodes) {
         this.removeWatcherNode(name);
     }
     this.zkClient.close();
@@ -302,7 +302,7 @@ WatcherManager.prototype.resetWatcherNodes = function(opts) {
         this.opts = opts;
     }
 
-    for (var name in this.watcherNodes) {
+    for (let name in this.watcherNodes) {
         this.removeWatcherNode(name);
     }
 
@@ -310,7 +310,7 @@ WatcherManager.prototype.resetWatcherNodes = function(opts) {
 };
 
 WatcherManager.prototype.promoteHaMaster = function(availableNodes, index, callback) {
-    var self = this;
+    let self = this;
     if (this.masterNode && this.masterNode.available) {
         return callback();
     }
@@ -326,8 +326,8 @@ WatcherManager.prototype.promoteHaMaster = function(availableNodes, index, callb
         }
     }
 
-    var readyPromoteNodeName = availableNodes[index];
-    var readyPromoteNode = this.getWatcherNode(readyPromoteNodeName);
+    let readyPromoteNodeName = availableNodes[index];
+    let readyPromoteNode = this.getWatcherNode(readyPromoteNodeName);
     logger.info('[Promote] new haMaster %j current availableNodes: %j', readyPromoteNode, availableNodes);
 
     if (!readyPromoteNode || !readyPromoteNode.available || !readyPromoteNode.ready) {
@@ -340,15 +340,15 @@ WatcherManager.prototype.promoteHaMaster = function(availableNodes, index, callb
             throw err;
         }
 
-        var masterNode = readyPromoteNode;
-        var masterNodeName = masterNode.name;
+        let masterNode = readyPromoteNode;
+        let masterNodeName = masterNode.name;
         self.setMasterNode(masterNode);
 
         logger.info('[Promote] make %s to master success!', readyPromoteNode.name);
 
         availableNodes.splice(index, 1);
         async.each(availableNodes, function(name, next) {
-            var slaveNode = availableNodes[name];
+            let slaveNode = availableNodes[name];
             if (!slaveNode) {
                 return next();
             }
@@ -375,11 +375,11 @@ WatcherManager.prototype.updateData = function() {
         return;
     }
 
-    var available = [];
-    var unavailable = [];
+    let available = [];
+    let unavailable = [];
 
-    for (var name in this.watcherNodes) {
-        var watcherNode = this.getWatcherNode(name);
+    for (let name in this.watcherNodes) {
+        let watcherNode = this.getWatcherNode(name);
         if (watcherNode.checkAvailable()) {
             available.push(name);
         } else {
@@ -400,10 +400,10 @@ WatcherManager.prototype.updateData = function() {
 };
 
 WatcherManager.prototype.updateNodesInfo = function(callback) {
-    var self = this;
-    var names = Object.keys(self.watcherNodes);
+    let self = this;
+    let names = Object.keys(self.watcherNodes);
     async.each(names, function(name, next) {
-        var watcherNode = self.getWatcherNode(name);
+        let watcherNode = self.getWatcherNode(name);
         if (watcherNode.checkAvailable()) {
             return watcherNode.updateInfo(next);
         }
@@ -419,7 +419,7 @@ WatcherManager.prototype.updateHaState = function(data) {
     }
 
     if (data.available.length === 0) {
-        var haState = {
+        let haState = {
             master: null,
             slaves: [],
             unavailable: data.unavailable
@@ -427,27 +427,27 @@ WatcherManager.prototype.updateHaState = function(data) {
         return this.setState(haState);
     }
 
-    var self = this;
-    var masterNode = this.masterNode;
-    var masterNodeName = "";
+    let self = this;
+    let masterNode = this.masterNode;
+    let masterNodeName = "";
     if (masterNode) {
         masterNodeName = masterNode.name;
     }
 
     self.updateNodesInfo(function() {
-        var slaves = [];
+        let slaves = [];
         data.available.forEach(function(name) {
             if (name == masterNodeName) {
                 return;
             }
 
-            var watcherNode = self.watcherNodes[name];
+            let watcherNode = self.watcherNodes[name];
             if (!watcherNode) {
                 return;
             }
 
-            var watcherNodeMaster = watcherNode.getMaster();
-            var watcherNodeMasterStatus = watcherNode.getMasterStatus();
+            let watcherNodeMaster = watcherNode.getMaster();
+            let watcherNodeMasterStatus = watcherNode.getMasterStatus();
 
             if (!watcherNode.checkAvailable()) {
                 throw new Error('[UpdateHaState] elect available node is unavailable for masterWatcher, masterWatcher is outdated ' + JSON.stringify(watcherNode));
@@ -474,7 +474,7 @@ WatcherManager.prototype.updateHaState = function(data) {
             }
         });
 
-        var haState = {
+        let haState = {
             master: masterNodeName,
             slaves: slaves,
             unavailable: data.unavailable
@@ -503,7 +503,7 @@ WatcherManager.prototype.setState = function(state) {
 
 //check the result to local haState
 WatcherManager.prototype.checkStateChange = function(state) {
-    var oldState = this.haState;
+    let oldState = this.haState;
     if (!oldState || oldState.master != state.master) {
         return true;
     }
@@ -520,7 +520,7 @@ WatcherManager.prototype.checkStateChange = function(state) {
 };
 
 WatcherManager.prototype.getLock = function(callback) {
-    var self = this;
+    let self = this;
     self.zkClient.createLock(self.locksPath, function(err, lock) {
         if (err) {
             logger.error('getLock zkClient createLock error ' + err.stack);
@@ -548,12 +548,12 @@ WatcherManager.prototype.setWatcherClient = function(watcherClient) {
 }
 
 WatcherManager.prototype.getWatcherClient = function(opts) {
-    var WatcherClient = this.watcherClient;
+    let WatcherClient = this.watcherClient;
     if (WatcherClient) {
         return new watcherClient();
     }
 
-    var watcherType = this.watcherType;
+    let watcherType = this.watcherType;
     WatcherClient = require('../client/' + watcherType + "Client");
     watcherClient = new WatcherClient(opts);
 
@@ -581,8 +581,8 @@ WatcherManager.prototype.setMaster = function(isMaster) {
 }
 
 WatcherManager.prototype.getClonedOpts = function() {
-    var opts = this.opts;
-    var r = {
+    let opts = this.opts;
+    let r = {
         user: opts.user,
         password: opts.password,
         pingInterval: opts.pingInterval,

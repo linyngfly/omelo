@@ -1,7 +1,7 @@
-var should = require('should');
-var toobusyFilter = require('../../../lib/filters/rpc/toobusy');
+let should = require('should');
+let toobusyFilter = require('../../../lib/filters/rpc/toobusy');
 
-var mockData = {
+let mockData = {
   serverId : "connector-server-1",
   msg : "hello",
   opts : {}
@@ -11,7 +11,7 @@ var mockData = {
 describe('#toobusyFilter',function(){
   it("should no callback for toobusy",function(done){
     function load() {
-      var callbackInvoked = false;
+      let callbackInvoked = false;
       toobusyFilter.before(mockData.serverId,mockData.msg,mockData.opts,function(serverId,msg,opts){
         callbackInvoked = true;
       });
@@ -20,9 +20,9 @@ describe('#toobusyFilter',function(){
         console.log(' logic of toobusy enterd, done!');
         return done();
       }
-      var start = new Date();
+      let start = new Date();
       while ((new Date() - start) < 250) {
-        for (var i = 0; i < 1e5;) i++;
+        for (let i = 0; i < 1e5;) i++;
       }
       setTimeout(load, 0);
     }

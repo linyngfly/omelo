@@ -41,7 +41,7 @@ WebInspector.AuditResultView = function(categoryResults)
         return (a.title || "").localeCompare(b.title || "");
     }
     categoryResults.sort(categorySorter);
-    for (var i = 0; i < categoryResults.length; ++i)
+    for (let i = 0; i < categoryResults.length; ++i)
         this.element.appendChild(new WebInspector.AuditCategoryResultPane(categoryResults[i]).element);
 
     this.element.addEventListener("contextmenu", this._contextMenuEventFired.bind(this), true);
@@ -50,7 +50,7 @@ WebInspector.AuditResultView = function(categoryResults)
 WebInspector.AuditResultView.prototype = {
     _contextMenuEventFired: function(event)
     {
-        var contextMenu = new WebInspector.ContextMenu();
+        let contextMenu = new WebInspector.ContextMenu();
         if (WebInspector.populateHrefContextMenu(contextMenu, null, event))
             contextMenu.show(event);
     }
@@ -65,7 +65,7 @@ WebInspector.AuditResultView.prototype.__proto__ = WebInspector.View.prototype;
 WebInspector.AuditCategoryResultPane = function(categoryResult)
 {
     WebInspector.SidebarPane.call(this, categoryResult.title);
-    var treeOutlineElement = document.createElement("ol");
+    let treeOutlineElement = document.createElement("ol");
     this.bodyElement.addStyleClass("audit-result-tree");
     this.bodyElement.appendChild(treeOutlineElement);
 
@@ -74,7 +74,7 @@ WebInspector.AuditCategoryResultPane = function(categoryResult)
 
     function ruleSorter(a, b)
     {
-        var result = WebInspector.AuditRule.SeverityOrder[a.severity || 0] - WebInspector.AuditRule.SeverityOrder[b.severity || 0];
+        let result = WebInspector.AuditRule.SeverityOrder[a.severity || 0] - WebInspector.AuditRule.SeverityOrder[b.severity || 0];
         if (!result)
             result = (a.value || "").localeCompare(b.value || "");
         return result;
@@ -82,13 +82,13 @@ WebInspector.AuditCategoryResultPane = function(categoryResult)
 
     categoryResult.ruleResults.sort(ruleSorter);
 
-    for (var i = 0; i < categoryResult.ruleResults.length; ++i) {
-        var ruleResult = categoryResult.ruleResults[i];
-        var treeElement = this._appendResult(this._treeOutline, ruleResult);
+    for (let i = 0; i < categoryResult.ruleResults.length; ++i) {
+        let ruleResult = categoryResult.ruleResults[i];
+        let treeElement = this._appendResult(this._treeOutline, ruleResult);
         treeElement.listItemElement.addStyleClass("audit-result");
 
         if (ruleResult.severity) {
-            var severityElement = document.createElement("img");
+            let severityElement = document.createElement("img");
             severityElement.className = "severity-" + ruleResult.severity;
             treeElement.listItemElement.appendChild(severityElement);
         }
@@ -99,7 +99,7 @@ WebInspector.AuditCategoryResultPane = function(categoryResult)
 WebInspector.AuditCategoryResultPane.prototype = {
     _appendResult: function(parentTreeElement, result)
     {
-        var title = "";
+        let title = "";
 
         if (typeof result.value === "string") {
             title = result.value;
@@ -107,7 +107,7 @@ WebInspector.AuditCategoryResultPane.prototype = {
                 title = String.sprintf("%s (%d)", title, result.violationCount);
         }
 
-        var treeElement = new TreeElement(null, null, !!result.children);
+        let treeElement = new TreeElement(null, null, !!result.children);
         treeElement.title = title;
         parentTreeElement.appendChild(treeElement);
 
@@ -117,7 +117,7 @@ WebInspector.AuditCategoryResultPane.prototype = {
             treeElement.listItemElement.appendChild(WebInspector.applyFormatters(result.value));
 
         if (result.children) {
-            for (var i = 0; i < result.children.length; ++i)
+            for (let i = 0; i < result.children.length; ++i)
                 this._appendResult(treeElement, result.children[i]);
         }
         if (result.expanded) {

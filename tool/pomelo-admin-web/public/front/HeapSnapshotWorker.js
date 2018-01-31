@@ -41,5 +41,5 @@ function postMessageWrapper(message)
     postMessage(message);
 }
 
-var dispatcher = new WebInspector.HeapSnapshotWorkerDispatcher(this, postMessageWrapper);
+let dispatcher = new WebInspector.HeapSnapshotWorkerDispatcher(this, postMessageWrapper);
 addEventListener("message", dispatcher.dispatchMessage.bind(dispatcher), false);

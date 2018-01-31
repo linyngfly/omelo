@@ -39,7 +39,7 @@ WebInspector.elementDragStart = function(element, dividerDrag, elementDragEnd, e
         if (WebInspector._elementDraggingGlassPane)
             WebInspector._elementDraggingGlassPane.parentElement.removeChild(WebInspector._elementDraggingGlassPane);
 
-        var glassPane = document.createElement("div");
+        let glassPane = document.createElement("div");
         glassPane.style.cssText = "position:absolute;top:0;bottom:0;left:0;right:0;opacity:0;z-index:1";
         glassPane.id = "glass-pane-for-drag";
         element.ownerDocument.body.appendChild(glassPane);
@@ -49,7 +49,7 @@ WebInspector.elementDragStart = function(element, dividerDrag, elementDragEnd, e
     WebInspector._elementDraggingEventListener = dividerDrag;
     WebInspector._elementEndDraggingEventListener = elementDragEnd;
 
-    var targetDocument = event.target.ownerDocument;
+    let targetDocument = event.target.ownerDocument;
     targetDocument.addEventListener("mousemove", dividerDrag, true);
     targetDocument.addEventListener("mouseup", elementDragEnd, true);
 
@@ -60,7 +60,7 @@ WebInspector.elementDragStart = function(element, dividerDrag, elementDragEnd, e
 
 WebInspector.elementDragEnd = function(event)
 {
-    var targetDocument = event.target.ownerDocument;
+    let targetDocument = event.target.ownerDocument;
     targetDocument.removeEventListener("mousemove", WebInspector._elementDraggingEventListener, true);
     targetDocument.removeEventListener("mouseup", WebInspector._elementEndDraggingEventListener, true);
 
@@ -78,9 +78,9 @@ WebInspector.elementDragEnd = function(event)
 
 WebInspector.animateStyle = function(animations, duration, callback)
 {
-    var interval;
-    var complete = 0;
-    var hasCompleted = false;
+    let interval;
+    let complete = 0;
+    let hasCompleted = false;
 
     const intervalDuration = (1000 / 30); // 30 frames per second.
     const animationsLength = animations.length;
@@ -94,9 +94,9 @@ WebInspector.animateStyle = function(animations, duration, callback)
     }
 
     // Pre-process animations.
-    for (var i = 0; i < animationsLength; ++i) {
-        var animation = animations[i];
-        var element = null, start = null, end = null, key = null;
+    for (let i = 0; i < animationsLength; ++i) {
+        let animation = animations[i];
+        let element = null, start = null, end = null, key = null;
         for (key in animation) {
             if (key === "element")
                 element = animation[key];
@@ -110,7 +110,7 @@ WebInspector.animateStyle = function(animations, duration, callback)
             continue;
 
         if (!start) {
-            var computedStyle = element.ownerDocument.defaultView.getComputedStyle(element);
+            let computedStyle = element.ownerDocument.defaultView.getComputedStyle(element);
             start = {};
             for (key in end)
                 start[key] = parseInt(computedStyle.getPropertyValue(key), 10);
@@ -127,23 +127,23 @@ WebInspector.animateStyle = function(animations, duration, callback)
         
         // Advance forward.
         complete += intervalDuration;
-        var next = complete + intervalDuration;
+        let next = complete + intervalDuration;
 
         // Make style changes.
-        for (var i = 0; i < animationsLength; ++i) {
-            var animation = animations[i];
-            var element = animation.element;
-            var start = animation.start;
-            var end = animation.end;
+        for (let i = 0; i < animationsLength; ++i) {
+            let animation = animations[i];
+            let element = animation.element;
+            let start = animation.start;
+            let end = animation.end;
             if (!element || !end)
                 continue;
 
-            var style = element.style;
+            let style = element.style;
             for (key in end) {
-                var endValue = end[key];
+                let endValue = end[key];
                 if (next < duration) {
-                    var startValue = start[key];
-                    var newValue = cubicInOut(complete, startValue, endValue - startValue, duration);
+                    let startValue = start[key];
+                    let newValue = cubicInOut(complete, startValue, endValue - startValue, duration);
                     style.setProperty(key, newValue + (key in propertyUnit ? propertyUnit[key] : defaultUnit));
                 } else
                     style.setProperty(key, endValue + (key in propertyUnit ? propertyUnit[key] : defaultUnit));
@@ -271,16 +271,16 @@ WebInspector.startEditing = function(element, config)
         return null;
 
     config = config || new WebInspector.EditingConfig(function() {}, function() {});
-    var committedCallback = config.commitHandler;
-    var cancelledCallback = config.cancelHandler;
-    var pasteCallback = config.pasteHandler;
-    var context = config.context;
-    var oldText = getContent(element);
-    var moveDirection = "";
+    let committedCallback = config.commitHandler;
+    let cancelledCallback = config.cancelHandler;
+    let pasteCallback = config.pasteHandler;
+    let context = config.context;
+    let oldText = getContent(element);
+    let moveDirection = "";
 
     element.addStyleClass("editing");
 
-    var oldTabIndex = element.getAttribute("tabIndex");
+    let oldTabIndex = element.getAttribute("tabIndex");
     if (isNaN(oldTabIndex) || oldTabIndex < 0)
         element.tabIndex = 0;
 
@@ -340,7 +340,7 @@ WebInspector.startEditing = function(element, config)
 
     function defaultFinishHandler(event)
     {
-        var isMetaOrCtrl = WebInspector.isMac() ?
+        let isMetaOrCtrl = WebInspector.isMac() ?
             event.metaKey && !event.shiftKey && !event.ctrlKey && !event.altKey :
             event.ctrlKey && !event.shiftKey && !event.metaKey && !event.altKey;
         if (isEnterKey(event) && (event.isMetaOrCtrlForTest || !config.multiline || isMetaOrCtrl))
@@ -368,14 +368,14 @@ WebInspector.startEditing = function(element, config)
 
     function pasteEventListener(event)
     {
-        var result = pasteCallback(event);
+        let result = pasteCallback(event);
         handleEditingResult(result, event);
     }
 
     function keyDownEventListener(event)
     {
-        var handler = config.customFinishHandler || defaultFinishHandler;
-        var result = handler(event);
+        let handler = config.customFinishHandler || defaultFinishHandler;
+        let result = handler(event);
         handleEditingResult(result, event);
     }
 
@@ -399,7 +399,7 @@ Number.secondsToString = function(seconds, higherResolution)
     if (seconds === 0)
         return "0";
 
-    var ms = seconds * 1000;
+    let ms = seconds * 1000;
     if (higherResolution && ms < 1000)
         return WebInspector.UIString("%.3fms", ms);
     else if (ms < 1000)
@@ -408,15 +408,15 @@ Number.secondsToString = function(seconds, higherResolution)
     if (seconds < 60)
         return WebInspector.UIString("%.2fs", seconds);
 
-    var minutes = seconds / 60;
+    let minutes = seconds / 60;
     if (minutes < 60)
         return WebInspector.UIString("%.1fmin", minutes);
 
-    var hours = minutes / 60;
+    let hours = minutes / 60;
     if (hours < 24)
         return WebInspector.UIString("%.1fhrs", hours);
 
-    var days = hours / 24;
+    let days = hours / 24;
     return WebInspector.UIString("%.1f days", days);
 }
 
@@ -431,13 +431,13 @@ Number.bytesToString = function(bytes, higherResolution)
     if (bytes < 1024)
         return WebInspector.UIString("%.0fB", bytes);
 
-    var kilobytes = bytes / 1024;
+    let kilobytes = bytes / 1024;
     if (higherResolution && kilobytes < 1024)
         return WebInspector.UIString("%.2fKB", kilobytes);
     else if (kilobytes < 1024)
         return WebInspector.UIString("%.0fKB", kilobytes);
 
-    var megabytes = kilobytes / 1024;
+    let megabytes = kilobytes / 1024;
     if (higherResolution)
         return WebInspector.UIString("%.2fMB", megabytes);
     else
@@ -446,8 +446,8 @@ Number.bytesToString = function(bytes, higherResolution)
 
 Number.withThousandsSeparator = function(num)
 {
-    var str = num + "";
-    var re = /(\d+)(\d{3})/;
+    let str = num + "";
+    let re = /(\d+)(\d{3})/;
     while (str.match(re))
         str = str.replace(re, "$1\u2009$2"); // \u2009 is a thin space.
     return str;
@@ -531,12 +531,12 @@ WebInspector.platformFlavor = function()
         const userAgent = navigator.userAgent;
 
         if (WebInspector.platform() === "windows") {
-            var match = userAgent.match(/Windows NT (\d+)\.(?:\d+)/);
+            let match = userAgent.match(/Windows NT (\d+)\.(?:\d+)/);
             if (match && match[1] >= 6)
                 return WebInspector.PlatformFlavor.WindowsVista;
             return null;
         } else if (WebInspector.platform() === "mac") {
-            var match = userAgent.match(/Mac OS X\s*(?:(\d+)_(\d+))?/);
+            let match = userAgent.match(/Mac OS X\s*(?:(\d+)_(\d+))?/);
             if (!match || match[1] != 10)
                 return WebInspector.PlatformFlavor.MacSnowLeopard;
             switch (Number(match[2])) {
@@ -567,12 +567,12 @@ WebInspector.port = function()
 
 WebInspector.installPortStyles = function()
 {
-    var platform = WebInspector.platform();
+    let platform = WebInspector.platform();
     document.body.addStyleClass("platform-" + platform);
-    var flavor = WebInspector.platformFlavor();
+    let flavor = WebInspector.platformFlavor();
     if (flavor)
         document.body.addStyleClass("platform-" + flavor);
-    var port = WebInspector.port();
+    let port = WebInspector.port();
     document.body.addStyleClass("port-" + port);
 }
 
@@ -627,9 +627,9 @@ WebInspector.setCurrentFocusElement = function(x)
         // Make a caret selection inside the new element if there isn't a range selection and there isn't already a caret selection inside.
         // This is needed (at least) to remove caret from console when focus is moved to some element in the panel.
         // The code below should not be applied to text fields and text areas, hence _isTextEditingElement check.
-        var selection = window.getSelection();
+        let selection = window.getSelection();
         if (!WebInspector._isTextEditingElement(WebInspector._currentFocusElement) && selection.isCollapsed && !WebInspector._currentFocusElement.isInsertionCaretInside()) {
-            var selectionRange = WebInspector._currentFocusElement.ownerDocument.createRange();
+            let selectionRange = WebInspector._currentFocusElement.ownerDocument.createRange();
             selectionRange.setStart(WebInspector._currentFocusElement, 0);
             selectionRange.setEnd(WebInspector._currentFocusElement, 0);
 
@@ -677,11 +677,11 @@ WebInspector.resetToolbarColors = function()
  */
 WebInspector.populateHrefContextMenu = function(contextMenu, contextNode, event)
 {
-    var anchorElement = event.target.enclosingNodeOrSelfWithClass("webkit-html-resource-link") || event.target.enclosingNodeOrSelfWithClass("webkit-html-external-link");
+    let anchorElement = event.target.enclosingNodeOrSelfWithClass("webkit-html-resource-link") || event.target.enclosingNodeOrSelfWithClass("webkit-html-external-link");
     if (!anchorElement)
         return false;
 
-    var resourceURL = WebInspector.resourceURLForRelatedNode(contextNode, anchorElement.href);
+    let resourceURL = WebInspector.resourceURLForRelatedNode(contextNode, anchorElement.href);
     if (!resourceURL)
         return false;
 

@@ -10,13 +10,13 @@
 'use strict';
 
 // Nodejs libs.
-var fs = require('fs');
-var path = require('path');
+let fs = require('fs');
+let path = require('path');
 
 exports.print = function(name) {
-  var code = 0;
-  var filepath = path.join(__dirname, '../completion', name);
-  var output;
+  let code = 0;
+  let filepath = path.join(__dirname, '../completion', name);
+  let output;
   try {
     // Attempt to read shell completion file.
     output = String(fs.readFileSync(filepath));

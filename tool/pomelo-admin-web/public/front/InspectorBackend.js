@@ -48,7 +48,7 @@ function InspectorBackendClass()
 InspectorBackendClass.prototype = {
     _wrap: function(callback, method)
     {
-        var callbackId = this._lastCallbackId++;
+        let callbackId = this._lastCallbackId++;
         if (!callback)
             callback = function() {};
 
@@ -62,8 +62,8 @@ InspectorBackendClass.prototype = {
 
     registerCommand: function(method, signature, replyArgs)
     {
-        var domainAndMethod = method.split(".");
-        var agentName = domainAndMethod[0] + "Agent";
+        let domainAndMethod = method.split(".");
+        let agentName = domainAndMethod[0] + "Agent";
         if (!window[agentName])
             window[agentName] = {};
 
@@ -88,23 +88,23 @@ InspectorBackendClass.prototype = {
 
     _sendMessageToBackend: function(method, signature, vararg)
     {
-        var args = Array.prototype.slice.call(arguments, 2);
-        var callback = (args.length && typeof args[args.length - 1] === "function") ? args.pop() : null;
+        let args = Array.prototype.slice.call(arguments, 2);
+        let callback = (args.length && typeof args[args.length - 1] === "function") ? args.pop() : null;
 
-        var params = {};
-        var hasParams = false;
-        for (var i = 0; i < signature.length; ++i) {
-            var param = signature[i];
-            var paramName = param["name"];
-            var typeName = param["type"];
-            var optionalFlag = param["optional"];
+        let params = {};
+        let hasParams = false;
+        for (let i = 0; i < signature.length; ++i) {
+            let param = signature[i];
+            let paramName = param["name"];
+            let typeName = param["type"];
+            let optionalFlag = param["optional"];
 
             if (!args.length && !optionalFlag) {
                 console.error("Protocol Error: Invalid number of arguments for method '" + method + "' call. It must have the following arguments '" + JSON.stringify(signature) + "'.");
                 return;
             }
 
-            var value = args.shift();
+            let value = args.shift();
             if (optionalFlag && typeof value === "undefined") {
                 continue;
             }
@@ -130,7 +130,7 @@ InspectorBackendClass.prototype = {
 
     _wrapCallbackAndSendMessageObject: function(method, params, callback)
     {
-        var messageObject = {};
+        let messageObject = {};
         messageObject.method = method;
         if (params)
             messageObject.params = params;
@@ -145,7 +145,7 @@ InspectorBackendClass.prototype = {
 
     sendMessageObjectToBackend: function(messageObject)
     {
-        //var message = JSON.stringify(messageObject);
+        //let message = JSON.stringify(messageObject);
         //InspectorFrontendHost.sendMessageToBackend(message);
         InspectorFrontendHost.sendMessageToBackend(messageObject);
     },
@@ -160,7 +160,7 @@ InspectorBackendClass.prototype = {
         if (this.dumpInspectorProtocolMessages)
             console.log("backend: " + ((typeof message === "string") ? message : JSON.stringify(message)));
 
-        var messageObject = (typeof message === "string") ? JSON.parse(message) : message;
+        let messageObject = (typeof message === "string") ? JSON.parse(message) : message;
 
         if ("id" in messageObject) { // just a response for some request
             if (messageObject.error) {
@@ -179,7 +179,7 @@ InspectorBackendClass.prototype = {
 
                     toString: function()
                     {
-                        var description ="Unknown error code";
+                        let description ="Unknown error code";
                         return this.getDescription() + "(" + this.code + "): " + this.message + "." + (this.data ? " " + this.data.join(" ") : "");
                     },
 
@@ -193,18 +193,18 @@ InspectorBackendClass.prototype = {
                     this.reportProtocolError(messageObject);
             }
 
-            var callback = this._callbacks[messageObject.id];
+            let callback = this._callbacks[messageObject.id];
             if (callback) {
-                var argumentsArray = [];
+                let argumentsArray = [];
                 if (messageObject.result) {
-                    var paramNames = this._replyArgs[callback.methodName];
+                    let paramNames = this._replyArgs[callback.methodName];
                     if (paramNames) {
-                        for (var i = 0; i < paramNames.length; ++i)
+                        for (let i = 0; i < paramNames.length; ++i)
                             argumentsArray.push(messageObject.result[paramNames[i]]);
                     }
                 }
 
-                var processingStartTime;
+                let processingStartTime;
                 if (this.dumpInspectorTimeStats && callback.methodName)
                     processingStartTime = Date.now();
 
@@ -222,14 +222,14 @@ InspectorBackendClass.prototype = {
 
             return;
         } else {
-            var method = messageObject.method.split(".");
-            var domainName = method[0];
-            var functionName = method[1];
+            let method = messageObject.method.split(".");
+            let domainName = method[0];
+            let functionName = method[1];
             if (!(domainName in this._domainDispatchers)) {
                 console.error("Protocol Error: the message is for non-existing domain '" + domainName + "'");
                 return;
             }
-            var dispatcher = this._domainDispatchers[domainName];
+            let dispatcher = this._domainDispatchers[domainName];
             if (!(functionName in dispatcher)) {
                 console.error("Protocol Error: Attempted to dispatch an unimplemented method '" + messageObject.method + "'");
                 return;
@@ -240,14 +240,14 @@ InspectorBackendClass.prototype = {
                 return;
             }
 
-            var params = [];
+            let params = [];
             if (messageObject.params) {
-                var paramNames = this._eventArgs[messageObject.method];
-                for (var i = 0; i < paramNames.length; ++i)
+                let paramNames = this._eventArgs[messageObject.method];
+                for (let i = 0; i < paramNames.length; ++i)
                     params.push(messageObject.params[paramNames[i]]);
             }
 
-            var processingStartTime;
+            let processingStartTime;
             if (this.dumpInspectorTimeStats)
                 processingStartTime = Date.now();
 
@@ -275,9 +275,9 @@ InspectorBackendClass.prototype = {
             this._scripts.push(script);
 
         if (!this._pendingResponsesCount) {
-            var scripts = this._scripts;
+            let scripts = this._scripts;
             this._scripts = []
-            for (var id = 0; id < scripts.length; ++id)
+            for (let id = 0; id < scripts.length; ++id)
                  scripts[id].call(this);
         }
     },
@@ -287,64 +287,64 @@ InspectorBackendClass.prototype = {
         if (this._initialized)
             return;
 
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         xhr.open("GET", "../Inspector.json", false);
         xhr.send(null);
     
-        var schema = JSON.parse(xhr.responseText);
-        var jsTypes = { integer: "number", array: "object" };
-        var rawTypes = {};
+        let schema = JSON.parse(xhr.responseText);
+        let jsTypes = { integer: "number", array: "object" };
+        let rawTypes = {};
     
-        var domains = schema["domains"];
-        for (var i = 0; i < domains.length; ++i) {
-            var domain = domains[i];
-            for (var j = 0; domain.types && j < domain.types.length; ++j) {
-                var type = domain.types[j];
+        let domains = schema["domains"];
+        for (let i = 0; i < domains.length; ++i) {
+            let domain = domains[i];
+            for (let j = 0; domain.types && j < domain.types.length; ++j) {
+                let type = domain.types[j];
                 rawTypes[domain.domain + "." + type.id] = jsTypes[type.type] || type.type;
             }
         }
     
-        var result = [];
-        for (var i = 0; i < domains.length; ++i) {
-            var domain = domains[i];
+        let result = [];
+        for (let i = 0; i < domains.length; ++i) {
+            let domain = domains[i];
 
-            var commands = domain["commands"] || [];    
-            for (var j = 0; j < commands.length; ++j) {
-                var command = commands[j];
-                var parameters = command["parameters"];
-                var paramsText = [];
-                for (var k = 0; parameters && k < parameters.length; ++k) {
-                    var parameter = parameters[k];
+            let commands = domain["commands"] || [];    
+            for (let j = 0; j < commands.length; ++j) {
+                let command = commands[j];
+                let parameters = command["parameters"];
+                let paramsText = [];
+                for (let k = 0; parameters && k < parameters.length; ++k) {
+                    let parameter = parameters[k];
     
-                    var type;
+                    let type;
                     if (parameter.type)
                         type = jsTypes[parameter.type] || parameter.type;
                     else {
-                        var ref = parameter["$ref"];
+                        let ref = parameter["$ref"];
                         if (ref.indexOf(".") !== -1)
                             type = rawTypes[ref];
                         else
                             type = rawTypes[domain.domain + "." + ref];
                     }
     
-                    var text = "{\"name\": \"" + parameter.name + "\", \"type\": \"" + type + "\", \"optional\": " + (parameter.optional ? "true" : "false") + "}";
+                    let text = "{\"name\": \"" + parameter.name + "\", \"type\": \"" + type + "\", \"optional\": " + (parameter.optional ? "true" : "false") + "}";
                     paramsText.push(text);
                 }
     
-                var returnsText = [];
-                var returns = command["returns"] || [];
-                for (var k = 0; k < returns.length; ++k) {
-                    var parameter = returns[k];
+                let returnsText = [];
+                let returns = command["returns"] || [];
+                for (let k = 0; k < returns.length; ++k) {
+                    let parameter = returns[k];
                     returnsText.push("\"" + parameter.name + "\"");
                 }
                 result.push("InspectorBackend.registerCommand(\"" + domain.domain + "." + command.name + "\", [" + paramsText.join(", ") + "], [" + returnsText.join(", ") + "]);");
             }
     
-            for (var j = 0; domain.events && j < domain.events.length; ++j) {
-                var event = domain.events[j];
-                var paramsText = [];
-                for (var k = 0; event.parameters && k < event.parameters.length; ++k) {
-                    var parameter = event.parameters[k];
+            for (let j = 0; domain.events && j < domain.events.length; ++j) {
+                let event = domain.events[j];
+                let paramsText = [];
+                for (let k = 0; event.parameters && k < event.parameters.length; ++k) {
+                    let parameter = event.parameters[k];
                     paramsText.push("\"" + parameter.name + "\"");
                 }
                 result.push("InspectorBackend.registerEvent(\"" + domain.domain + "." + event.name + "\", [" + paramsText.join(", ") + "]);");

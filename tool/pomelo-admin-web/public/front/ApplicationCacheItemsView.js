@@ -65,7 +65,7 @@ WebInspector.ApplicationCacheItemsView = function(model, frameId)
 
     this._markDirty();
     
-    var status = this._model.frameManifestStatus(frameId);
+    let status = this._model.frameManifestStatus(frameId);
     this.updateStatus(status);
     
     this.updateNetworkState(this._model.onLine);
@@ -114,10 +114,10 @@ WebInspector.ApplicationCacheItemsView.prototype = {
      */
     updateStatus: function(status)
     {
-        var oldStatus = this._status;
+        let oldStatus = this._status;
         this._status = status;
         
-        var statusInformation = {};
+        let statusInformation = {};
         // We should never have UNCACHED status, since we remove frames with UNCACHED application cache status from the tree. 
         statusInformation[applicationCache.UNCACHED]    = { src: "Images/errorRedDot.png", text: "UNCACHED" };
         statusInformation[applicationCache.IDLE]        = { src: "Images/successGreenDot.png", text: "IDLE" };
@@ -126,7 +126,7 @@ WebInspector.ApplicationCacheItemsView.prototype = {
         statusInformation[applicationCache.UPDATEREADY] = { src: "Images/successGreenDot.png",  text: "UPDATEREADY" };
         statusInformation[applicationCache.OBSOLETE]    = { src: "Images/errorRedDot.png",      text: "OBSOLETE" };
 
-        var info = statusInformation[status] || statusInformation[applicationCache.UNCACHED];
+        let info = statusInformation[status] || statusInformation[applicationCache.UNCACHED];
 
         this.statusIcon.src = info.src;
         this.statusMessage.textContent = info.text;
@@ -180,7 +180,7 @@ WebInspector.ApplicationCacheItemsView.prototype = {
         this._size = applicationCache.size;
         this._resources = applicationCache.resources;
 
-        var lastPathComponent = applicationCache.lastPathComponent;
+        let lastPathComponent = applicationCache.lastPathComponent;
 
         if (!this._dataGrid)
             this._createDataGrid();
@@ -198,7 +198,7 @@ WebInspector.ApplicationCacheItemsView.prototype = {
 
     _createDataGrid: function()
     {
-        var columns = { 0: {}, 1: {}, 2: {} };
+        let columns = { 0: {}, 1: {}, 2: {} };
         columns[0].title = WebInspector.UIString("Resource");
         columns[0].sort = "ascending";
         columns[0].sortable = true;
@@ -214,8 +214,8 @@ WebInspector.ApplicationCacheItemsView.prototype = {
 
     _populateDataGrid: function()
     {
-        var selectedResource = this._dataGrid.selectedNode ? this._dataGrid.selectedNode.resource : null;
-        var sortDirection = this._dataGrid.sortOrder === "ascending" ? 1 : -1;
+        let selectedResource = this._dataGrid.selectedNode ? this._dataGrid.selectedNode.resource : null;
+        let sortDirection = this._dataGrid.sortOrder === "ascending" ? 1 : -1;
 
         function numberCompare(field, resource1, resource2)
         {
@@ -226,7 +226,7 @@ WebInspector.ApplicationCacheItemsView.prototype = {
              return sortDirection * (resource1[field] + "").localeCompare(resource2[field] + "")
         }
 
-        var comparator;
+        let comparator;
         switch (parseInt(this._dataGrid.sortColumnIdentifier, 10)) {
             case 0: comparator = localeCompare.bind(this, "name"); break;
             case 1: comparator = localeCompare.bind(this, "type"); break;
@@ -237,14 +237,14 @@ WebInspector.ApplicationCacheItemsView.prototype = {
         this._resources.sort(comparator);
         this._dataGrid.removeChildren();
 
-        var nodeToSelect;
-        for (var i = 0; i < this._resources.length; ++i) {
-            var data = {};
-            var resource = this._resources[i];
+        let nodeToSelect;
+        for (let i = 0; i < this._resources.length; ++i) {
+            let data = {};
+            let resource = this._resources[i];
             data[0] = resource.url;
             data[1] = resource.type;
             data[2] = Number.bytesToString(resource.size);
-            var node = new WebInspector.DataGridNode(data);
+            let node = new WebInspector.DataGridNode(data);
             node.resource = resource;
             node.selectable = true;
             this._dataGrid.appendChild(node);

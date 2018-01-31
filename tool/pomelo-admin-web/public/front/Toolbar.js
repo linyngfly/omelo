@@ -70,7 +70,7 @@ WebInspector.Toolbar.prototype = {
         if ((!WebInspector.isCompactMode() && WebInspector.platformFlavor() !== WebInspector.PlatformFlavor.MacLeopard && WebInspector.platformFlavor() !== WebInspector.PlatformFlavor.MacSnowLeopard) || WebInspector.port() == "qt")
             return;
 
-        var target = event.target;
+        let target = event.target;
         if (target.hasStyleClass("toolbar-item") && target.hasStyleClass("toggleable"))
             return;
 
@@ -94,12 +94,12 @@ WebInspector.Toolbar.prototype = {
     _toolbarDrag: function(event)
     {
         if (WebInspector.isCompactMode()) {
-            var height = window.innerHeight - (event.screenY - this.element.lastScreenY);
+            let height = window.innerHeight - (event.screenY - this.element.lastScreenY);
 
             InspectorFrontendHost.setAttachedWindowHeight(height);
         } else {
-            var x = event.screenX - this.element.lastScreenX;
-            var y = event.screenY - this.element.lastScreenY;
+            let x = event.screenX - this.element.lastScreenX;
+            let y = event.screenY - this.element.lastScreenY;
 
             // We cannot call window.moveBy here because it restricts the movement
             // of the window at the edges.
@@ -139,7 +139,7 @@ WebInspector.Toolbar.prototype = {
     {
         this._setDropdownVisible(false);
 
-        var toolbar = document.getElementById("toolbar");
+        let toolbar = document.getElementById("toolbar");
         if (this.element.scrollHeight > this.element.clientHeight)
             this._dropdownButton.removeStyleClass("hidden");
         else
@@ -149,7 +149,7 @@ WebInspector.Toolbar.prototype = {
 
 WebInspector.Toolbar.createPanelToolbarItem = function(panel)
 {
-    var toolbarItem = document.createElement("button");
+    let toolbarItem = document.createElement("button");
     toolbarItem.className = "toolbar-item toggleable";
     toolbarItem.panel = panel;
     toolbarItem.addStyleClass(panel._panelName);
@@ -160,7 +160,7 @@ WebInspector.Toolbar.createPanelToolbarItem = function(panel)
     }
     toolbarItem.addEventListener("click", onToolbarItemClicked, false);
 
-    var iconElement = toolbarItem.createChild("div", "toolbar-icon");
+    let iconElement = toolbarItem.createChild("div", "toolbar-icon");
 
     if ("toolbarItemLabel" in panel)
         toolbarItem.createChild("div", "toolbar-label").textContent = panel.toolbarItemLabel;
@@ -191,9 +191,9 @@ WebInspector.ToolbarDropdown.prototype = {
     {
         if (this.visible)
             return;
-        var style = this.element.style;
+        let style = this.element.style;
         this._populate();
-        var top = this._arrow.totalOffsetTop() + this._arrow.clientHeight;
+        let top = this._arrow.totalOffsetTop() + this._arrow.clientHeight;
         this._arrow.addStyleClass("dropdown-visible");
         this.element.style.top = top + "px";
         this.element.style.left = this._arrow.totalOffsetLeft() + "px";
@@ -217,9 +217,9 @@ WebInspector.ToolbarDropdown.prototype = {
 
     _populate: function()
     {
-        var toolbarItems = this._toolbar.querySelectorAll(".toolbar-item.toggleable");
+        let toolbarItems = this._toolbar.querySelectorAll(".toolbar-item.toggleable");
 
-        for (var i = 0; i < toolbarItems.length; ++i) {
+        for (let i = 0; i < toolbarItems.length; ++i) {
             if (toolbarItems[i].offsetTop > 0)
                 this._contentElement.appendChild(WebInspector.Toolbar.createPanelToolbarItem(toolbarItems[i].panel));
         }

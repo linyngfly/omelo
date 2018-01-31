@@ -54,12 +54,12 @@ WebInspector.TimelineOverviewPane = function(presentationModel)
                                              "timeline-mode-vertical-bars", WebInspector.TimelineOverviewPane.Mode.EventsVertical);
     }
 
-    var overviewTreeElement = document.createElement("ol");
+    let overviewTreeElement = document.createElement("ol");
     overviewTreeElement.className = "sidebar-tree";
     this._topPaneSidebarElement.appendChild(overviewTreeElement);
     this.element.appendChild(this._topPaneSidebarElement);
 
-    var topPaneSidebarTree = new TreeOutline(overviewTreeElement);
+    let topPaneSidebarTree = new TreeOutline(overviewTreeElement);
     this._timelinesOverviewItem = new WebInspector.SidebarTreeElement("resources-time-graph-sidebar-item", WebInspector.UIString("Timelines"));
     if (this._overviewModeSelector)
         this._timelinesOverviewItem.statusElement = this._overviewModeSelector.element;
@@ -92,15 +92,15 @@ WebInspector.TimelineOverviewPane = function(presentationModel)
 
     this._overviewContainer.appendChild(this._overviewGrid.element);
 
-    var separatorElement = document.createElement("div");
+    let separatorElement = document.createElement("div");
     separatorElement.id = "timeline-overview-separator";
     this.element.appendChild(separatorElement);
  
     this._categoryGraphs = {};
-    var i = 0;
-    var categories = this._presentationModel.categories;
-    for (var category in categories) {
-        var categoryGraph = new WebInspector.TimelineCategoryGraph(categories[category], i++ % 2);
+    let i = 0;
+    let categories = this._presentationModel.categories;
+    for (let category in categories) {
+        let categoryGraph = new WebInspector.TimelineCategoryGraph(categories[category], i++ % 2);
         this._categoryGraphs[category] = categoryGraph;
         this._overviewGrid.itemsGraphsElement.appendChild(categoryGraph.graphElement);
         categories[category].addEventListener(WebInspector.TimelineCategory.Events.VisibilityChanged, this._onCategoryVisibilityChanged, this);
@@ -130,7 +130,7 @@ WebInspector.TimelineOverviewPane.Events = {
 WebInspector.TimelineOverviewPane.prototype = {
     _showTimelines: function()
     {
-        var newMode = this._overviewModeSelector ? this._overviewModeSelector.value : WebInspector.TimelineOverviewPane.Mode.EventsHorizontal;
+        let newMode = this._overviewModeSelector ? this._overviewModeSelector.value : WebInspector.TimelineOverviewPane.Mode.EventsHorizontal;
         if (this._currentMode === newMode)
             return;
         this._currentMode = newMode;
@@ -178,7 +178,7 @@ WebInspector.TimelineOverviewPane.prototype = {
 
     _onCategoryVisibilityChanged: function(event)
     {
-        var category = event.data;
+        let category = event.data;
         this._categoryGraphs[category.name].dimmed = category.hidden;
     },
 
@@ -193,7 +193,7 @@ WebInspector.TimelineOverviewPane.prototype = {
             return false;
         }
 
-        var records = this._presentationModel.rootRecord().children;
+        let records = this._presentationModel.rootRecord().children;
         WebInspector.TimelinePanel.forAllRecords(records, updateBoundaries.bind(this));
 
         if (this._heapGraph.visible) {
@@ -209,8 +209,8 @@ WebInspector.TimelineOverviewPane.prototype = {
     _updateCategoryStrips: function(records)
     {
         // Clear summary bars.
-        var timelines = {};
-        for (var category in this._presentationModel.categories) {
+        let timelines = {};
+        for (let category in this._presentationModel.categories) {
             timelines[category] = [];
             this._categoryGraphs[category].clearChunks();
         }
@@ -220,21 +220,21 @@ WebInspector.TimelineOverviewPane.prototype = {
         {
             if (!(this._showShortEvents || record.isLong()))
                 return;
-            var percentages = this._overviewCalculator.computeBarGraphPercentages(record);
+            let percentages = this._overviewCalculator.computeBarGraphPercentages(record);
 
-            var end = Math.round(percentages.end);
-            var categoryName = record.category.name;
-            for (var j = Math.round(percentages.start); j <= end; ++j)
+            let end = Math.round(percentages.end);
+            let categoryName = record.category.name;
+            for (let j = Math.round(percentages.start); j <= end; ++j)
                 timelines[categoryName][j] = true;
         }
         WebInspector.TimelinePanel.forAllRecords(records, markPercentagesForRecord.bind(this));
 
         // Convert sparse arrays to continuous segments, render graphs for each.
-        for (var category in this._presentationModel.categories) {
-            var timeline = timelines[category];
+        for (let category in this._presentationModel.categories) {
+            let timeline = timelines[category];
             window.timelineSaved = timeline;
-            var chunkStart = -1;
-            for (var j = 0; j < 101; ++j) {
+            let chunkStart = -1;
+            for (let j = 0; j < 101; ++j) {
                 if (timeline[j]) {
                     if (chunkStart === -1)
                         chunkStart = j;
@@ -256,16 +256,16 @@ WebInspector.TimelineOverviewPane.prototype = {
     updateEventDividers: function(records, dividerConstructor)
     {
         this._overviewGrid.removeEventDividers();
-        var dividers = [];
-        for (var i = 0; i < records.length; ++i) {
-            var record = records[i];
+        let dividers = [];
+        for (let i = 0; i < records.length; ++i) {
+            let record = records[i];
             if (record.type === WebInspector.TimelineModel.RecordType.BeginFrame)
                 continue;
-            var positions = this._overviewCalculator.computeBarGraphPercentages(record);
-            var dividerPosition = Math.round(positions.start * 10);
+            let positions = this._overviewCalculator.computeBarGraphPercentages(record);
+            let dividerPosition = Math.round(positions.start * 10);
             if (dividers[dividerPosition])
                 continue;
-            var divider = dividerConstructor(record);
+            let divider = dividerConstructor(record);
             divider.style.left = positions.start + "%";
             dividers[dividerPosition] = divider;
         }
@@ -325,12 +325,12 @@ WebInspector.TimelineOverviewPane.prototype = {
     _onWindowChanged: function()
     {
         if (this._verticalOverview) {
-            var times = this._verticalOverview.getWindowTimes(this.windowLeft(), this.windowRight());
+            let times = this._verticalOverview.getWindowTimes(this.windowLeft(), this.windowRight());
             this._windowStartTime = times.startTime;
             this._windowEndTime = times.endTime;
         } else {
-            var absoluteMin = this._presentationModel.minimumRecordTime();
-            var absoluteMax = this._presentationModel.maximumRecordTime();
+            let absoluteMin = this._presentationModel.minimumRecordTime();
+            let absoluteMax = this._presentationModel.maximumRecordTime();
             this._windowStartTime = absoluteMin + (absoluteMax - absoluteMin) * this.windowLeft();
             this._windowEndTime = absoluteMin + (absoluteMax - absoluteMin) * this.windowRight();
         }
@@ -364,7 +364,7 @@ WebInspector.TimelineOverviewWindow = function(parentElement)
     this._overviewWindowBordersElement.className = "timeline-overview-window-rulers";
     parentElement.appendChild(this._overviewWindowBordersElement);
 
-    var overviewDividersBackground = document.createElement("div");
+    let overviewDividersBackground = document.createElement("div");
     overviewDividersBackground.className = "timeline-overview-dividers-background";
     parentElement.appendChild(overviewDividersBackground);
 
@@ -413,14 +413,14 @@ WebInspector.TimelineOverviewWindow.prototype = {
 
     _dragWindow: function(event)
     {
-        var node = event.target;
+        let node = event.target;
         while (node) {
             if (node.hasStyleClass("resources-dividers-label-bar")) {
                 WebInspector.elementDragStart(this._overviewWindowElement, this._windowDragging.bind(this, event.pageX,
                     this._leftResizeElement.offsetLeft + WebInspector.TimelineOverviewPane.ResizerOffset, this._rightResizeElement.offsetLeft + WebInspector.TimelineOverviewPane.ResizerOffset), this._endWindowDragging.bind(this), event, "ew-resize");
                 break;
             } else if (node === this._parentElement) {
-                var position = event.pageX - this._parentElement.offsetLeft;
+                let position = event.pageX - this._parentElement.offsetLeft;
                 this._overviewWindowSelector = new WebInspector.TimelineOverviewPane.WindowSelector(this._parentElement, position);
                 WebInspector.elementDragStart(null, this._windowSelectorDragging.bind(this), this._endWindowSelectorDragging.bind(this), event, "ew-resize");
                 break;
@@ -441,7 +441,7 @@ WebInspector.TimelineOverviewWindow.prototype = {
     _endWindowSelectorDragging: function(event)
     {
         WebInspector.elementDragEnd(event);
-        var window = this._overviewWindowSelector._close(event.pageX - this._parentElement.offsetLeft);
+        let window = this._overviewWindowSelector._close(event.pageX - this._parentElement.offsetLeft);
         delete this._overviewWindowSelector;
         if (window.end - window.start < WebInspector.TimelineOverviewPane.MinSelectableSize) {
             if (this._parentElement.clientWidth - window.end > WebInspector.TimelineOverviewPane.MinSelectableSize)
@@ -454,10 +454,10 @@ WebInspector.TimelineOverviewWindow.prototype = {
 
     _windowDragging: function(startX, windowLeft, windowRight, event)
     {
-        var delta = event.pageX - startX;
-        var start = windowLeft + delta;
-        var end = windowRight + delta;
-        var windowSize = windowRight - windowLeft;
+        let delta = event.pageX - startX;
+        let start = windowLeft + delta;
+        let end = windowRight + delta;
+        let windowSize = windowRight - windowLeft;
 
         if (start < 0) {
             start = 0;
@@ -500,7 +500,7 @@ WebInspector.TimelineOverviewWindow.prototype = {
 
     _setWindowPosition: function(start, end)
     {
-        var clientWidth = this._parentElement.clientWidth;
+        let clientWidth = this._parentElement.clientWidth;
         const rulerAdjustment = 1 / clientWidth;
         if (typeof start === "number") {
             this.windowLeft = start / clientWidth;
@@ -545,8 +545,8 @@ WebInspector.TimelineOverviewCalculator = function()
 WebInspector.TimelineOverviewCalculator.prototype = {
     computeBarGraphPercentages: function(record)
     {
-        var start = (record.startTime - this.minimumBoundary) / this.boundarySpan * 100;
-        var end = (record.endTime - this.minimumBoundary) / this.boundarySpan * 100;
+        let start = (record.startTime - this.minimumBoundary) / this.boundarySpan * 100;
+        let end = (record.endTime - this.minimumBoundary) / this.boundarySpan * 100;
         return {start: start, end: end};
     },
 
@@ -558,7 +558,7 @@ WebInspector.TimelineOverviewCalculator.prototype = {
 
     updateBoundaries: function(record)
     {
-        var result = false;
+        let result = false;
         if (typeof this.minimumBoundary === "undefined" || record.startTime < this.minimumBoundary) {
             this.minimumBoundary = record.startTime;
             result = true;
@@ -604,7 +604,7 @@ WebInspector.TimelineCategoryGraph.prototype = {
 
     addChunk: function(start, end)
     {
-        var chunk = document.createElement("div");
+        let chunk = document.createElement("div");
         chunk.className = "timeline-graph-bar";
         this._barAreaElement.appendChild(chunk);
         chunk.style.setProperty("left", start + "%");
@@ -642,7 +642,7 @@ WebInspector.TimelineOverviewPane.WindowSelector = function(parent, position)
 WebInspector.TimelineOverviewPane.WindowSelector.prototype = {
     _createSelectorElement: function(parent, left, width, height)
     {
-        var selectorElement = document.createElement("div");
+        let selectorElement = document.createElement("div");
         selectorElement.className = "timeline-window-selector";
         selectorElement.style.left = left + "px";
         selectorElement.style.width = width + "px";
@@ -721,10 +721,10 @@ WebInspector.HeapGraph.prototype = {
             return;
 
         const lowerOffset = 3;
-        var maxUsedHeapSize = 0;
-        var minUsedHeapSize = 100000000000;
-        var minTime;
-        var maxTime;
+        let maxUsedHeapSize = 0;
+        let minUsedHeapSize = 100000000000;
+        let minTime;
+        let maxTime;
         WebInspector.TimelinePanel.forAllRecords(records, function(r) {
             maxUsedHeapSize = Math.max(maxUsedHeapSize, r.usedHeapSize || maxUsedHeapSize);
             minUsedHeapSize = Math.min(minUsedHeapSize, r.usedHeapSize || minUsedHeapSize);
@@ -736,29 +736,29 @@ WebInspector.HeapGraph.prototype = {
         });
         minUsedHeapSize = Math.min(minUsedHeapSize, maxUsedHeapSize);
 
-        var width = this._canvas.width;
-        var height = this._canvas.height - lowerOffset;
-        var xFactor = width / (maxTime - minTime);
-        var yFactor = height / (maxUsedHeapSize - minUsedHeapSize);
+        let width = this._canvas.width;
+        let height = this._canvas.height - lowerOffset;
+        let xFactor = width / (maxTime - minTime);
+        let yFactor = height / (maxUsedHeapSize - minUsedHeapSize);
 
-        var histogram = new Array(width);
+        let histogram = new Array(width);
         WebInspector.TimelinePanel.forAllRecords(records, function(r) {
             if (!r.usedHeapSize)
                 return;
-             var x = Math.round((r.endTime - minTime) * xFactor);
-             var y = Math.round((r.usedHeapSize - minUsedHeapSize) * yFactor);
+             let x = Math.round((r.endTime - minTime) * xFactor);
+             let y = Math.round((r.usedHeapSize - minUsedHeapSize) * yFactor);
              histogram[x] = Math.max(histogram[x] || 0, y);
         });
 
-        var ctx = this._canvas.getContext("2d");
+        let ctx = this._canvas.getContext("2d");
         this._clear(ctx);
 
         // +1 so that the border always fit into the canvas area.
         height = height + 1;
 
         ctx.beginPath();
-        var initialY = 0;
-        for (var k = 0; k < histogram.length; k++) {
+        let initialY = 0;
+        for (let k = 0; k < histogram.length; k++) {
             if (histogram[k]) {
                 initialY = histogram[k];
                 break;
@@ -766,7 +766,7 @@ WebInspector.HeapGraph.prototype = {
         }
         ctx.moveTo(0, height - initialY);
 
-        for (var x = 0; x < histogram.length; x++) {
+        for (let x = 0; x < histogram.length; x++) {
              if (!histogram[x])
                  continue;
              ctx.lineTo(x, height - histogram[x]);
@@ -815,10 +815,10 @@ WebInspector.TimelineVerticalOverview.prototype = {
 
     update: function(allRecords)
     {
-        var records = [];
-        var frameCount = 0;
-        for (var i = 0; i < allRecords.length; ++i) {
-            var record = allRecords[i];
+        let records = [];
+        let frameCount = 0;
+        for (let i = 0; i < allRecords.length; ++i) {
+            let record = allRecords[i];
             if (record.category.hidden)
                 continue;
             if (record.type === WebInspector.TimelineModel.RecordType.BeginFrame || (frameCount && (i + 1 === records.length)))
@@ -826,47 +826,47 @@ WebInspector.TimelineVerticalOverview.prototype = {
             records.push(record);
         }
         // If we have frames, aggregate by frames; otherwise, just show top-level records.
-        var recordCount = frameCount || records.length;
+        let recordCount = frameCount || records.length;
 
         const minBarWidth = 4;
         this._recordsPerBar = Math.max(1, recordCount * minBarWidth / this.element.clientWidth);
-        var numberOfBars = Math.ceil(recordCount / this._recordsPerBar);
+        let numberOfBars = Math.ceil(recordCount / this._recordsPerBar);
 
         this._barTimes = [];
         this._longestBarTime = 0;
         this.element.removeChildren();
-        var padding = this.element.createChild("div", "padding");
+        let padding = this.element.createChild("div", "padding");
 
-        var statistics = frameCount ? this._aggregateFrames(records, numberOfBars) : this._aggregateRecords(records, numberOfBars);
+        let statistics = frameCount ? this._aggregateFrames(records, numberOfBars) : this._aggregateRecords(records, numberOfBars);
         const paddingTop = 4;
-        var scale = (this.element.clientHeight - paddingTop) / this._longestBarTime;
+        let scale = (this.element.clientHeight - paddingTop) / this._longestBarTime;
 
-        for (var i = 0; i < statistics.length; ++i)
+        for (let i = 0; i < statistics.length; ++i)
             this.element.insertBefore(this._buildBar(statistics[i], scale), padding);
     },
 
     _aggregateFrames: function(records, numberOfBars)
     {
-        var statistics = [];
-        for (var barNumber = 0, currentRecord = 0, currentFrame = 0;
+        let statistics = [];
+        for (let barNumber = 0, currentRecord = 0, currentFrame = 0;
              barNumber < numberOfBars && currentRecord < records.length; ++barNumber) {
-            var lastFrame = Math.floor((barNumber + 1) * this._recordsPerBar);
-            var barStartTime = records[currentRecord].startTime;
-            var longestFrameStatistics;
-            var longestFrameTime = 0;
+            let lastFrame = Math.floor((barNumber + 1) * this._recordsPerBar);
+            let barStartTime = records[currentRecord].startTime;
+            let longestFrameStatistics;
+            let longestFrameTime = 0;
 
             for (; currentFrame < lastFrame && currentRecord < records.length; ++currentFrame) {
                 if (records[currentRecord].type === WebInspector.TimelineModel.RecordType.BeginFrame)
                     currentRecord++;
-                var frameStatistics = {};
-                var frameInfo = this._aggregateFrameStatistics(records, currentRecord, frameStatistics);
+                let frameStatistics = {};
+                let frameInfo = this._aggregateFrameStatistics(records, currentRecord, frameStatistics);
                 currentRecord += frameInfo.recordCount;
                 if (frameInfo.totalTime > longestFrameTime) {
                     longestFrameStatistics = frameStatistics;
                     longestFrameTime = frameInfo.totalTime;
                 }
             }
-            var barEndTime = records[currentRecord - 1].endTime;
+            let barEndTime = records[currentRecord - 1].endTime;
             if (longestFrameStatistics) {
                 this._longestBarTime = Math.max(this._longestBarTime, longestFrameTime);
                 statistics.push(longestFrameStatistics);
@@ -878,15 +878,15 @@ WebInspector.TimelineVerticalOverview.prototype = {
 
     _aggregateFrameStatistics: function(records, startIndex, statistics)
     {
-        var totalTime = 0;
-        for (var index = startIndex; index < records.length; ++index) {
-            var record = records[index];
+        let totalTime = 0;
+        for (let index = startIndex; index < records.length; ++index) {
+            let record = records[index];
             if (record.type === WebInspector.TimelineModel.RecordType.BeginFrame)
                 break;
-            var categories = Object.keys(record.aggregatedStats);
-            for (var i = 0; i < categories.length; ++i) {
-                var category = categories[i];
-                var value = statistics[category] || 0;
+            let categories = Object.keys(record.aggregatedStats);
+            for (let i = 0; i < categories.length; ++i) {
+                let category = categories[i];
+                let value = statistics[category] || 0;
                 value += record.aggregatedStats[category];
                 totalTime += record.aggregatedStats[category];
                 statistics[category] = value;
@@ -900,17 +900,17 @@ WebInspector.TimelineVerticalOverview.prototype = {
 
     _aggregateRecords: function(records, numberOfBars)
     {
-        var statistics = [];
-        for (var barNumber = 0, currentRecord = 0; barNumber < numberOfBars && currentRecord < records.length; ++barNumber) {
-            var barStartTime = records[currentRecord].startTime;
-            var longestRecord = records[currentRecord];
-            var lastIndex = Math.min(Math.floor((barNumber + 1) * this._recordsPerBar), records.length);
+        let statistics = [];
+        for (let barNumber = 0, currentRecord = 0; barNumber < numberOfBars && currentRecord < records.length; ++barNumber) {
+            let barStartTime = records[currentRecord].startTime;
+            let longestRecord = records[currentRecord];
+            let lastIndex = Math.min(Math.floor((barNumber + 1) * this._recordsPerBar), records.length);
             for (++currentRecord; currentRecord < lastIndex; ++currentRecord) {
-                var record = records[currentRecord];
+                let record = records[currentRecord];
                 if (longestRecord.endTime - longestRecord.startTime < record.endTime - record.startTime)
                     longestRecord = record;
             }
-            var barEndTime = records[currentRecord - 1].endTime;
+            let barEndTime = records[currentRecord - 1].endTime;
             statistics.push(longestRecord.aggregatedStats);
             this._longestBarTime = Math.max(this._longestBarTime, longestRecord.endTime - longestRecord.startTime);
             this._barTimes.push({ startTime: barStartTime, endTime: barEndTime });
@@ -920,15 +920,15 @@ WebInspector.TimelineVerticalOverview.prototype = {
 
     _buildBar: function(statistics, scale)
     {
-        var outer = document.createElement("div");
+        let outer = document.createElement("div");
         outer.className = "timeline-bar-vertical";
-        var categories = Object.keys(statistics);
-        for (var i = 0; i < categories.length; ++i) {
-            var category = categories[i];
-            var duration = statistics[category];
+        let categories = Object.keys(statistics);
+        for (let i = 0; i < categories.length; ++i) {
+            let category = categories[i];
+            let duration = statistics[category];
             if (!duration)
                 continue;
-            var bar = outer.createChild("div", "timeline-" + category);
+            let bar = outer.createChild("div", "timeline-" + category);
             bar.style.height = (statistics[category] * scale) + "px";
         }
         return outer;
@@ -936,18 +936,18 @@ WebInspector.TimelineVerticalOverview.prototype = {
 
     getWindowTimes: function(windowLeft, windowRight)
     {
-        var windowSpan = this.element.clientWidth
-        var leftOffset = windowLeft * windowSpan;
-        var rightOffset = windowRight * windowSpan;
-        var bars = this.element.children;
-        var offset0 = bars[0] ? bars[0].offsetLeft : 4;
-        var barWidth = 9;
+        let windowSpan = this.element.clientWidth
+        let leftOffset = windowLeft * windowSpan;
+        let rightOffset = windowRight * windowSpan;
+        let bars = this.element.children;
+        let offset0 = bars[0] ? bars[0].offsetLeft : 4;
+        let barWidth = 9;
         if (bars.length > 2) {
-            var offset1 = bars[bars.length - 2].offsetLeft;
+            let offset1 = bars[bars.length - 2].offsetLeft;
             barWidth = (offset1 - offset0) / (bars.length - 2);
         }
-        var firstBar = Math.floor(Math.max(leftOffset - offset0, 0) / barWidth);
-        var lastBar = Math.min(Math.ceil((rightOffset - offset0 - 2) / barWidth), this._barTimes.length - 1);
+        let firstBar = Math.floor(Math.max(leftOffset - offset0, 0) / barWidth);
+        let lastBar = Math.min(Math.ceil((rightOffset - offset0 - 2) / barWidth), this._barTimes.length - 1);
         const snapToRightTolerancePixels = 3;
         return {
             startTime: firstBar >= this._barTimes.length ? Infinity : this._barTimes[firstBar].startTime,
@@ -974,7 +974,7 @@ WebInspector.TimelineOverviewModeSelector = function(selectCallback)
 WebInspector.TimelineOverviewModeSelector.prototype = {
     addButton: function(tooltip, className, value)
     {
-        var button = this._createButton(tooltip, className, value);
+        let button = this._createButton(tooltip, className, value);
         this.element.appendChild(button);
         this._buttons.push(button);
         if (this._buttons.length === 1)
@@ -988,7 +988,7 @@ WebInspector.TimelineOverviewModeSelector.prototype = {
 
     _createButton: function(tooltip, className, value)
     {
-        var button = document.createElement("button");
+        let button = document.createElement("button");
         button.createChild("div", "glyph");
         button.createChild("div", "glyph shadow");
         button.className = className;
@@ -1008,10 +1008,10 @@ WebInspector.TimelineOverviewModeSelector.prototype = {
 
     _onClick: function(event)
     {
-        var button = event.target.enclosingNodeOrSelfWithNodeName("button");
+        let button = event.target.enclosingNodeOrSelfWithNodeName("button");
         if (!button)
             return;
-        for (var i = 0; i < this._buttons.length; ++i)
+        for (let i = 0; i < this._buttons.length; ++i)
             this._select(this._buttons[i], this._buttons[i] === button);
         this._selectCallback(button.value);
     }

@@ -1,16 +1,16 @@
-var should = require('should');
-var timeoutFilter = require('../../../lib/filters/handler/timeout');
-var FilterService = require('../../../lib/common/service/filterService');
-var util = require('util');
-var mockSession = {
+let should = require('should');
+let timeoutFilter = require('../../../lib/filters/handler/timeout');
+let FilterService = require('../../../lib/common/service/filterService');
+let util = require('util');
+let mockSession = {
   key : "123"
 };
 
-var WAIT_TIME = 100;
+let WAIT_TIME = 100;
 describe("#serialFilter",function(){
   it("should do before filter ok",function(done){
-    var service = new FilterService();
-    var filter = timeoutFilter();
+    let service = new FilterService();
+    let filter = timeoutFilter();
     service.before(filter);
 
     service.beforeFilter(null,mockSession,function(){
@@ -22,9 +22,9 @@ describe("#serialFilter",function(){
   });
 
   it("should do after filter by doing before filter ok",function(done){
-    var service = new FilterService();
-    var filter = timeoutFilter();
-    var _session ;
+    let service = new FilterService();
+    let filter = timeoutFilter();
+    let _session ;
     service.before(filter);
 
     service.beforeFilter(null,mockSession,function(){
