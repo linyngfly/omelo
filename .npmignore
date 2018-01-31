@@ -4,3 +4,5 @@ coverage.html
 lib-cov/
 coverage.html
 package-lock.json
+*.svn
+.git/*
