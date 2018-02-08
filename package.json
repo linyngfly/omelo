@@ -7,10 +7,11 @@
   "engines": {
     "node": "8.9.0"
   },
-  "main": "index",
+  "main": "index.js",
+
   "author": {
-    "name": "halfblood369",
-    "email": "halfblood369@gmail.com"
+    "name": "linyngfly",
+    "email": "linyngfly@163.com"
   },
   "bin": {
     "pomelo": "./bin/pomelo"
