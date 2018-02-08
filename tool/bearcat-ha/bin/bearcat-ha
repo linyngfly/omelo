@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-let Logger = require('pomelo-logger');
+let Logger = require('omelo-logger');
 let logger = Logger.getLogger('bearcat-ha', 'CommandLine');
 let Cluster = require('../lib/watcher/watcherCluster');
 let Version = require('../package.json').version;

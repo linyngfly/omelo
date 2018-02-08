@@ -1,4 +1,4 @@
-let logger = require('pomelo-logger').getLogger('bearcat-ha', 'MysqlClient');
+let logger = require('omelo-logger').getLogger('bearcat-ha', 'MysqlClient');
 let EventEmitter = require('events').EventEmitter;
 let Constant = require('../util/constant');
 let mysql = require('mysql');

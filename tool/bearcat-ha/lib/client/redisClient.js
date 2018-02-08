@@ -11,7 +11,7 @@
  * MIT Licensed
  */
 
-let logger = require('pomelo-logger').getLogger('bearcat-ha', 'RedisClient');
+let logger = require('omelo-logger').getLogger('bearcat-ha', 'RedisClient');
 let EventEmitter = require('events').EventEmitter;
 let Constant = require('../util/constant');
 let redis = require('redis');

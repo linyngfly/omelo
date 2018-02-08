@@ -1694,10 +1694,10 @@ require.register("boot/index.js", function(exports, require, module){
   let Emitter = require('emitter');
   window.EventEmitter = Emitter;
 
-  let protocol = require('pomelo-protocol');
+  let protocol = require('omelo-protocol');
   window.Protocol = protocol;
 
-  let protobuf = require('pomelo-protobuf');
+  let protobuf = require('omelo-protobuf');
   window.protobuf = protobuf;
 
   let pomelo = require('pomelo-jsclient-websocket');

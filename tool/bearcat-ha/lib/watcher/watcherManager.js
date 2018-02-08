@@ -11,7 +11,7 @@
  * MIT Licensed
  */
 
-let logger = require('pomelo-logger').getLogger('bearcat-ha', 'WatcherManager');
+let logger = require('omelo-logger').getLogger('bearcat-ha', 'WatcherManager');
 let ZookeeperClient = require('../client/zookeeperClient');
 let WatcherStrategy = require('./watcherStrategy');
 let EventEmitter = require('events').EventEmitter;

@@ -11,7 +11,7 @@
  * MIT Licensed
  */
 
-let logger = require('pomelo-logger').getLogger('bearcat-ha', 'HaClient');
+let logger = require('omelo-logger').getLogger('bearcat-ha', 'HaClient');
 let EventEmitter = require('events').EventEmitter;
 let zooKeeper = require("node-zookeeper-client");
 let HASTATE = require('./util/haClientState');

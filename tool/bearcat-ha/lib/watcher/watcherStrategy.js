@@ -11,7 +11,7 @@
  * MIT Licensed
  */
 
-let logger = require('pomelo-logger').getLogger('bearcat-ha', 'WatcherStrategy');
+let logger = require('omelo-logger').getLogger('bearcat-ha', 'WatcherStrategy');
 let Utils = require('../util/utils');
 let WatcherStrategy = {};
 
