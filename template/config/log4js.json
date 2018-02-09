@@ -1,9 +1,18 @@
 {
-  "appenders": [
-    {
+  "appenders": {
+    "console": {
       "type": "console"
     },
-    {
+    "file": {
+      "type": "file",
+      "filename": "${opts:base}/logs/con-log-${opts:serverId}.log",
+      "maxLogSize": 1048576,
+      "layout": {
+        "type": "basic"
+      },
+      "backups": 5
+    },
+    "con-log": {
       "type": "file",
       "filename": "${opts:base}/logs/con-log-${opts:serverId}.log",
       "pattern": "connector",
@@ -14,7 +23,7 @@
       "backups": 5,
       "category": "con-log"
     },
-    {
+    "rpc-log": {
       "type": "file",
       "filename": "${opts:base}/logs/rpc-log-${opts:serverId}.log",
       "maxLogSize": 1048576,
@@ -24,7 +33,7 @@
       "backups": 5,
       "category": "rpc-log"
     },
-    {
+    "forward-log": {
       "type": "file",
       "filename": "${opts:base}/logs/forward-log-${opts:serverId}.log",
       "maxLogSize": 1048576,
@@ -34,17 +43,17 @@
       "backups": 5,
       "category": "forward-log"
     },
-    {
-     "type": "file",
-     "filename": "${opts:base}/logs/rpc-debug-${opts:serverId}.log",
-     "maxLogSize": 1048576,
-     "layout": {
-      "type": "basic"
-     },
-     "backups": 5,
-     "category": "rpc-debug"
+    "rpc-debug": {
+      "type": "file",
+      "filename": "${opts:base}/logs/rpc-debug-${opts:serverId}.log",
+      "maxLogSize": 1048576,
+      "layout": {
+        "type": "basic"
+      },
+      "backups": 5,
+      "category": "rpc-debug"
     },
-    {
+    "crash-log": {
       "type": "file",
       "filename": "${opts:base}/logs/crash.log",
       "maxLogSize": 1048576,
@@ -52,56 +61,55 @@
         "type": "basic"
       },
       "backups": 5,
-      "category":"crash-log"
+      "category": "crash-log"
     },
-    {
+    "admin-log": {
       "type": "file",
       "filename": "${opts:base}/logs/admin.log",
       "maxLogSize": 1048576,
       "layout": {
-          "type": "basic"
-        }
-      ,"backups": 5,
-      "category":"admin-log"
+        "type": "basic"
+      },
+      "backups": 5,
+      "category": "admin-log"
     },
-    {
+    "omelo": {
       "type": "file",
       "filename": "${opts:base}/logs/omelo-${opts:serverId}.log",
       "maxLogSize": 1048576,
       "layout": {
-          "type": "basic"
-        }
-      ,"backups": 5,
-      "category":"omelo"
+        "type": "basic"
+      },
+      "backups": 5,
+      "category": "omelo"
     },
-    {
+    "omelo-admin": {
       "type": "file",
       "filename": "${opts:base}/logs/omelo-admin.log",
       "maxLogSize": 1048576,
       "layout": {
-          "type": "basic"
-        }
-      ,"backups": 5,
-      "category":"omelo-admin"
+        "type": "basic"
+      },
+      "backups": 5,
+      "category": "omelo-admin"
     },
-    {
+    "omelo-rpc": {
       "type": "file",
       "filename": "${opts:base}/logs/omelo-rpc-${opts:serverId}.log",
       "maxLogSize": 1048576,
       "layout": {
-          "type": "basic"
-        }
-      ,"backups": 5,
-      "category":"omelo-rpc"
+        "type": "basic"
+      },
+      "backups": 5,
+      "category": "omelo-rpc"
     }
-  ],
-
-  "levels": {
-    "rpc-log" : "ERROR",
-    "forward-log": "ERROR"
   },
-
+  "categories": {
+    "default": {
+      "appenders": ["file", "console"],
+      "level": "error"
+    }
+  },
   "replaceConsole": true,
-
   "lineDebug": false
 }
