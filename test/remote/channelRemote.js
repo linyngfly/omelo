@@ -1,5 +1,5 @@
 let should = require('should');
-let pomelo = require('../../');
+let omelo = require('../../');
 let remote = require('../../lib/common/remote/frontend/channelRemote');
 let SessionService = require('../../lib/common/service/sessionService');
 let ChannelService = require('../../lib/common/service/channelService');
@@ -38,7 +38,7 @@ describe('channel remote test', function() {
         }
       }
 
-      let app = pomelo.createApp({base: mockBase});
+      let app = omelo.createApp({base: mockBase});
       app.components.__connector__ = {
         send: function(reqId, route, msg, recvs, opts, cb) {
           app.components.__pushScheduler__.schedule(reqId, route, msg, recvs, opts, cb);
@@ -92,7 +92,7 @@ describe('channel remote test', function() {
         }
       }
 
-      let app = pomelo.createApp({base: mockBase});
+      let app = omelo.createApp({base: mockBase});
       app.components.__connector__ = {
         send: function(reqId, route, msg, recvs, opts, cb) {
           app.components.__pushScheduler__.schedule(reqId, route, msg, recvs, opts, cb);
@@ -138,7 +138,7 @@ describe('channel remote test', function() {
         }
       }
 
-      let app = pomelo.createApp({base: mockBase});
+      let app = omelo.createApp({base: mockBase});
       app.components.__connector__ = {
         send: function(reqId, route, msg, recvs, opts, cb) {
           app.components.__pushScheduler__.schedule(reqId, route, msg, recvs, opts, cb);

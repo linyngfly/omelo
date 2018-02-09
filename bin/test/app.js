@@ -1,16 +1,16 @@
-let pomelo = require('pomelo');
+let omelo = require('omelo');
 
 /**
  * Init app for client.
  */
-let app = pomelo.createApp();
+let app = omelo.createApp();
 app.set('name', 'test');
 
 // app configuration
 app.configure('production|development', 'connector', function(){
   app.set('connectorConfig',
     {
-      connector : pomelo.connectors.sioconnector,
+      connector : omelo.connectors.sioconnector,
       // 'websocket', 'polling-xhr', 'polling-jsonp', 'polling'
       transports : ['websocket', 'polling'],
       heartbeats : true,

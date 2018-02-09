@@ -1,5 +1,5 @@
 let logger = require('log4js').getLogger('HZJob');
-let Schedule = require('pomelo-schedule');
+let Schedule = require('omelo-schedule');
 
 let jobTypes = [{
 		id: 'hzJob1',

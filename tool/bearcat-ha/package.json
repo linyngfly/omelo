@@ -36,7 +36,7 @@
     "json-comments": "0.2.1",
     "mysql": "2.6.x",
     "node-zookeeper-client": "0.2.x",
-    "pomelo-logger": "0.1.x",
+    "omelo-logger": "0.1.x",
     "redis": "0.12.x"
   },
   "deprecated": false,

@@ -1,5 +1,5 @@
 let app = require('../lib/application');
-let pomelo = require('../');
+let omelo = require('../');
 let should = require('should');
 
 let WAIT_TIME = 1000;
@@ -418,7 +418,7 @@ describe('application test', function(){
         {id: 'area-server-1', serverType: 'area', host: '127.0.0.1', port: 2234}
       ];
       app.init({base: mockBase});
-      app.event.on(pomelo.events.ADD_SERVERS, function(servers) {
+      app.event.on(omelo.events.ADD_SERVERS, function(servers) {
         // check event args
         newServers.should.eql(servers);
 
@@ -481,13 +481,13 @@ describe('application test', function(){
       let delCount = 0;
 
       app.init({base: mockBase});
-      app.event.on(pomelo.events.ADD_SERVERS, function(servers) {
+      app.event.on(omelo.events.ADD_SERVERS, function(servers) {
         // check event args
         newServers.should.eql(servers);
         addCount++;
       });
 
-      app.event.on(pomelo.events.REMOVE_SERVERS, function(ids) {
+      app.event.on(omelo.events.REMOVE_SERVERS, function(ids) {
         delIds.should.eql(ids);
 
         // check servers

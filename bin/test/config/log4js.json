@@ -66,33 +66,33 @@
     },
     {
       "type": "file",
-      "filename": "${opts:base}/logs/pomelo-${opts:serverId}.log",
+      "filename": "${opts:base}/logs/omelo-${opts:serverId}.log",
       "maxLogSize": 1048576,
       "layout": {
           "type": "basic"
         }
       ,"backups": 5,
-      "category":"pomelo"
+      "category":"omelo"
     },
     {
       "type": "file",
-      "filename": "${opts:base}/logs/pomelo-admin.log",
+      "filename": "${opts:base}/logs/omelo-admin.log",
       "maxLogSize": 1048576,
       "layout": {
           "type": "basic"
         }
       ,"backups": 5,
-      "category":"pomelo-admin"
+      "category":"omelo-admin"
     },
     {
       "type": "file",
-      "filename": "${opts:base}/logs/pomelo-rpc-${opts:serverId}.log",
+      "filename": "${opts:base}/logs/omelo-rpc-${opts:serverId}.log",
       "maxLogSize": 1048576,
       "layout": {
           "type": "basic"
         }
       ,"backups": 5,
-      "category":"pomelo-rpc"
+      "category":"omelo-rpc"
     }
   ],
 

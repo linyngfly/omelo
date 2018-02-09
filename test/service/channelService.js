@@ -1,5 +1,5 @@
 let should = require('should');
-let pomelo = require('../../');
+let omelo = require('../../');
 let ChannelService = require('../../lib/common/service/channelService');
 
 let channelName = 'test_channel';
@@ -95,7 +95,7 @@ describe('channel manager test', function() {
         cb();
       };
 
-      let app = pomelo.createApp({base: mockBase});
+      let app = omelo.createApp({base: mockBase});
       app.rpcInvoke = mockRpcInvoke;
       let channelService = new ChannelService(app);
 
@@ -107,7 +107,7 @@ describe('channel manager test', function() {
 
     it('should return an err if uids is empty', function(done) {
       let mockMsg = {key: 'some remote message'};
-      let app = pomelo.createApp({base: mockBase});
+      let app = omelo.createApp({base: mockBase});
       let channelService = new ChannelService(app);
 
       channelService.pushMessageByUids(mockMsg, null, function(err) {
@@ -138,7 +138,7 @@ describe('channel manager test', function() {
         cb(new Error('[TestMockError] mock rpc error'));
       };
 
-      let app = pomelo.createApp({base: mockBase});
+      let app = omelo.createApp({base: mockBase});
       app.rpcInvoke = mockRpcInvoke;
       let channelService = new ChannelService(app);
 
@@ -173,7 +173,7 @@ describe('channel manager test', function() {
         }
       };
 
-      let app = pomelo.createApp({base: mockBase});
+      let app = omelo.createApp({base: mockBase});
       app.rpcInvoke = mockRpcInvoke;
       let channelService = new ChannelService(app);
 
@@ -223,7 +223,7 @@ describe('channel manager test', function() {
         cb();
       };
 
-      let app = pomelo.createApp({base: mockBase});
+      let app = omelo.createApp({base: mockBase});
       app.rpcInvoke = mockRpcInvoke;
       app.addServers(mockServers);
       let channelService = new ChannelService(app);

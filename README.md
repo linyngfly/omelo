@@ -2,15 +2,15 @@
 
 Pomelo is a fast, scalable game server framework for [node.js](http://nodejs.org).
 It provides the basic development framework and many related components, including libraries and tools.
-Pomelo is also suitable for real-time web applications; its distributed architecture makes pomelo scale better than other real-time web frameworks.
+Pomelo is also suitable for real-time web applications; its distributed architecture makes omelo scale better than other real-time web frameworks.
 
-[![Build Status](https://travis-ci.org/NetEase/pomelo.svg?branch=master)](https://travis-ci.org/NetEase/pomelo)
+[![Build Status](https://travis-ci.org/NetEase/omelo.svg?branch=master)](https://travis-ci.org/NetEase/omelo)
 
- * Homepage: <http://pomelo.netease.com/>
- * Mailing list: <https://groups.google.com/group/pomelo>
- * Documentation: <http://github.com/NetEase/pomelo>
- * Wiki: <https://github.com/NetEase/pomelo/wiki/>
- * Issues: <https://github.com/NetEase/pomelo/issues/>
+ * Homepage: <http://omelo.netease.com/>
+ * Mailing list: <https://groups.google.com/group/omelo>
+ * Documentation: <http://github.com/NetEase/omelo>
+ * Wiki: <https://github.com/NetEase/omelo/wiki/>
+ * Issues: <https://github.com/NetEase/omelo/issues/>
  * Tags: game, nodejs
 
 
@@ -37,27 +37,27 @@ Pomelo is also suitable for real-time web applications; its distributed architec
 
 * Many clients support, including javascript, flash, android, iOS, cocos2d-x, C
 * Many libraries and tools, including command line tool, admin tool, performance test tool, AI, path finding etc.
-* Good reference materials: full docs, many examples and [an open-source MMO RPG demo](https://github.com/NetEase/pomelo/wiki/Introduction-to--Lord-of-Pomelo)
+* Good reference materials: full docs, many examples and [an open-source MMO RPG demo](https://github.com/NetEase/omelo/wiki/Introduction-to--Lord-of-Pomelo)
 
 ### Extensible
 
 * Support plugin architecture, easy to add new features through plugins. We also provide many plugins like online status, master high availability.
 * Custom features, users can define their own network protocol, custom components very easy.
 
-## Why should I use pomelo?
+## Why should I use omelo?
 Fast, scalable, real-time game server development is not an easy job, and a good container or framework can reduce its complexity.
 Unfortunately, unlike web, finding a game server framework solution is difficult, especially an open source solution. Pomelo fills this gap, providing a full solution for building game server frameworks.
 Pomelo has the following advantages:
 * The architecture is scalable. It uses a multi-process, single thread runtime architecture, which has been proven in the industry and is especially suited to the node.js thread model.
-* Easy to use, the development model is quite similar to web, using convention over configuration, with almost zero config. The [API](http://pomelo.netease.com/api.html) is also easy to use.
-* The framework is extensible. Based on the node.js micro module principle, the core of pomelo is small. All of the components, libraries and tools are individual npm modules, and anyone can create their own module to extend the framework.
-* The reference materials and documentation are quite complete. In addition to the documentation, we also provide [an open-source MMO RPG demo](https://github.com/NetEase/pomelo/wiki/Introduction-to--Lord-of-Pomelo) (HTML5 client), which is a far better reference material than any book.
+* Easy to use, the development model is quite similar to web, using convention over configuration, with almost zero config. The [API](http://omelo.netease.com/api.html) is also easy to use.
+* The framework is extensible. Based on the node.js micro module principle, the core of omelo is small. All of the components, libraries and tools are individual npm modules, and anyone can create their own module to extend the framework.
+* The reference materials and documentation are quite complete. In addition to the documentation, we also provide [an open-source MMO RPG demo](https://github.com/NetEase/omelo/wiki/Introduction-to--Lord-of-Pomelo) (HTML5 client), which is a far better reference material than any book.
 
-## How can I develop with pomelo?
-With the following references, you can quickly familiarize yourself with the pomelo development process:
-* [Pomelo documents](https://github.com/NetEase/pomelo/wiki)
-* [Getting started](https://github.com/NetEase/pomelo/wiki/Welcome-to-Pomelo)
-* [Tutorial](https://github.com/NetEase/pomelo/wiki/Preface)
+## How can I develop with omelo?
+With the following references, you can quickly familiarize yourself with the omelo development process:
+* [Pomelo documents](https://github.com/NetEase/omelo/wiki)
+* [Getting started](https://github.com/NetEase/omelo/wiki/Welcome-to-Pomelo)
+* [Tutorial](https://github.com/NetEase/omelo/wiki/Preface)
 
 
 ## Contributors

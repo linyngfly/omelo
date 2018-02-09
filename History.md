@@ -1,11 +1,11 @@
 2.2.5 / 2017-1-22
 =================
-  * [#815](https://github.com/NetEase/pomelo/pull/815)
-  * [#901](https://github.com/NetEase/pomelo/pull/901)
+  * [#815](https://github.com/NetEase/omelo/pull/815)
+  * [#901](https://github.com/NetEase/omelo/pull/901)
 
 2.2.4 / 2017-1-20
 =================
-  * [NEW] upgrade pomelo-rpc to 1.0.7
+  * [NEW] upgrade omelo-rpc to 1.0.7
 
 2.2.3 / 2017-1-20
 =================
@@ -13,7 +13,7 @@
 
 2.2.2 / 2017-1-20
 =================
-  * [#899](https://github.com/NetEase/pomelo/pull/899)
+  * [#899](https://github.com/NetEase/omelo/pull/899)
 
 2.2.1 / 2017-1-20
 =================
@@ -21,118 +21,118 @@
 
 2.2.0 / 2017-1-19
 =================
-  * [NEW] upgrade pomelo-rpc to 1.0.6, rpc protocol moved to MQTT
-  * [NEW] upgrade pomelo-admin to 1.0.0
+  * [NEW] upgrade omelo-rpc to 1.0.6, rpc protocol moved to MQTT
+  * [NEW] upgrade omelo-admin to 1.0.0
   * [NEW] pure javaScript without need to install c++ addons 
 
 1.2.1 / 2015-12-31
 ================
   * [NEW] upgrade ws to 0.8.0
-  * [#771](https://github.com/NetEase/pomelo/pull/771)
-  * [#774](https://github.com/NetEase/pomelo/pull/774)
+  * [#771](https://github.com/NetEase/omelo/pull/771)
+  * [#774](https://github.com/NetEase/omelo/pull/774)
   * [FIX] tls: destory connection when clientError
 
 1.2.0 / 2015-09-18
 =================
-  * [NEW] upgrade pomelo-admin to 0.4.5
-  * [#751](https://github.com/NetEase/pomelo/pull/751)
-  * [#741](https://github.com/NetEase/pomelo/pull/741)
-  * [#740](https://github.com/NetEase/pomelo/pull/740)
+  * [NEW] upgrade omelo-admin to 0.4.5
+  * [#751](https://github.com/NetEase/omelo/pull/751)
+  * [#741](https://github.com/NetEase/omelo/pull/741)
+  * [#740](https://github.com/NetEase/omelo/pull/740)
   * [FIX] fix wrong variable in protobuf
 
 1.1.9 / 2015-06-05
 =================
-  * [NEW] upgrade pomelo-rpc to 0.4.10
-  * [NEW] upgrade pomelo-admin to 0.4.4
-  * [NEW] upgrade pomelo-logger to 0.1.7
+  * [NEW] upgrade omelo-rpc to 0.4.10
+  * [NEW] upgrade omelo-admin to 0.4.4
+  * [NEW] upgrade omelo-logger to 0.1.7
 
 1.1.8 / 2015-05-29
 =================
   * fix bug on verison calculating when update proto files
   * avoid modules loading error on windows
-  * [NEW] upgrade pomelo-protocol to 0.1.6
+  * [NEW] upgrade omelo-protocol to 0.1.6
 
 1.1.7 / 2015-05-12
 =================
-  * [#706](https://github.com/NetEase/pomelo/pull/706)
-  * [#707](https://github.com/NetEase/pomelo/pull/707)
-  * [#443](https://github.com/NetEase/pomelo/pull/443)
-  * [#444](https://github.com/NetEase/pomelo/pull/444)
-  * [#713](https://github.com/NetEase/pomelo/pull/713)
-  * [NEW] upgrade pomelo-rpc to 0.4.9
-  * [NEW] upgrade pomelo-admin to 0.4.3
+  * [#706](https://github.com/NetEase/omelo/pull/706)
+  * [#707](https://github.com/NetEase/omelo/pull/707)
+  * [#443](https://github.com/NetEase/omelo/pull/443)
+  * [#444](https://github.com/NetEase/omelo/pull/444)
+  * [#713](https://github.com/NetEase/omelo/pull/713)
+  * [NEW] upgrade omelo-rpc to 0.4.9
+  * [NEW] upgrade omelo-admin to 0.4.3
 
 1.1.6 / 2015-03-12
 =================
   * [NEW] add configure file automatically reload feature
   * [NEW] add mqtt connector heartbeat timeout option
-  * [NEW] upgrade pomelo-rpc to 0.4.8
+  * [NEW] upgrade omelo-rpc to 0.4.8
 
 1.1.5 / 2015-02-26
 =================
-  * [NEW] upgrade pomelo-rpc to 0.4.7
+  * [NEW] upgrade omelo-rpc to 0.4.7
 
 1.1.4 / 2015-01-23
 =================
-  [#670](https://github.com/NetEase/pomelo/pull/670)
-  [#669](https://github.com/NetEase/pomelo/pull/669)
-  [#666](https://github.com/NetEase/pomelo/pull/666)
-  [#665](https://github.com/NetEase/pomelo/pull/665)
-  [#662](https://github.com/NetEase/pomelo/pull/662)
-  [#659](https://github.com/NetEase/pomelo/pull/659)
-  [#657](https://github.com/NetEase/pomelo/pull/657)
-  [#653](https://github.com/NetEase/pomelo/pull/653)
+  [#670](https://github.com/NetEase/omelo/pull/670)
+  [#669](https://github.com/NetEase/omelo/pull/669)
+  [#666](https://github.com/NetEase/omelo/pull/666)
+  [#665](https://github.com/NetEase/omelo/pull/665)
+  [#662](https://github.com/NetEase/omelo/pull/662)
+  [#659](https://github.com/NetEase/omelo/pull/659)
+  [#657](https://github.com/NetEase/omelo/pull/657)
+  [#653](https://github.com/NetEase/omelo/pull/653)
 
 1.1.2 / 2014-11-12
 =================
 * [NEW] introduce updateUserInfo for connectionService
-  [#637](https://github.com/NetEase/pomelo/pull/637)
+  [#637](https://github.com/NetEase/omelo/pull/637)
 * [FIX] fix wrong variable err using 
-  [#642](https://github.com/NetEase/pomelo/pull/642)
+  [#642](https://github.com/NetEase/omelo/pull/642)
 * [NEW] introduce cancelShutdownHook
-  [#644](https://github.com/NetEase/pomelo/pull/644)
+  [#644](https://github.com/NetEase/omelo/pull/644)
 * [FIX] revert PR #613, which should not be accepted
-  [#649](https://github.com/NetEase/pomelo/pull/649)
+  [#649](https://github.com/NetEase/omelo/pull/649)
 
 1.1.1 / 2014-10-10
 =================
-* [NEW] upgrade pomelo-protocol to 0.1.4
-  [#616](https://github.com/NetEase/pomelo/pull/616)
+* [NEW] upgrade omelo-protocol to 0.1.4
+  [#616](https://github.com/NetEase/omelo/pull/616)
 * [FIX] incorrect this scope
-  [#622](https://github.com/NetEase/pomelo/pull/622)
+  [#622](https://github.com/NetEase/omelo/pull/622)
 * [FIX] fix bug on arg parse
-  [#623](https://github.com/NetEase/pomelo/pull/623)
+  [#623](https://github.com/NetEase/omelo/pull/623)
 * [FIX] connection without communication bug
 
 1.1.0 / 2014-09-12
 =================
 * [NEW] fit for libpomelo2
-* [NEW] upgrade pomelo-rpc to 0.4.5
-  [#612](https://github.com/NetEase/pomelo/pull/612)
+* [NEW] upgrade omelo-rpc to 0.4.5
+  [#612](https://github.com/NetEase/omelo/pull/612)
 * [FIX] close http server after WebSocketServer.close
-  [#613](https://github.com/NetEase/pomelo/pull/613)
+  [#613](https://github.com/NetEase/omelo/pull/613)
 * [FIX] update timeout.js
-  [#614](https://github.com/NetEase/pomelo/pull/614)
+  [#614](https://github.com/NetEase/omelo/pull/614)
 * [FIX] fix typo
 
 1.0.4 / 2014-08-26
 =================
-* [NEW] upgrade pomelo-rpc to 0.4.3
-* [NEW] upgrade pomelo-logger to 0.1.6
-* [FIX] pomelo-masterha-plugin reconnect bug miss parameter env
-* [#582](https://github.com/NetEase/pomelo/pull/582)
+* [NEW] upgrade omelo-rpc to 0.4.3
+* [NEW] upgrade omelo-logger to 0.1.6
+* [FIX] omelo-masterha-plugin reconnect bug miss parameter env
+* [#582](https://github.com/NetEase/omelo/pull/582)
 
 1.0.3 / 2014-07-18
 =================
 * [NEW] dictVersion : Similar to `protoVersion`, add `dictVersion` and skip sending dict when handshaking if possible.
-  [#572](https://github.com/NetEase/pomelo/pull/572)
-* [FIX] CRON : Upgrade pomelo-scheduler to v0.3.9. Fix a bug that will loss tasks if The number of days next month is greater than this month.
-  [#560](https://github.com/NetEase/pomelo/pull/560)
-  [pomelo-scheduler#4](https://github.com/NetEase/pomelo-scheduler/pull/4)
+  [#572](https://github.com/NetEase/omelo/pull/572)
+* [FIX] CRON : Upgrade omelo-scheduler to v0.3.9. Fix a bug that will loss tasks if The number of days next month is greater than this month.
+  [#560](https://github.com/NetEase/omelo/pull/560)
+  [omelo-scheduler#4](https://github.com/NetEase/omelo-scheduler/pull/4)
 * [FIX] hot update : Remove the error logging if a server doesn't have any handler.
-  [#562](https://github.com/NetEase/pomelo/pull/562)
+  [#562](https://github.com/NetEase/omelo/pull/562)
 * [NEW] protobuf : Add `protobuf cache` into libpomelo, and add `useProto` handshake option to tell the client whether to use the protobuf.
-  [#564](https://github.com/NetEase/pomelo/pull/564)
+  [#564](https://github.com/NetEase/omelo/pull/564)
   [libpomelo#58](https://github.com/NetEase/libpomelo/pull/58)
   [discuss(chinese)](http://nodejs.netease.com/topic/53c6c126898634292c8157a2)
 
@@ -144,7 +144,7 @@
 =================
 * merge pull request #538 #541 #545 #546 #547
 * update master watchdog notify method
-* upgrade pomelo-rpc to 0.4.2
+* upgrade omelo-rpc to 0.4.2
 
 1.0.0 / 2014-06-19
 =================
@@ -155,12 +155,12 @@
 1.0.0-pre / 2014-05-16
 =================
 * add udpconnector
-* pomelo-rpc load balancing and fault tolerance
+* omelo-rpc load balancing and fault tolerance
 * connector wss & tls support
-* pomelo-zookeeper-plugin
-* pomelo-scale-plugin
+* omelo-zookeeper-plugin
+* omelo-scale-plugin
 * environment directory configuration support
-* pomelo-cli dynamic script
+* omelo-cli dynamic script
 
 0.9.10 / 2014-05-15
 =================
@@ -174,7 +174,7 @@
 * merge pull request #495
 * merge pull request #499
 * merge pull request #501
-* upgrade pomelo-admin to 0.3.4
+* upgrade omelo-admin to 0.3.4
 
 0.9.8 / 2014-05-04
 =================
@@ -209,18 +209,18 @@
 
 0.9.3 / 2014-03-11
 =================
-* upgrade pomelo-admin to 0.3.2 for npm reason
+* upgrade omelo-admin to 0.3.2 for npm reason
 
 0.9.2 / 2014-03-10
 =================
 * merge pull request sshPort
 * merge pull request #438
 * fix hybridconnector dict bug
-* upgrade pomelo-rpc to 0.3.2
+* upgrade omelo-rpc to 0.3.2
 
 0.9.1 / 2014-03-03
 =================
-* fix pomelo stop auto-restart bug
+* fix omelo stop auto-restart bug
 * add restart-force option
 * add application.require method
 * export constants.js
@@ -245,28 +245,28 @@
 
 0.8.7 / 2014-01-28
 =================
-* refactor pomelo command, report remained servers if kill failed 
+* refactor omelo command, report remained servers if kill failed 
 
 0.8.6 / 2014-01-22
 =================
-* upgrade pomelo-rpc 0.2.9
-* upgrade pomelo-admin 0.2.9
+* upgrade omelo-rpc 0.2.9
+* upgrade omelo-admin 0.2.9
 
 0.8.5 / 2014-01-22
 =================
-* upgrade pomelo-rpc 0.2.8
-* upgrade pomelo-scheduler 0.3.8
+* upgrade omelo-rpc 0.2.8
+* upgrade omelo-scheduler 0.3.8
 
 0.8.4 / 2014-01-20
 =================
-* fix bin/pomelo spell bug
+* fix bin/omelo spell bug
 
 0.8.3 / 2014-01-16
 =================
 * add tcp socket close option
-* upgrade pomelo-rpc 0.2.7
-* upgrade pomelo-admin 0.2.8
-* upgrade pomelo-schedule 0.3.7
+* upgrade omelo-rpc 0.2.7
+* upgrade omelo-admin 0.2.8
+* upgrade omelo-schedule 0.3.7
 
 0.8.2 / 2014-01-03
 =================
@@ -275,40 +275,40 @@
 
 0.8.1 / 2013-12-31
 =================
-* upgrade pomelo-rpc to 0.2.6
+* upgrade omelo-rpc to 0.2.6
 * handle rpc filter error
 * add test cases
 
 0.8.0 / 2013-12-24
 =================
-* refactor bin/pomelo
+* refactor bin/omelo
 * pushScheduler add option
 * add rpc invoke method
 * lifecycle callback feature
 * add rcp filter interface
 * simplify servers.json configuration
-* pomelo-logger dynamic log level
-* pomelo-rpc & pomelo-admin white list
-* pomelo-data-plugin
+* omelo-logger dynamic log level
+* omelo-rpc & omelo-admin white list
+* omelo-data-plugin
 
 0.7.7 / 2013-12-16
 =================
-* upgrade pomelo-loader to 0.0.6
-* upgrade pomelo-logger to 0.1.2(add dynamic change logger level feature)
+* upgrade omelo-loader to 0.0.6
+* upgrade omelo-logger to 0.1.2(add dynamic change logger level feature)
 
 0.7.6 / 2013-12-3
 =================
-* upgrade pomelo-rpc to 0.2.4
-* upgrade pomelo-admin to 0.2.6(fix reconnect bug)
+* upgrade omelo-rpc to 0.2.4
+* upgrade omelo-admin to 0.2.6(fix reconnect bug)
 
 0.7.5 / 2013-11-27
 =================
-* fix pomelo kill bug
+* fix omelo kill bug
 * fix rpc toobusy filter bug
 
 0.7.4 / 2013-11-20
 =================
-* fix pomelo add command
+* fix omelo add command
 * master start servers in 2 mode, detached in production, no detched in development
 
 0.7.3 / 2013-11-15
@@ -318,9 +318,9 @@
 0.7.2 / 2013-11-14
 =================
 * add start server detached mode
-* add masterha for pomelo stop&list
+* add masterha for omelo stop&list
 * fix auto-restart disconnect bug
-* update pomelo start for different envs
+* update omelo start for different envs
 
 0.7.1 / 2013-11-11
 =================
@@ -332,12 +332,12 @@
 * crontab
 * global filter
 * transaction
-* pomelo-cli auto-complete
+* omelo-cli auto-complete
 * some components rename
 
 0.6.8 / 2013-11-4
 =================
-* update pomelo-admin version
+* update omelo-admin version
 
 0.6.7 / 2013-10-14
 =================
@@ -346,19 +346,19 @@
 0.6.6 / 2013-10-12
 =================
 * merge pull request #303 replace tab & remove session get value argument
-* upgrade pomelo-admin to 0.2.4
-* upgrade pomelo-monitor to 0.3.7
-* upgrade pomelo-rpc to 0.2.2
+* upgrade omelo-admin to 0.2.4
+* upgrade omelo-monitor to 0.3.7
+* upgrade omelo-rpc to 0.2.2
 
 0.6.5 / 2013-9-30
 =================
 * fix server reconnect bug
-* upgrade pomelo-admin to 0.2.3
+* upgrade omelo-admin to 0.2.3
 
 0.6.4 / 2013-9-27
 =================
 * update logger config && test log4js config
-* update require pomelo path & unuse module
+* update require omelo path & unuse module
 * merge pull request update readme #295
 
 0.6.3 / 2013-9-10
@@ -369,13 +369,13 @@
 
 0.6.2 / 2013-9-5
 =================
-* upgrade pomelo-admin to 0.2.2
+* upgrade omelo-admin to 0.2.2
 * update test cases
 * fix socket.on end bug
 
 0.6.1 / 2013-9-2
 =================
-* update pomelo-admin & pomelo-rpc to 0.2.1
+* update omelo-admin & omelo-rpc to 0.2.1
 * add rpcDebug module in master
 
 0.6.0 / 2013-8-26
@@ -398,7 +398,7 @@
 
 0.5.4 / 2013-7-25
 =================
-* update pomelo-protocol version
+* update omelo-protocol version
 
 0.5.3 / 2013-7-25
 =================
@@ -414,7 +414,7 @@
 
 0.5.1 / 2013-7-19
 =================
-* update pomelo-protobuf version
+* update omelo-protobuf version
 * receive servers console data event in production environment
 
 
@@ -430,7 +430,7 @@
 0.4.6 / 2013-7-15
 =================
 
-* fix pomelo-protocol bug, which will lose message when requestId is 128 multiple
+* fix omelo-protocol bug, which will lose message when requestId is 128 multiple
 
 0.4.5 / 2013-7-3
 =================
@@ -462,7 +462,7 @@
 0.3.10 / 2013-5-20
 ==================
 
-* `pomelo-protocol` upgrades to 0.3.4
+* `omelo-protocol` upgrades to 0.3.4
 * fix session bind bug in backend server
 * replace `childprocess.exec` with `spawn` in `starter.js`
 
@@ -504,7 +504,7 @@
 ==================
 
 * fix server not verifing useDict, useProtobuf bug
-* fix can not start pomelo from ide bug
+* fix can not start omelo from ide bug
 * add host param in listen for hybridconnector, which is important for some load balance strategy
 
 0.3.3 / 2013-3-12
@@ -544,7 +544,7 @@
 0.2.3 / 2012-12-25
 ==================
 
-* add mkdirp, update pomelo-admin version
+* add mkdirp, update omelo-admin version
 * solve windows comptaible problem
 
 0.2.2 / 2012-12-9

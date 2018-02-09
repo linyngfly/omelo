@@ -1,17 +1,17 @@
 let fs = require('fs');
-let pomelo = require('pomelo');
+let omelo = require('omelo');
 
 /**
  * Init app for client.
  */
-let app = pomelo.createApp();
+let app = omelo.createApp();
 app.set('name', '$');
 
 // app configuration
 app.configure('production|development', 'connector', function(){
   app.set('connectorConfig',
     {
-      connector : pomelo.connectors.hybridconnector,
+      connector : omelo.connectors.hybridconnector,
       heartbeat : 3,
       useDict : true,
       useProtobuf : true,
