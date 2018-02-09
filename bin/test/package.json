@@ -1,9 +1,0 @@
-{
-    "name":"test",
-    "version":"0.0.1",
-    "private":false,
-    "dependencies":{
-        "omelo":"2.2.5"
-    }
-}
-
