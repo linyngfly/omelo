@@ -292,6 +292,7 @@ function createApplicationAt(ph, type) {
  * @param {Object} opts options for `start` operation
  */
 function start(opts) {
+
   let absScript = path.resolve(opts.directory, 'app.js');
   if (!fs.existsSync(absScript)) {
     abort(SCRIPT_NOT_FOUND);

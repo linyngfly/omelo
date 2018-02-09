@@ -1,4 +1,6 @@
 let omelo = require('omelo');
+const path = require('path');
+const omeloHttpPlugin = require('omelo-http-plugin');
 
 /**
  * Init app for client.
@@ -18,6 +20,16 @@ app.configure('production|development', 'connector', function(){
       heartbeatTimeout : 60 * 1000,
       heartbeatInterval : 25 * 1000
     });
+});
+
+app.configure('production|development', 'http', function(){
+  app.loadConfig('http', path.join(app.getBase(), 'config/http.json'));
+  app.use(omeloHttpPlugin, {http:app.get('http')});
+
+  app.beforeStopHook(function () {
+    //todo add user code
+});
+
 });
 
 // start app

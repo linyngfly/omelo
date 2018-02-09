@@ -1,6 +1,6 @@
 {
   "name": "omelo",
-  "version": "2.2.5",
+  "version": "2.2.7",
   "private": false,
   "deprecated": false,
   "description": "`omelo` is base omelo, support es6 version",
@@ -8,7 +8,6 @@
     "node": "8.9.0"
   },
   "main": "index.js",
-
   "author": {
     "name": "linyngfly",
     "email": "linyngfly@163.com"
@@ -35,7 +34,6 @@
   ],
   "keywords": [
     "omelo",
-    "omelo",
     "framework",
     "game",
     "web",
@@ -50,13 +48,13 @@
     "mkdirp": "^0.5.1",
     "mqtt": "^2.15.1",
     "node-bignumber": "^1.2.1",
-    "omelo-admin": "^1.0.0",
-    "omelo-loader": "0.0.7",
-    "omelo-logger": "^0.1.7",
-    "omelo-protobuf": "^0.4.0",
-    "omelo-protocol": "^0.1.6",
-    "omelo-rpc": "^1.0.7",
-    "omelo-scheduler": "^0.5.0",
+    "omelo-admin": ">=1.0.2",
+    "omelo-loader": ">=0.0.7",
+    "omelo-logger": ">=0.1.7",
+    "omelo-protobuf": ">=0.4.1",
+    "omelo-protocol": ">=0.1.7",
+    "omelo-rpc": ">=1.0.8",
+    "omelo-scheduler": ">=0.5.0",
     "seq-queue": "0.0.5",
     "socket.io": "^2.0.4",
     "ws": "^4.0.0"

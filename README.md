@@ -16,6 +16,9 @@ Pomelo is also suitable for real-time web applications; its distributed architec
 
 ## Features
 
+## Install nvm
+* curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
+
 ### Complete support of game server and realtime application server architecture
 
 * Multiple-player game: mobile, social, web, MMO rpg(middle size)

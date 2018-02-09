@@ -1,0 +1,38 @@
+{
+  "development": {
+    "http-server-1": {
+      "useCluster":true,
+      "useSSL":true,
+      "static":true,
+      "views":true,
+      "http": {
+        "host": "127.0.0.1",
+        "port": 3001
+      },
+      "https": {
+        "host": "127.0.0.1",
+        "port": 3002,
+        "keyFile": "shared/server.key",
+        "certFile": "shared/server.crt"
+      }
+    }
+  },
+  "production": {
+    "http-server-1": {
+      "useCluster":true,
+      "useSSL":true,
+      "static":true,
+      "views":true,
+      "http": {
+        "host": "127.0.0.1",
+        "port": 3001
+      },
+      "https": {
+        "host": "127.0.0.1",
+        "port": 3002,
+        "keyFile": "shared/server.key",
+        "certFile": "shared/server.crt"
+      }
+    }
+  }
+}
