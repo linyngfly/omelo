@@ -19,13 +19,15 @@ app.configure('production|development', function(){
     });
 });
 
-app.configure('production|development', 'http', function(){
+app.configure('production|development', 'http', function () {
   app.loadConfig('http', path.join(app.getBase(), 'config/http.json'));
-  app.use(omeloHttpPlugin, {http:app.get('http')});
+  app.use(omeloHttpPlugin, {
+    http: app.get('http')
+  });
 
   app.beforeStopHook(function () {
     //todo add user code
-});
+  });
 
 });
 

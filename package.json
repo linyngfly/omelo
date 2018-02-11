@@ -1,6 +1,6 @@
 {
   "name": "omelo",
-  "version": "2.2.7",
+  "version": "2.2.9",
   "private": false,
   "deprecated": false,
   "description": "`omelo` is base omelo, support es6 version",
