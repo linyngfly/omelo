@@ -1,6 +1,6 @@
 {
   "name": "omelo",
-  "version": "2.2.9",
+  "version": "2.3.1",
   "private": false,
   "deprecated": false,
   "description": "`omelo` is base omelo, support es6 version",
@@ -55,6 +55,7 @@
     "omelo-protocol": ">=0.1.7",
     "omelo-rpc": ">=1.0.8",
     "omelo-scheduler": ">=0.5.0",
+    "omelo-http-plugin": ">=0.0.26",
     "seq-queue": "0.0.5",
     "socket.io": "^2.0.4",
     "ws": "^4.0.0"
