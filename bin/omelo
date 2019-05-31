@@ -306,7 +306,7 @@ function start(opts) {
 
   let logDir = path.resolve(opts.directory, 'logs');
   if (!fs.existsSync(logDir)) {
-    fs.mkdir(logDir);
+    mkdir(logDir);
   }
 
   let ls;
