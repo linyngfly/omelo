@@ -654,6 +654,10 @@ function runServer(server) {
     for (key in server) {
       cmd += util.format(' %s=%s ', key, server[key]);
     }
-    starter.sshrun(cmd, server.host);
+    
+    if(process.env.PUB_PLATFORM != null){
+      cmd += util.format(' %s=%s ', 'PUB_PLATFORM', process.env.PUB_PLATFORM);
+    } 
+   starter.sshrun(cmd, server.host);
   }
 }
